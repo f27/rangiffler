@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+}
+
+group = 'guru.qa'
+sourceCompatibility = '17'
+
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+    ext {
+        dockerHubName = "fattaft"
+
+        lombokVersion = '1.18.30'
+        flywayVersion = '10.10.0'
+        mysqlConnectorVersion = '8.3.0'
+        springKafkaVersion = '3.0.11'
+        springGrpcVersion = '2.14.0.RELEASE'
+        springGraphqlDateTimeVersion = '6.0.0'
+        oauth2ResourceServerVersion = ''
+
+        dockerImage = System.getProperty("os.arch") == "aarch64" || System.getProperty("os.arch") == "arm64"
+                ? "arm64v8/eclipse-temurin:19-jre"
+                : "eclipse-temurin:19-jre"
+        dockerArch = System.getProperty("os.arch") == "aarch64" || System.getProperty("os.arch") == "arm64"
+                ? "arm64"
+                : "amd64"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

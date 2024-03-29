@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package guru.qa.grpc.rangiffler;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.grpc.rangiffler.grpc";
+option java_outer_classname = "UserdataProto";
+
+service RangifflerUserdataService {
+  rpc GetUser(Username) returns (User);
+  rpc GetUsers(UsersRequest) returns (UsersResponse);
+  rpc GetFriends(UsersRequest) returns (UsersResponse);
+  rpc GetIncomeInvitations(UsersRequest) returns (UsersResponse);
+  rpc GetOutcomeInvitations(UsersRequest) returns (UsersResponse);
+
+  rpc UpdateCurrentUser(User) returns (User);
+  rpc AddFriend(FriendshipRequest) returns (User);
+  rpc AcceptFriend(FriendshipRequest) returns (User);
+  rpc RejectFriend(FriendshipRequest) returns (User);
+  rpc DeleteFriend(FriendshipRequest) returns (User);
+}
+
+message Username {
+  string username = 1;
+}
+
+message User {
+  string id = 1;
+  string username = 2;
+  string firstname = 3;
+  string lastname = 4;
+  string avatar = 5;
+  string countryCode = 6;
+  FriendStatus friendStatus = 7;
+}
+
+message UsersRequest {
+  string username = 1;
+  string searchQuery = 2;
+  int32 page = 3;
+  int32 size = 4;
+}
+
+message UsersResponse {
+  repeated User users = 1;
+  bool hasNext = 2;
+}
+
+message FriendshipRequest {
+  string username = 1;
+  string targetUserId = 2;
+}
+
+enum FriendStatus {
+  NOT_FRIEND = 0;
+  INVITATION_SENT = 1;
+  INVITATION_RECEIVED = 2;
+  FRIEND = 3;
+}

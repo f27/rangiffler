@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package guru.qa.grpc.rangiffler;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.grpc.rangiffler.grpc";
+option java_outer_classname = "PhotoProto";
+
+service RangifflerPhotoService {
+  rpc CreatePhoto(CreatePhotoRequest) returns (PhotoResponse);
+  rpc UpdatePhoto(UpdatePhotoRequest) returns (PhotoResponse);
+  rpc LikePhoto(LikePhotoRequest) returns (PhotoResponse);
+  rpc DeletePhoto(DeletePhotoRequest) returns (google.protobuf.Empty);
+  rpc GetPhotos(GetPhotosRequest) returns (GetPhotosResponse);
+  rpc GetStat(GetStatRequest) returns (GetStatResponse);
+}
+
+message CreatePhotoRequest {
+  string username = 1;
+  string src = 2;
+  string countryCode = 3;
+  string description = 4;
+}
+
+message UpdatePhotoRequest {
+  string username = 1;
+  string photoId = 2;
+  string countryCode = 3;
+  string description = 4;
+}
+
+message LikePhotoRequest {
+  string username = 1;
+  string photoId = 2;
+}
+
+message PhotoResponse {
+  string photoId = 1;
+  string src = 2;
+  string countryCode = 3;
+  string description = 4;
+  string creationDate = 5;
+  Likes likes = 6;
+}
+
+message Likes {
+  int32 total = 1;
+  repeated Like likes = 2;
+}
+
+message Like {
+  string userId = 1;
+}
+
+message GetPhotosRequest {
+  string username = 1;
+  bool withFriends = 2;
+  int32 page = 3;
+  int32 size = 4;
+}
+
+message GetPhotosResponse {
+  repeated PhotoResponse photos = 1;
+  bool hasNext = 2;
+}
+
+message GetStatRequest {
+  string username = 1;
+  bool withFriends = 2;
+}
+
+message GetStatResponse {
+  map<string, int32> stat = 1;
+}
+
+message DeletePhotoRequest {
+  string username = 1;
+  string photoId = 2;
+}
