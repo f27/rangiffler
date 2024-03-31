@@ -4,11 +4,13 @@ import com.codeborne.selenide.Configuration;
 
 public class LocalConfig implements Config {
 
-    private LocalConfig() {}
+    private LocalConfig() {
+    }
 
     static final LocalConfig instance = new LocalConfig();
 
     static {
+        Configuration.baseUrl = instance.frontUrl();
         Configuration.browserSize = "1980x1024";
     }
 

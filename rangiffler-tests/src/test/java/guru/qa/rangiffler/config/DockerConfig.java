@@ -5,11 +5,13 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class DockerConfig implements Config {
 
-    private DockerConfig() {}
+    private DockerConfig() {
+    }
 
     static final DockerConfig instance = new DockerConfig();
 
     static {
+        Configuration.baseUrl = instance.frontUrl();
         Configuration.remote = "http://selenoid:4444/wd/hub";
         Configuration.browser = "chrome";
         Configuration.browserVersion = "117.0";
