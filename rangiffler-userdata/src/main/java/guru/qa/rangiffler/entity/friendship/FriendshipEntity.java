@@ -13,6 +13,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@IdClass(FriendshipId.class)
 @Table(name = "friendship")
 public class FriendshipEntity {
 
@@ -43,7 +44,8 @@ public class FriendshipEntity {
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         FriendshipEntity that = (FriendshipEntity) o;
-        return getRequester() != null && Objects.equals(getRequester(), that.getRequester()) && Objects.equals(getAddressee(), that.getAddressee());
+        return getRequester() != null && Objects.equals(getRequester(), that.getRequester())
+                && getAddressee()!= null && Objects.equals(getAddressee(), that.getAddressee());
     }
 
     @Override
