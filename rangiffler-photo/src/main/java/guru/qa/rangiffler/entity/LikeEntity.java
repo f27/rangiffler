@@ -14,7 +14,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@SecondaryTable(name = "photo_like", pkJoinColumns = @PrimaryKeyJoinColumn(name = "like_id"))
 @Table(name = "`like`")
 public class LikeEntity {
 
@@ -30,10 +29,6 @@ public class LikeEntity {
     @Column(name = "created_date", nullable = false)
     private Timestamp createdDate;
 
-    @ManyToOne
-    @JoinColumn(name = "photo_id", table = "photo_like")
-    private PhotoEntity photo;
-
     public static Like toGrpcMessage(LikeEntity entity) {
         return Like.newBuilder()
                 .setUserId(entity.getUserId().toString())
@@ -48,8 +43,7 @@ public class LikeEntity {
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         LikeEntity that = (LikeEntity) o;
-        return getUserId() != null && Objects.equals(getUserId(), that.getUserId())
-                && getPhoto() != null && Objects.equals(getPhoto(), that.getPhoto());
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
