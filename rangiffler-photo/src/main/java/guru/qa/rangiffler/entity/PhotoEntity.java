@@ -45,7 +45,14 @@ public class PhotoEntity {
     @Column(name = "created_date", nullable = false)
     private Timestamp createdDate;
 
-    @OneToMany(mappedBy = "photo", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "photo_like",
+            joinColumns = {
+                    @JoinColumn(name = "photo_id", nullable = false)
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "like_id", nullable = false)
+            })
     private List<LikeEntity> likes = new ArrayList<>();
 
     public static PhotoResponse toGrpcMessage(PhotoEntity photo) {
@@ -75,14 +82,14 @@ public class PhotoEntity {
     }
 
     public void addLike(UUID userId) {
-        LikeEntity like = new LikeEntity();
-        like.setUserId(userId);
-        like.setPhoto(this);
-        if (likes.contains(like)) {
-            likes.remove(like);
-        } else {
-            likes.add(like);
-        }
+        likes.stream()
+                .filter(entity -> entity.getUserId().equals(userId))
+                .findAny()
+                .ifPresentOrElse((entity) -> likes.remove(entity), () -> {
+                    LikeEntity like = new LikeEntity();
+                    like.setUserId(userId);
+                    likes.add(like);
+                });
     }
 
     @Override
