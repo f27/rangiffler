@@ -19,6 +19,8 @@ subprojects {
         springGrpcVersion = '2.14.0.RELEASE'
         springGraphqlDateTimeVersion = '6.0.0'
         oauth2ResourceServerVersion = ''
+        protobufVersion = '3.24.3'
+        grpcVersion = '1.58.0'
 
         dockerImage = System.getProperty("os.arch") == "aarch64" || System.getProperty("os.arch") == "arm64"
                 ? "arm64v8/eclipse-temurin:19-jre"
