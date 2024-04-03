@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public abstract class JpaService {
 
-    private final EntityManager em;
+    protected final EntityManager em;
 
     protected JpaService(EntityManager em) {
         this.em = em;
@@ -23,6 +23,13 @@ public abstract class JpaService {
         tx(em -> em.persist(entity));
     }
 
+    protected <T> void removeById(Class<T> entityClass, UUID id) {
+        tx(em -> {
+            T entity = em.find(entityClass, id);
+            em.remove(entity);
+        });
+    }
+
     protected <T> void remove(T entity) {
         tx(em -> em.remove(entity));
     }
@@ -31,7 +38,7 @@ public abstract class JpaService {
         return txWithResult(em -> em.merge(entity));
     }
 
-    private <T> T txWithResult(Function<EntityManager, T> function) {
+    protected  <T> T txWithResult(Function<EntityManager, T> function) {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         try {
@@ -41,10 +48,12 @@ public abstract class JpaService {
         } catch (Exception e) {
             transaction.rollback();
             throw e;
+        } finally {
+            em.clear();
         }
     }
 
-    private void tx(Consumer<EntityManager> consumer) {
+    protected void tx(Consumer<EntityManager> consumer) {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         try {
@@ -53,6 +62,8 @@ public abstract class JpaService {
         } catch (Exception e) {
             transaction.rollback();
             throw e;
+        } finally {
+            em.clear();
         }
     }
 }

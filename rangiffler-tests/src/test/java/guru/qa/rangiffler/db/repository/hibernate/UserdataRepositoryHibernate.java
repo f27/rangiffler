@@ -22,13 +22,15 @@ public class UserdataRepositoryHibernate extends JpaService implements UserdataR
     }
 
     @Override
-    public Optional<UserEntity> findById(UUID id) {
-        return Optional.ofNullable(getById(UserEntity.class, id));
+    public Optional<UserEntity> findByUsername(String username) {
+        String query = "SELECT u FROM UserEntity u where u.username=:username";
+        return em.createQuery(query, UserEntity.class)
+                .setParameter("username", username)
+                .getResultStream().findAny();
     }
 
     @Override
     public void deleteById(UUID id) {
-        UserEntity toBeDeleted = findById(id).get();
-        remove(toBeDeleted);
+        removeById(UserEntity.class, id);
     }
 }

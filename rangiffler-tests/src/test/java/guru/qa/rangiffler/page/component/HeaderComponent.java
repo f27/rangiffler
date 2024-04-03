@@ -14,8 +14,13 @@ public class HeaderComponent extends BaseComponent<HeaderComponent> {
 
     private final SelenideElement logoutButton = self.$("button[aria-label=Logout]");
 
-    @Step("Проверить, что видно кнопку [Logout] в хедере")
+    @Step("[HEADER] Проверить, что видно кнопку [Logout]")
     public void logoutButtonShouldBeVisible() {
         logoutButton.shouldBe(visible);
+    }
+
+    @Step("[HEADER] Нажать кнопку [Logout]")
+    public void clickLogout() {
+        logoutButton.click();
     }
 }

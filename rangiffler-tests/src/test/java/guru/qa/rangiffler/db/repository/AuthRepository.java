@@ -9,7 +9,8 @@ public interface AuthRepository {
 
     UserAuthEntity create(UserAuthEntity user);
 
-    Optional<UserAuthEntity> findById(UUID id);
+    Optional<UserAuthEntity> findByUsername(String username);
 
     void deleteById(UUID id);
+
 }

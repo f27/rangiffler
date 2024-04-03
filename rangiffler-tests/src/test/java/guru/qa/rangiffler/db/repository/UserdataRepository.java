@@ -9,7 +9,7 @@ public interface UserdataRepository {
 
     UserEntity create(UserEntity user);
 
-    Optional<UserEntity> findById(UUID id);
+    Optional<UserEntity> findByUsername(String username);
 
     void deleteById(UUID id);
 
