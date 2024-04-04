@@ -38,7 +38,7 @@ public abstract class JpaService {
         return txWithResult(em -> em.merge(entity));
     }
 
-    protected  <T> T txWithResult(Function<EntityManager, T> function) {
+    protected <T> T txWithResult(Function<EntityManager, T> function) {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         try {

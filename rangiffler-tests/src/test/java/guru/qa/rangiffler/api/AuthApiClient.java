@@ -3,6 +3,7 @@ package guru.qa.rangiffler.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import guru.qa.rangiffler.api.interceptor.CodeInterceptor;
 import guru.qa.rangiffler.jupiter.extension.ApiLoginExtension;
+import io.qameta.allure.Step;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class AuthApiClient extends RestClient {
         authApi = retrofit.create(AuthApi.class);
     }
 
+    @Step("Авторизоваться")
     public void doLogin(String username, String password) throws IOException {
         authApi.authorize(
                 "code",

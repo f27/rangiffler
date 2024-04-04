@@ -11,10 +11,12 @@
     <logger name="com.codeborne.selenide.webdriver.WebDriverFactory" level="error"/>
     <logger name="com.codeborne.selenide.impl.WebDriverThreadLocalContainer" level="error"/>
     <logger name="com.codeborne.selenide.impl.FileHelper" level="error"/>
+    <logger name="com.codeborne.selenide.impl.Plugins" level="error"/>
     <logger name="com.codeborne.selenide.drivercommands.CreateDriverCommand" level="error"/>
     <logger name="com.codeborne.selenide.drivercommands.CloseDriverCommand" level="error"/>
     <logger name="com.codeborne.selenide.drivercommands.DisposablesRegistry" level="error"/>
 
+    <logger name="guru.qa.rangiffler.api" level="error"/>
     <logger name="guru.qa.niffler.kafka.KafkaConsumer" level="warn"/>
     <logger name="guru.qa.niffler.jupiter.extension.AllureDockerExtension" level="debug"/>
 

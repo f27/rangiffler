@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.codeborne.selenide.Selenide.sleep;
+import static io.qameta.allure.Allure.step;
 
 public class UserForRegistrationExtension implements AfterEachCallback, ParameterResolver {
 
@@ -28,22 +29,22 @@ public class UserForRegistrationExtension implements AfterEachCallback, Paramete
                 .findAny();
         if (annotatedParameter.isPresent()) {
             UserModel userToDelete = context.getStore(NAMESPACE).get(context.getUniqueId(), UserModel.class);
-            AuthRepository authRepository = new AuthRepositoryHibernate();
-            UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
-
-            // user in userdata can be created with time lag
-            Optional<UserEntity> userInUserdata = Optional.empty();
-            for (int i = 1; i <= 30; i++) {
-                userInUserdata = userdataRepository.findByUsername(userToDelete.getUsername());
-                if (userInUserdata.isPresent())
-                    break;
-                sleep(200);
-            }
-
-            authRepository.findByUsername(userToDelete.getUsername())
-                    .ifPresent(userAuthEntity -> authRepository.deleteById(userAuthEntity.getId()));
-            userInUserdata
-                    .ifPresent(userEntity -> userdataRepository.deleteById(userEntity.getId()));
+            step("Удалить зарегистрированного во время теста пользователя", () -> {
+                AuthRepository authRepository = new AuthRepositoryHibernate();
+                UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
+                // user in userdata can be created with time lag
+                Optional<UserEntity> userInUserdata = Optional.empty();
+                for (int i = 1; i <= 30; i++) {
+                    userInUserdata = userdataRepository.findByUsername(userToDelete.getUsername());
+                    if (userInUserdata.isPresent())
+                        break;
+                    sleep(200);
+                }
+                authRepository.findByUsername(userToDelete.getUsername())
+                        .ifPresent(userAuthEntity -> authRepository.deleteById(userAuthEntity.getId()));
+                userInUserdata
+                        .ifPresent(userEntity -> userdataRepository.deleteById(userEntity.getId()));
+            });
         }
     }
 

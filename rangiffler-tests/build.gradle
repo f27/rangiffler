@@ -13,6 +13,7 @@ buildscript {
         selenideVersion = '7.2.3'
         kafkaClientsVersion = '3.7.0'
         javaFakerVersion = '1.0.2'
+        sqlFormatterVersion = '2.0.4'
     }
 }
 
@@ -55,6 +56,7 @@ dependencies {
     testImplementation "p6spy:p6spy:${p6spyVersion}"
     testImplementation "org.hibernate:hibernate-core:${hibernateVersion}"
     testImplementation "org.springframework.security:spring-security-crypto:${springCryptoVersion}"
+    testImplementation "com.github.vertical-blank:sql-formatter:${sqlFormatterVersion}"
     // Allure
     testImplementation "io.qameta.allure:allure-attachments:${allureVersion}"
     testImplementation("io.qameta.allure:allure-junit5:${allureVersion}") {
@@ -74,6 +76,7 @@ dependencies {
     }
     // WEB
     testImplementation "com.codeborne:selenide:${selenideVersion}"
+    testImplementation "com.codeborne:selenide-clear-with-shortcut:${selenideVersion}"
     // gRPC
     testImplementation project(':rangiffler-grpc-common')
     testImplementation "io.grpc:grpc-protobuf:${project.ext.grpcVersion}"

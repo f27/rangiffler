@@ -42,8 +42,8 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
         UserEntity userdata = new UserEntity();
         userdata.setCountryCode("ru");
         userdata.setUsername(userAuth.getUsername());
-        userdata.setFirstname(annotation.firstname().isEmpty() ? null : annotation.firstname());
-        userdata.setLastname(annotation.lastname().isEmpty() ? null : annotation.lastname());
+        userdata.setFirstname(annotation.generateFirstname() ? DataUtil.generateRandomFirstname() : null);
+        userdata.setLastname(annotation.generateLastname() ? DataUtil.generateRandomLastname() : null);
         userdata.setAvatar(annotation.avatar().isEmpty() ? null : ImageUtil.getImageAsBase64(annotation.avatar()).getBytes());
 
         authRepository.create(userAuth);

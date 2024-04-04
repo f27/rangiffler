@@ -14,6 +14,8 @@ import org.openqa.selenium.Cookie;
 
 import javax.annotation.Nonnull;
 
+import static io.qameta.allure.Allure.step;
+
 public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ApiLoginExtension.class);
@@ -93,13 +95,15 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
             authApiClient.doLogin(generatedUser.getUsername(), generatedUser.getPassword());
 
             if (initBrowser) {
-                Selenide.open("/");
-                LocalStorage localStorage = Selenide.localStorage();
-                localStorage.setItem("codeChallenge", getCodeChallenge());
-                localStorage.setItem("id_token", getToken());
-                localStorage.setItem("codeVerifier", getCodeVerifier());
-                WebDriverRunner.getWebDriver().manage().addCookie(getJsessionCookie());
-                Selenide.refresh();
+                step("Запустить браузер с авторизованным пользователем", () -> {
+                    Selenide.open("/");
+                    LocalStorage localStorage = Selenide.localStorage();
+                    localStorage.setItem("codeChallenge", getCodeChallenge());
+                    localStorage.setItem("id_token", getToken());
+                    localStorage.setItem("codeVerifier", getCodeVerifier());
+                    WebDriverRunner.getWebDriver().manage().addCookie(getJsessionCookie());
+                    Selenide.refresh();
+                });
             }
         }
     }

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static io.qameta.allure.Allure.step;
+
 public abstract class AbstractGenerateUserExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace GENERATE_USER_NAMESPACE =
@@ -21,27 +23,38 @@ public abstract class AbstractGenerateUserExtension implements BeforeEachCallbac
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
         UserModel[] generatedUsers = context.getStore(GENERATE_USER_NAMESPACE).get(context.getUniqueId(), UserModel[].class);
-        for (UserModel user : generatedUsers) {
-            deleteUserById(user.getId(), user.getAuthId());
-        }
         UserModel apiLoginUser = context.getStore(API_LOGIN_NAMESPACE).get(context.getUniqueId(), UserModel.class);
-        if (apiLoginUser != null) {
-            deleteUserById(apiLoginUser.getId(), apiLoginUser.getAuthId());
+        if (generatedUsers != null || apiLoginUser != null) {
+            step("Удалить сгенерированных пользователей", () -> {
+                if (generatedUsers != null) {
+                    for (UserModel user : generatedUsers) {
+                        deleteUserById(user.getId(), user.getAuthId());
+                    }
+                }
+                if (apiLoginUser != null) {
+                    deleteUserById(apiLoginUser.getId(), apiLoginUser.getAuthId());
+                }
+            });
         }
     }
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         GenerateUser[] generateUserAnnotations = context.getRequiredTestMethod().getAnnotationsByType(GenerateUser.class);
-        List<UserModel> generatedUsers = new ArrayList<>();
-        for (GenerateUser generateUserAnnotation : generateUserAnnotations) {
-            generatedUsers.add(generateUser(generateUserAnnotation));
-        }
-        context.getStore(GENERATE_USER_NAMESPACE).put(context.getUniqueId(), generatedUsers.toArray(new UserModel[0]));
-
         ApiLogin apiLoginAnnotation = context.getRequiredTestMethod().getAnnotation(ApiLogin.class);
-        if (apiLoginAnnotation != null) {
-            context.getStore(API_LOGIN_NAMESPACE).put(context.getUniqueId(), generateUser(apiLoginAnnotation.user()));
+
+        if (generateUserAnnotations.length > 0 || apiLoginAnnotation != null) {
+            step("Сгенерировать пользователей", () -> {
+                List<UserModel> generatedUsers = new ArrayList<>();
+                for (GenerateUser generateUserAnnotation : generateUserAnnotations) {
+                    generatedUsers.add(generateUser(generateUserAnnotation));
+                }
+                context.getStore(GENERATE_USER_NAMESPACE).put(context.getUniqueId(), generatedUsers.toArray(new UserModel[0]));
+
+                if (apiLoginAnnotation != null) {
+                    context.getStore(API_LOGIN_NAMESPACE).put(context.getUniqueId(), generateUser(apiLoginAnnotation.user()));
+                }
+            });
         }
     }
 

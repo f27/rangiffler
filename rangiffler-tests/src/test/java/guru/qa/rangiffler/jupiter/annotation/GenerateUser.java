@@ -11,9 +11,9 @@ public @interface GenerateUser {
 
     String password() default "";
 
-    String firstname() default "";
+    boolean generateFirstname() default false;
 
-    String lastname() default "";
+    boolean generateLastname() default false;
 
     String avatar() default "";
 

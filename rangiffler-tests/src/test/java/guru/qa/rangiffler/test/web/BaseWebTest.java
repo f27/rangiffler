@@ -2,10 +2,7 @@ package guru.qa.rangiffler.test.web;
 
 import guru.qa.rangiffler.config.Config;
 import guru.qa.rangiffler.jupiter.annotation.meta.WebTest;
-import guru.qa.rangiffler.page.LoginPage;
-import guru.qa.rangiffler.page.MyTravelsPage;
-import guru.qa.rangiffler.page.RegisterPage;
-import guru.qa.rangiffler.page.WelcomePage;
+import guru.qa.rangiffler.page.*;
 import io.qameta.allure.Epic;
 import org.junit.jupiter.api.Tag;
 
@@ -20,5 +17,6 @@ public abstract class BaseWebTest {
     protected final WelcomePage welcomePage = new WelcomePage();
     protected final MyTravelsPage myTravelsPage = new MyTravelsPage();
     protected final RegisterPage registerPage = new RegisterPage();
+    protected final ProfilePage profilePage = new ProfilePage();
 
 }
