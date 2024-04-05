@@ -9,16 +9,18 @@ import guru.qa.rangiffler.db.repository.UserdataRepository;
 import guru.qa.rangiffler.db.repository.hibernate.AuthRepositoryHibernate;
 import guru.qa.rangiffler.db.repository.hibernate.UserdataRepositoryHibernate;
 import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
+import guru.qa.rangiffler.model.CountryEnum;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.util.DataUtil;
 import guru.qa.rangiffler.util.ImageUtil;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
 public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
+
+    private static final String DEFAULT_COUNTRY_CODE = "ru";
 
     @Override
     public UserModel createUser(GenerateUser annotation) {
@@ -40,7 +42,7 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
                 }).toList()));
 
         UserEntity userdata = new UserEntity();
-        userdata.setCountryCode("ru");
+        userdata.setCountryCode(annotation.generateCountry() ? DataUtil.generateRandomCountry().getCode() : DEFAULT_COUNTRY_CODE);
         userdata.setUsername(userAuth.getUsername());
         userdata.setFirstname(annotation.generateFirstname() ? DataUtil.generateRandomFirstname() : null);
         userdata.setLastname(annotation.generateLastname() ? DataUtil.generateRandomLastname() : null);
@@ -61,7 +63,8 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
         user.setPassword(userAuth.getPassword());
         user.setFirstname(userdata.getFirstname());
         user.setLastname(userdata.getLastname());
-        user.setAvatar(userdata.getAvatar() == null ? null : new String(userdata.getAvatar(), StandardCharsets.UTF_8));
+        user.setCountry(CountryEnum.findByCode(userdata.getCountryCode()));
+        user.setAvatar(annotation.avatar());
         return user;
     }
 

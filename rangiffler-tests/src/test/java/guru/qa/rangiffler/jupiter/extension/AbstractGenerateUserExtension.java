@@ -25,6 +25,7 @@ public abstract class AbstractGenerateUserExtension implements BeforeEachCallbac
         UserModel[] generatedUsers = context.getStore(GENERATE_USER_NAMESPACE).get(context.getUniqueId(), UserModel[].class);
         UserModel apiLoginUser = context.getStore(API_LOGIN_NAMESPACE).get(context.getUniqueId(), UserModel.class);
         if (generatedUsers != null || apiLoginUser != null) {
+            System.out.println("1");
             step("Удалить сгенерированных пользователей", () -> {
                 if (generatedUsers != null) {
                     for (UserModel user : generatedUsers) {

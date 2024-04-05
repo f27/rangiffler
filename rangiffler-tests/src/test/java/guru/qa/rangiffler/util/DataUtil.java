@@ -1,6 +1,7 @@
 package guru.qa.rangiffler.util;
 
 import com.github.javafaker.Faker;
+import guru.qa.rangiffler.model.CountryEnum;
 
 import javax.annotation.Nonnull;
 
@@ -36,5 +37,10 @@ public class DataUtil {
     @Nonnull
     public static String generateStringWithLength(int length) {
         return FAKER.regexify(String.format("[a-z1-9]{%d}", length));
+    }
+
+    @Nonnull
+    public static CountryEnum generateRandomCountry() {
+        return CountryEnum.getRandom();
     }
 }

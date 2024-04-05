@@ -19,6 +19,7 @@ public class UserModel {
     private String firstname;
     private String lastname;
     private String avatar;
+    private CountryEnum country;
     private FriendStatus friendStatus;
     private List<UserModel> friends = new ArrayList<>();
 

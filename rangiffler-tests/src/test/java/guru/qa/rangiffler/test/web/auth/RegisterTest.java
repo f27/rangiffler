@@ -30,7 +30,7 @@ public class RegisterTest extends BaseWebTest {
     @Test
     @GenerateUser
     @DisplayName("Нельзя зарегистрироваться с уже существующим именем пользователя")
-    void shouldNotRegisterUserWithSameUsername(@User(FOR_GENERATE_USER) UserModel user) {
+    void shouldNotRegisterUserWithSameUsernameTest(@User(FOR_GENERATE_USER) UserModel user) {
         registerPage
                 .setUsername(user.getUsername())
                 .setPassword(user.getPassword())
@@ -42,7 +42,7 @@ public class RegisterTest extends BaseWebTest {
 
     @Test
     @DisplayName("Нельзя зарегистрироваться со слишком коротким паролем")
-    void shouldNotRegisterUserWithTooShortPassword() {
+    void shouldNotRegisterUserWithTooShortPasswordTest() {
         String shortPassword = DataUtil.generateRandomPassword(1, 2);
         registerPage
                 .setUsername(DataUtil.generateRandomUsername())
@@ -55,7 +55,7 @@ public class RegisterTest extends BaseWebTest {
 
     @Test
     @DisplayName("Нельзя зарегистрироваться со слишком коротким паролем")
-    void shouldNotRegisterUserWithTooLongPassword() {
+    void shouldNotRegisterUserWithTooLongPasswordTest() {
         String longPassword = DataUtil.generateRandomPassword(13, 20);
         registerPage
                 .setUsername(DataUtil.generateRandomUsername())
@@ -68,7 +68,7 @@ public class RegisterTest extends BaseWebTest {
 
     @Test
     @DisplayName("Нельзя зарегистрироваться с неверным подтверждением пароля")
-    void shouldNotRegisterUserWithWrongPasswordSubmit() {
+    void shouldNotRegisterUserWithWrongPasswordSubmitTest() {
         registerPage
                 .setUsername(DataUtil.generateRandomUsername())
                 .setPassword(DataUtil.generateRandomPassword())
@@ -80,7 +80,7 @@ public class RegisterTest extends BaseWebTest {
 
     @Test
     @DisplayName("Нельзя зарегистрироваться со слишком длинным именем пользователя")
-    void shouldNotRegisterUserWithTooLongUsername() {
+    void shouldNotRegisterUserWithTooLongUsernameTest() {
         String password = DataUtil.generateRandomPassword();
         registerPage
                 .setUsername(DataUtil.generateStringWithLength(51))
@@ -93,7 +93,7 @@ public class RegisterTest extends BaseWebTest {
 
     @Test
     @DisplayName("Успешная регистрация")
-    void successfulRegistration(@UserForRegistration UserModel user) {
+    void successfulRegistrationTest(@UserForRegistration UserModel user) {
         registerPage
                 .setUsername(user.getUsername())
                 .setPassword(user.getPassword())

@@ -8,6 +8,7 @@ import guru.qa.rangiffler.repository.UserRepository;
 import jakarta.annotation.Nonnull;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,10 @@ public class UserService {
     @Transactional
     public @Nonnull
     String registerUser(@Nonnull String username, @Nonnull String password) {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user != null) {
+            throw new DataIntegrityViolationException("Username `" + username + "` already exists");
+        }
         UserEntity userEntity = new UserEntity();
         userEntity.setEnabled(true);
         userEntity.setAccountNonExpired(true);

@@ -11,9 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @Feature("Профиль аккаунта")
-@Story("Страница профиля")
-@DisplayName("Страница профиля")
-public class ProfileTest extends BaseWebTest {
+@Story("Username")
+@DisplayName("Username")
+public class UsernameTest extends BaseWebTest {
 
     @BeforeEach
     void openProfile() {
@@ -23,7 +23,7 @@ public class ProfileTest extends BaseWebTest {
 
     @Test
     @ApiLogin
-    @DisplayName("Страница профиля должна содержать отключенное поле [Username] c username пользователя")
+    @DisplayName("Username должно быть отключенным и содержать значение")
     void usernameInputShouldBeDisabled(@User UserModel user) {
         profilePage
                 .checkUsernameInputIsDisabled()

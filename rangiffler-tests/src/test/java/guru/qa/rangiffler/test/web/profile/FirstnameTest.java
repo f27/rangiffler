@@ -27,59 +27,112 @@ public class FirstnameTest extends BaseWebTest {
     @Test
     @ApiLogin
     @DisplayName("Имя пользователя можно заполнить")
-    void firstSetUsername() {
+    void firstSetFirstnameTest() {
         String updatedFirstname = DataUtil.generateRandomFirstname();
         profilePage
-                .checkUsername("")
-                .setUsername(updatedFirstname)
+                .checkFirstname("")
+                .setFirstname(updatedFirstname)
                 .clickSave()
                 .checkSnackbarMessage("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
-                .checkUsername(updatedFirstname);
+                .checkFirstname(updatedFirstname);
     }
 
     @Test
     @ApiLogin(user = @GenerateUser(generateFirstname = true))
     @DisplayName("Имя пользователя может быть обновлено")
-    void usernameUpdate(@User UserModel user) {
+    void firstnameUpdateTest(@User UserModel user) {
         String updatedFirstname = DataUtil.generateRandomFirstname();
         profilePage
-                .checkUsername(user.getFirstname())
-                .setUsername(updatedFirstname)
+                .checkFirstname(user.getFirstname())
+                .setFirstname(updatedFirstname)
                 .clickSave()
                 .checkSnackbarMessage("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
-                .checkUsername(updatedFirstname);
+                .checkFirstname(updatedFirstname);
     }
 
     @Test
     @ApiLogin
     @DisplayName("Имя пользователя не может быть длинней 50 символов")
-    void usernameCanNotBeTooLong() {
+    void firstnameCanNotBeTooLongTest() {
         String updatedFirstname = DataUtil.generateStringWithLength(51);
         profilePage
-                .checkUsername("")
-                .setUsername(updatedFirstname)
+                .checkFirstname("")
+                .setFirstname(updatedFirstname)
                 .clickSave()
                 .checkFirstnameHelperHasMessage("First name length has to be not longer that 50 symbols");
         Selenide.refresh();
         profilePage
-                .checkUsername("");
+                .checkFirstname("");
     }
 
     @Test
     @ApiLogin
     @DisplayName("Имя пользователя может быть длиной в 50 символов")
-    void usernameCanBeLong() {
+    void firstnameCanBeLongTest() {
         String updatedFirstname = DataUtil.generateStringWithLength(50);
         profilePage
-                .setUsername(updatedFirstname)
+                .setFirstname(updatedFirstname)
                 .clickSave()
                 .checkSnackbarMessage("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
-                .checkUsername(updatedFirstname);
+                .checkFirstname(updatedFirstname);
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(generateFirstname = true))
+    @DisplayName("Имя пользователя по умолчанию должна быть его")
+    void firstnameShouldHaveUsersValueTest(@User UserModel user) {
+        profilePage
+                .checkFirstname(user.getFirstname());
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(generateFirstname = true))
+    @DisplayName("Имя пользователя, сохраненное заранее, должно восстановиться при нажатии [Reset]")
+    void firstnameWithValueShouldBeRestoredAfterResetButtonClickedTest(@User UserModel user) {
+        String updatedFirstname = DataUtil.generateRandomFirstname();
+        profilePage
+                .checkFirstname(user.getFirstname())
+                .setFirstname(updatedFirstname)
+                .checkFirstname(updatedFirstname)
+                .clickReset()
+                .checkFirstname(user.getFirstname());
+    }
+
+    @Test
+    @ApiLogin
+    @DisplayName("Имя пользователя, которое было пустым, должно быть пустым после нажатия [Reset]")
+    void emptyFirstnameShouldBeEmptyAfterResetButtonClickedTest() {
+        String updatedFirstname = DataUtil.generateRandomFirstname();
+        profilePage
+                .checkFirstname("")
+                .setFirstname(updatedFirstname)
+                .checkFirstname(updatedFirstname)
+                .clickReset()
+                .checkFirstname("");
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(generateFirstname = true))
+    @DisplayName("Имя пользователя может быть обновлено после нажатия кнопки [Reset]")
+    void firstnameUpdateAfterResetButtonClickedTest(@User UserModel user) {
+        String updatedFirstname = DataUtil.generateRandomFirstname();
+        profilePage
+                .checkFirstname(user.getFirstname())
+                .setFirstname(updatedFirstname)
+                .checkFirstname(updatedFirstname)
+                .clickReset()
+                .setFirstname(updatedFirstname)
+                .checkFirstname(updatedFirstname)
+                .clickSave()
+                .checkSnackbarMessage("Your profile is successfully updated");
+        Selenide.refresh();
+        profilePage
+                .checkFirstname(updatedFirstname);
     }
 }

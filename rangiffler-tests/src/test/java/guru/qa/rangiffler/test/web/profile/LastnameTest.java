@@ -27,7 +27,7 @@ public class LastnameTest extends BaseWebTest {
     @Test
     @ApiLogin
     @DisplayName("Фамилия может быть заполнена")
-    void firstSetLastname() {
+    void firstSetLastnameTest() {
         String updatedLastname = DataUtil.generateRandomLastname();
         profilePage
                 .checkLastname("")
@@ -42,7 +42,7 @@ public class LastnameTest extends BaseWebTest {
     @Test
     @ApiLogin(user = @GenerateUser(generateLastname = true))
     @DisplayName("Фамилия может быть обновлена")
-    void lastnameUpdate(@User UserModel user) {
+    void lastnameUpdateTest(@User UserModel user) {
         String updatedLastname = DataUtil.generateRandomLastname();
         profilePage
                 .checkLastname(user.getLastname())
@@ -57,7 +57,7 @@ public class LastnameTest extends BaseWebTest {
     @Test
     @ApiLogin
     @DisplayName("Фамилия не может быть длинней 50 символов")
-    void lastnameCanNotBeTooLong() {
+    void lastnameCanNotBeTooLongTest() {
         String updatedLastname = DataUtil.generateStringWithLength(51);
         profilePage
                 .checkLastname("")
@@ -72,10 +72,63 @@ public class LastnameTest extends BaseWebTest {
     @Test
     @ApiLogin
     @DisplayName("Фамилия может быть длиной в 50 символов")
-    void lastnameCanBeLong() {
+    void lastnameCanBeLongTest() {
         String updatedLastname = DataUtil.generateStringWithLength(50);
         profilePage
                 .setLastname(updatedLastname)
+                .clickSave()
+                .checkSnackbarMessage("Your profile is successfully updated");
+        Selenide.refresh();
+        profilePage
+                .checkLastname(updatedLastname);
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(generateLastname = true))
+    @DisplayName("Фамилия по умолчанию должна быть его")
+    void lastnameShouldHaveUsersValueTest(@User UserModel user) {
+        profilePage
+                .checkLastname(user.getLastname());
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(generateLastname = true))
+    @DisplayName("Фамилия, сохраненная заранее, должна восстановиться при нажатии [Reset]")
+    void lastnameWithValueShouldBeRestoredAfterResetButtonClickedTest(@User UserModel user) {
+        String updatedLastname = DataUtil.generateRandomLastname();
+        profilePage
+                .checkLastname(user.getLastname())
+                .setLastname(updatedLastname)
+                .checkLastname(updatedLastname)
+                .clickReset()
+                .checkLastname(user.getLastname());
+    }
+
+    @Test
+    @ApiLogin
+    @DisplayName("Фамилия, которая была пустой, должна быть пустой после нажатия [Reset]")
+    void emptyLastnameShouldBeEmptyAfterResetButtonClickedTest() {
+        String updatedLastname = DataUtil.generateRandomLastname();
+        profilePage
+                .checkLastname("")
+                .setLastname(updatedLastname)
+                .checkLastname(updatedLastname)
+                .clickReset()
+                .checkLastname("");
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(generateLastname = true))
+    @DisplayName("Фамилия может быть обновлена после нажатия кнопки [Reset]")
+    void lastnameUpdateAfterResetButtonClickedTest(@User UserModel user) {
+        String updatedLastname = DataUtil.generateRandomLastname();
+        profilePage
+                .checkLastname(user.getLastname())
+                .setLastname(updatedLastname)
+                .checkLastname(updatedLastname)
+                .clickReset()
+                .setLastname(updatedLastname)
+                .checkLastname(updatedLastname)
                 .clickSave()
                 .checkSnackbarMessage("Your profile is successfully updated");
         Selenide.refresh();

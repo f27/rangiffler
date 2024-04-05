@@ -15,6 +15,8 @@ public @interface GenerateUser {
 
     boolean generateLastname() default false;
 
+    boolean generateCountry() default false;
+
     String avatar() default "";
 
 }
