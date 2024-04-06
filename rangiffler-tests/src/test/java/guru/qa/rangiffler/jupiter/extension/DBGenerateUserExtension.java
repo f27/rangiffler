@@ -22,13 +22,15 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
 
     private static final String DEFAULT_COUNTRY_CODE = "ru";
 
+    private final AuthRepository authRepository = new AuthRepositoryHibernate();
+    private final UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
+
     @Override
     public UserModel createUser(GenerateUser annotation) {
-        AuthRepository authRepository = new AuthRepositoryHibernate();
-        UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
+        final String password = annotation.password().isEmpty() ? DataUtil.generateRandomPassword() : annotation.password();
         UserAuthEntity userAuth = new UserAuthEntity();
         userAuth.setUsername(annotation.username().isEmpty() ? DataUtil.generateRandomUsername() : annotation.username());
-        userAuth.setPassword(annotation.password().isEmpty() ? DataUtil.generateRandomPassword() : annotation.password());
+        userAuth.setPassword(password);
         userAuth.setEnabled(true);
         userAuth.setAccountNonExpired(true);
         userAuth.setAccountNonLocked(true);
@@ -52,7 +54,7 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
         try {
             userdataRepository.create(userdata);
         } catch (Throwable t) {
-            authRepository.deleteById(userAuth.getId());
+            authRepository.delete(userAuth);
             throw t;
         }
 
@@ -60,7 +62,7 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
         user.setId(userdata.getId());
         user.setAuthId(userAuth.getId());
         user.setUsername(userdata.getUsername());
-        user.setPassword(userAuth.getPassword());
+        user.setPassword(password);
         user.setFirstname(userdata.getFirstname());
         user.setLastname(userdata.getLastname());
         user.setCountry(CountryEnum.findByCode(userdata.getCountryCode()));
@@ -70,8 +72,6 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
 
     @Override
     public void deleteUserById(UUID id, UUID authId) {
-        AuthRepository authRepository = new AuthRepositoryHibernate();
-        UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
         userdataRepository.deleteById(id);
         authRepository.deleteById(authId);
     }

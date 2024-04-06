@@ -4,6 +4,7 @@ import guru.qa.rangiffler.db.DataBase;
 import guru.qa.rangiffler.db.entity.UserEntity;
 import guru.qa.rangiffler.db.jpa.EmfProvider;
 import guru.qa.rangiffler.db.jpa.JpaService;
+import guru.qa.rangiffler.db.jpa.ThreadLocalEntityManager;
 import guru.qa.rangiffler.db.repository.UserdataRepository;
 
 import java.util.Optional;
@@ -12,7 +13,7 @@ import java.util.UUID;
 public class UserdataRepositoryHibernate extends JpaService implements UserdataRepository {
 
     public UserdataRepositoryHibernate() {
-        super(EmfProvider.INSTANCE.emf(DataBase.USERDATA).createEntityManager());
+        super(new ThreadLocalEntityManager(EmfProvider.INSTANCE.emf(DataBase.USERDATA)));
     }
 
     @Override

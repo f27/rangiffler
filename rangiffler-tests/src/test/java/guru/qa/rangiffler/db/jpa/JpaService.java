@@ -15,10 +15,6 @@ public abstract class JpaService {
         this.em = em;
     }
 
-    protected <T> T getById(Class<T> entityClass, UUID id) {
-        return txWithResult(em -> em.find(entityClass, id));
-    }
-
     protected <T> void persist(T entity) {
         tx(em -> em.persist(entity));
     }
@@ -48,8 +44,6 @@ public abstract class JpaService {
         } catch (Exception e) {
             transaction.rollback();
             throw e;
-        } finally {
-            em.clear();
         }
     }
 
@@ -62,8 +56,6 @@ public abstract class JpaService {
         } catch (Exception e) {
             transaction.rollback();
             throw e;
-        } finally {
-            em.clear();
         }
     }
 }
