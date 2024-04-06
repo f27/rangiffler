@@ -1,6 +1,10 @@
 package guru.qa.rangiffler.test.web.travel;
 
 import guru.qa.rangiffler.jupiter.annotation.ApiLogin;
+import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
+import guru.qa.rangiffler.jupiter.annotation.Photo;
+import guru.qa.rangiffler.jupiter.annotation.User;
+import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.test.web.BaseWebTest;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -29,6 +33,13 @@ public class PhotoTest extends BaseWebTest {
         myTravelsPage
                 .checkAmountOfPhotos(1)
                 .checkPhotoIsVisible(photoForUpload);
-        System.out.println("1");
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(photos = @Photo))
+    @DisplayName("Фотография должна быть видна")
+    void photoShouldBeVisibleTest(@User UserModel user) {
+        myTravelsPage
+                .checkPhotoIsVisible(user.getPhotos().get(0).getPhoto());
     }
 }

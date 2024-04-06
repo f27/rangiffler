@@ -1,4 +1,4 @@
-package guru.qa.rangiffler.db.entity;
+package guru.qa.rangiffler.db.entity.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -22,8 +22,13 @@ public class UserModel {
     private CountryEnum country;
     private FriendStatus friendStatus;
     private List<UserModel> friends = new ArrayList<>();
+    private List<PhotoModel> photos = new ArrayList<>();
 
     public void addFriend(UserModel friend) {
         friends.add(friend);
+    }
+
+    public void addPhoto(PhotoModel photo) {
+        photos.add(photo);
     }
 }

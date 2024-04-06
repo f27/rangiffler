@@ -1,15 +1,11 @@
 package guru.qa.rangiffler.jupiter.extension;
 
-import guru.qa.rangiffler.jupiter.annotation.ApiLogin;
-import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
-import guru.qa.rangiffler.jupiter.annotation.GenerateUsers;
-import guru.qa.rangiffler.jupiter.annotation.User;
+import guru.qa.rangiffler.jupiter.annotation.*;
 import guru.qa.rangiffler.model.UserModel;
 import org.junit.jupiter.api.extension.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static io.qameta.allure.Allure.step;
 
@@ -28,11 +24,11 @@ public abstract class AbstractGenerateUserExtension implements BeforeEachCallbac
             step("Удалить сгенерированных пользователей", () -> {
                 if (generatedUsers != null) {
                     for (UserModel user : generatedUsers) {
-                        deleteUserById(user.getId(), user.getAuthId());
+                        deleteUser(user);
                     }
                 }
                 if (apiLoginUser != null) {
-                    deleteUserById(apiLoginUser.getId(), apiLoginUser.getAuthId());
+                    deleteUser(apiLoginUser);
                 }
             });
         }
@@ -88,10 +84,13 @@ public abstract class AbstractGenerateUserExtension implements BeforeEachCallbac
 
     public abstract UserModel createUser(GenerateUser annotation);
 
-    public abstract void deleteUserById(UUID id, UUID authId);
+    public abstract void addPhotos(UserModel user, Photo[] photos);
+
+    public abstract void deleteUser(UserModel user);
 
     private UserModel generateUser(GenerateUser annotation) {
         UserModel user = createUser(annotation);
+        addPhotos(user, annotation.photos());
         return user;
     }
 

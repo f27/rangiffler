@@ -17,6 +17,8 @@ public @interface GenerateUser {
 
     boolean generateCountry() default false;
 
+    Photo[] photos() default {};
+
     String avatar() default "";
 
 }

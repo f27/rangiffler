@@ -1,22 +1,27 @@
 package guru.qa.rangiffler.jupiter.extension;
 
-import guru.qa.rangiffler.db.entity.Authority;
-import guru.qa.rangiffler.db.entity.AuthorityEntity;
-import guru.qa.rangiffler.db.entity.UserAuthEntity;
-import guru.qa.rangiffler.db.entity.UserEntity;
+import guru.qa.rangiffler.db.entity.photo.PhotoEntity;
+import guru.qa.rangiffler.db.entity.user.Authority;
+import guru.qa.rangiffler.db.entity.user.AuthorityEntity;
+import guru.qa.rangiffler.db.entity.user.UserAuthEntity;
+import guru.qa.rangiffler.db.entity.user.UserEntity;
 import guru.qa.rangiffler.db.repository.AuthRepository;
+import guru.qa.rangiffler.db.repository.PhotoRepository;
 import guru.qa.rangiffler.db.repository.UserdataRepository;
 import guru.qa.rangiffler.db.repository.hibernate.AuthRepositoryHibernate;
+import guru.qa.rangiffler.db.repository.hibernate.PhotoRepositoryHibernate;
 import guru.qa.rangiffler.db.repository.hibernate.UserdataRepositoryHibernate;
 import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
+import guru.qa.rangiffler.jupiter.annotation.Photo;
 import guru.qa.rangiffler.model.CountryEnum;
+import guru.qa.rangiffler.model.PhotoModel;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.util.DataUtil;
 import guru.qa.rangiffler.util.ImageUtil;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 
 public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
 
@@ -24,6 +29,7 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
 
     private final AuthRepository authRepository = new AuthRepositoryHibernate();
     private final UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
+    private final PhotoRepository photoRepository = new PhotoRepositoryHibernate();
 
     @Override
     public UserModel createUser(GenerateUser annotation) {
@@ -71,8 +77,31 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
     }
 
     @Override
-    public void deleteUserById(UUID id, UUID authId) {
-        userdataRepository.deleteById(id);
-        authRepository.deleteById(authId);
+    public void addPhotos(UserModel user, Photo[] photos) {
+        for (Photo photo : photos) {
+            PhotoEntity photoEntity = new PhotoEntity();
+            photoEntity.setUserId(user.getId());
+            photoEntity.setCountryCode(photo.country().getCode());
+            photoEntity.setDescription(photo.description());
+            photoEntity.setPhoto(ImageUtil.getImageAsBase64(photo.image()).getBytes(StandardCharsets.UTF_8));
+            photoRepository.create(photoEntity);
+
+            PhotoModel photoModel = new PhotoModel();
+            photoModel.setId(photoEntity.getId());
+            photoModel.setCountry(CountryEnum.findByCode(photoEntity.getCountryCode()));
+            photoModel.setDescription(photoEntity.getDescription());
+            photoModel.setPhoto(photo.image());
+
+            user.addPhoto(photoModel);
+        }
+    }
+
+    @Override
+    public void deleteUser(UserModel user) {
+        for (PhotoModel photo : user.getPhotos()) {
+            photoRepository.deleteById(photo.getId());
+        }
+        userdataRepository.deleteById(user.getId());
+        authRepository.deleteById(user.getAuthId());
     }
 }

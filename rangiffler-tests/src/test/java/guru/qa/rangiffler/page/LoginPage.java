@@ -30,9 +30,9 @@ public class LoginPage extends BasePage<LoginPage> {
         signInButton.click();
     }
 
-    @Step("Проверить, что есть сообщение о неверных учетных данных")
-    public LoginPage checkFormHasErrorBadCredentials() {
-        formError.shouldHave(exactText("Неверные учетные данные пользователя"));
+    @Step("Проверить, что есть сообщение об ошибке [{msg}]")
+    public LoginPage checkFormHasError(String msg) {
+        formError.shouldHave(exactText(msg));
         return this;
     }
 }

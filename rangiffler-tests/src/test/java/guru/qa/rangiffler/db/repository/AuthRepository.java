@@ -1,6 +1,6 @@
 package guru.qa.rangiffler.db.repository;
 
-import guru.qa.rangiffler.db.entity.UserAuthEntity;
+import guru.qa.rangiffler.db.entity.user.UserAuthEntity;
 
 import java.util.Optional;
 import java.util.UUID;

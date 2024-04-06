@@ -5,6 +5,7 @@ import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
 import guru.qa.rangiffler.jupiter.annotation.User;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.test.web.BaseWebTest;
+import guru.qa.rangiffler.util.DataUtil;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +43,7 @@ public class LoginTest extends BaseWebTest {
                 .setPassword(user.getPassword() + "1")
                 .clickSignIn();
         loginPage
-                .checkFormHasErrorBadCredentials();
+                .checkFormHasError("Неверные учетные данные пользователя");
     }
 
     @Test
@@ -57,6 +58,19 @@ public class LoginTest extends BaseWebTest {
                 .setPassword(users[1].getPassword())
                 .clickSignIn();
         loginPage
-                .checkFormHasErrorBadCredentials();
+                .checkFormHasError("Неверные учетные данные пользователя");
+    }
+
+    @Test
+    @DisplayName("Нельзя войти незарегистрированным пользователем")
+    void shouldNotLoginWithNotRegisteredUserTest() {
+        Selenide.open("/");
+        welcomePage.clickLoginButton();
+        loginPage
+                .setUsername(DataUtil.generateRandomUsername())
+                .setPassword(DataUtil.generateRandomPassword())
+                .clickSignIn();
+        loginPage
+                .checkFormHasError("Неверные учетные данные пользователя");
     }
 }

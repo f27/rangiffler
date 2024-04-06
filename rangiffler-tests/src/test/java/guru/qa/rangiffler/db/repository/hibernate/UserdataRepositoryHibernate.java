@@ -1,7 +1,7 @@
 package guru.qa.rangiffler.db.repository.hibernate;
 
 import guru.qa.rangiffler.db.DataBase;
-import guru.qa.rangiffler.db.entity.UserEntity;
+import guru.qa.rangiffler.db.entity.user.UserEntity;
 import guru.qa.rangiffler.db.jpa.EmfProvider;
 import guru.qa.rangiffler.db.jpa.JpaService;
 import guru.qa.rangiffler.db.jpa.ThreadLocalEntityManager;

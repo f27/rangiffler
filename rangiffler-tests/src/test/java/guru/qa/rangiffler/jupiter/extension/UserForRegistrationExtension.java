@@ -1,6 +1,6 @@
 package guru.qa.rangiffler.jupiter.extension;
 
-import guru.qa.rangiffler.db.entity.UserEntity;
+import guru.qa.rangiffler.db.entity.user.UserEntity;
 import guru.qa.rangiffler.db.repository.AuthRepository;
 import guru.qa.rangiffler.db.repository.UserdataRepository;
 import guru.qa.rangiffler.db.repository.hibernate.AuthRepositoryHibernate;
