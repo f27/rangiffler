@@ -22,7 +22,7 @@ public class CountryTest extends BaseWebTest {
     @BeforeEach
     void openProfile() {
         myTravelsPage
-                .goToProfile();
+                .getDrawer().clickProfile();
     }
 
     @Test
@@ -51,7 +51,7 @@ public class CountryTest extends BaseWebTest {
                 .selectCountry(updatedCountry)
                 .checkCountry(updatedCountry)
                 .clickSave()
-                .checkSnackbarMessage("Your profile is successfully updated");
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkCountry(updatedCountry);
@@ -83,7 +83,7 @@ public class CountryTest extends BaseWebTest {
                 .selectCountry(updatedCountry)
                 .checkCountry(updatedCountry)
                 .clickSave()
-                .checkSnackbarMessage("Your profile is successfully updated");
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkCountry(updatedCountry);

@@ -6,8 +6,8 @@ import io.qameta.allure.Step;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.$;
 
-public class SnackbarComponent extends BaseComponent<SnackbarComponent> {
-    public SnackbarComponent() {
+public class Snackbar extends BaseComponent<Snackbar> {
+    public Snackbar() {
         super($("div.MuiSnackbar-root"));
     }
 

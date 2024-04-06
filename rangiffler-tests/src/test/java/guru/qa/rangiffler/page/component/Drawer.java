@@ -5,8 +5,8 @@ import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class DrawerComponent extends BaseComponent<DrawerComponent> {
-    public DrawerComponent() {
+public class Drawer extends BaseComponent<Drawer> {
+    public Drawer() {
         super($("div.MuiDrawer-root"));
     }
 

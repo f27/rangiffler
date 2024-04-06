@@ -20,7 +20,7 @@ public class AvatarTest extends BaseWebTest {
     @BeforeEach
     void openProfile() {
         myTravelsPage
-                .goToProfile();
+                .getDrawer().clickProfile();
     }
 
     @Test
@@ -47,7 +47,8 @@ public class AvatarTest extends BaseWebTest {
         profilePage
                 .uploadAvatar(avatarClasspath)
                 .checkAvatar(avatarClasspath)
-                .clickSave();
+                .clickSave()
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkAvatar(avatarClasspath);
@@ -62,7 +63,8 @@ public class AvatarTest extends BaseWebTest {
                 .checkAvatar(user.getAvatar())
                 .uploadAvatar(updatedAvatarClasspath)
                 .checkAvatar(updatedAvatarClasspath)
-                .clickSave();
+                .clickSave()
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkAvatar(updatedAvatarClasspath);
@@ -81,7 +83,8 @@ public class AvatarTest extends BaseWebTest {
                 .checkAvatar(user.getAvatar())
                 .uploadAvatar(updatedAvatarClasspath)
                 .checkAvatar(updatedAvatarClasspath)
-                .clickSave();
+                .clickSave()
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkAvatar(updatedAvatarClasspath);

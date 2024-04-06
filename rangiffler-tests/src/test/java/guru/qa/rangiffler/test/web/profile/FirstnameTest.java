@@ -21,7 +21,7 @@ public class FirstnameTest extends BaseWebTest {
     @BeforeEach
     void openProfile() {
         myTravelsPage
-                .goToProfile();
+                .getDrawer().clickProfile();
     }
 
     @Test
@@ -33,7 +33,7 @@ public class FirstnameTest extends BaseWebTest {
                 .checkFirstname("")
                 .setFirstname(updatedFirstname)
                 .clickSave()
-                .checkSnackbarMessage("Your profile is successfully updated");
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkFirstname(updatedFirstname);
@@ -48,7 +48,7 @@ public class FirstnameTest extends BaseWebTest {
                 .checkFirstname(user.getFirstname())
                 .setFirstname(updatedFirstname)
                 .clickSave()
-                .checkSnackbarMessage("Your profile is successfully updated");
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkFirstname(updatedFirstname);
@@ -77,7 +77,7 @@ public class FirstnameTest extends BaseWebTest {
         profilePage
                 .setFirstname(updatedFirstname)
                 .clickSave()
-                .checkSnackbarMessage("Your profile is successfully updated");
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkFirstname(updatedFirstname);
@@ -130,7 +130,7 @@ public class FirstnameTest extends BaseWebTest {
                 .setFirstname(updatedFirstname)
                 .checkFirstname(updatedFirstname)
                 .clickSave()
-                .checkSnackbarMessage("Your profile is successfully updated");
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkFirstname(updatedFirstname);

@@ -21,7 +21,7 @@ public class LastnameTest extends BaseWebTest {
     @BeforeEach
     void openProfile() {
         myTravelsPage
-                .goToProfile();
+                .getDrawer().clickProfile();
     }
 
     @Test
@@ -33,7 +33,7 @@ public class LastnameTest extends BaseWebTest {
                 .checkLastname("")
                 .setLastname(updatedLastname)
                 .clickSave()
-                .checkSnackbarMessage("Your profile is successfully updated");
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkLastname(updatedLastname);
@@ -48,7 +48,7 @@ public class LastnameTest extends BaseWebTest {
                 .checkLastname(user.getLastname())
                 .setLastname(updatedLastname)
                 .clickSave()
-                .checkSnackbarMessage("Your profile is successfully updated");
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkLastname(updatedLastname);
@@ -77,7 +77,7 @@ public class LastnameTest extends BaseWebTest {
         profilePage
                 .setLastname(updatedLastname)
                 .clickSave()
-                .checkSnackbarMessage("Your profile is successfully updated");
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkLastname(updatedLastname);
@@ -130,7 +130,7 @@ public class LastnameTest extends BaseWebTest {
                 .setLastname(updatedLastname)
                 .checkLastname(updatedLastname)
                 .clickSave()
-                .checkSnackbarMessage("Your profile is successfully updated");
+                .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
         Selenide.refresh();
         profilePage
                 .checkLastname(updatedLastname);

@@ -18,7 +18,7 @@ public class UsernameTest extends BaseWebTest {
     @BeforeEach
     void openProfile() {
         myTravelsPage
-                .goToProfile();
+                .getDrawer().clickProfile();
     }
 
     @Test

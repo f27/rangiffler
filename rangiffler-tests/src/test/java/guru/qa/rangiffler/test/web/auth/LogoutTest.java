@@ -17,9 +17,10 @@ public class LogoutTest extends BaseWebTest {
     @DisplayName("Успешный выход из аккаунта")
     void logoutTest() {
         myTravelsPage
-                .clickLogout();
+                .getHeader().clickLogout();
+        welcomePage.getSnackbar()
+                .messageShouldHaveText("Session completed");
         welcomePage
-                .checkSnackbarMessage("Session completed")
                 .checkLoginAndRegisterButtonsAreVisible();
     }
 }

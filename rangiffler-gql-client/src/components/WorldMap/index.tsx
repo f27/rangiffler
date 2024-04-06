@@ -1,5 +1,5 @@
 import {FC } from 'react';
-import SvgWorldMap from 'react-svg-worldmap';
+import SvgWorldMap, {CountryContext} from 'react-svg-worldmap';
 import "./styles.css";
 
 type WorldMapData = {
@@ -17,6 +17,10 @@ export const WorldMap: FC<WorldMapInterface> = ({data = []}) => {
         value: v.count,
     }));
 
+    const getHref = ({ countryCode }: CountryContext) => ({
+        id: countryCode,
+    });
+
     return (
             <SvgWorldMap
                 color="#174536"
@@ -24,6 +28,7 @@ export const WorldMap: FC<WorldMapInterface> = ({data = []}) => {
                 size="xl"
                 data={mapData}
                 richInteraction={true}
+                hrefFunction={getHref}
             />
     );
 }
