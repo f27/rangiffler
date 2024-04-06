@@ -4,6 +4,7 @@ import guru.qa.rangiffler.db.DataBase;
 import guru.qa.rangiffler.db.entity.UserAuthEntity;
 import guru.qa.rangiffler.db.jpa.EmfProvider;
 import guru.qa.rangiffler.db.jpa.JpaService;
+import guru.qa.rangiffler.db.jpa.ThreadLocalEntityManager;
 import guru.qa.rangiffler.db.repository.AuthRepository;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +17,7 @@ public class AuthRepositoryHibernate extends JpaService implements AuthRepositor
     private final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     public AuthRepositoryHibernate() {
-        super(EmfProvider.INSTANCE.emf(DataBase.AUTH).createEntityManager());
+        super(new ThreadLocalEntityManager(EmfProvider.INSTANCE.emf(DataBase.AUTH)));
     }
 
     @Override

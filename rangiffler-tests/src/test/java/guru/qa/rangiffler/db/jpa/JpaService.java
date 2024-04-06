@@ -48,8 +48,6 @@ public abstract class JpaService {
         } catch (Exception e) {
             transaction.rollback();
             throw e;
-        } finally {
-            em.clear();
         }
     }
 
@@ -62,8 +60,6 @@ public abstract class JpaService {
         } catch (Exception e) {
             transaction.rollback();
             throw e;
-        } finally {
-            em.clear();
         }
     }
 }

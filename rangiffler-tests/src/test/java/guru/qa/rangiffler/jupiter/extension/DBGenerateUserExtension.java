@@ -20,12 +20,13 @@ import java.util.UUID;
 
 public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
 
+    private final AuthRepository authRepository = new AuthRepositoryHibernate();
+    private final UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
+
     private static final String DEFAULT_COUNTRY_CODE = "ru";
 
     @Override
     public UserModel createUser(GenerateUser annotation) {
-        AuthRepository authRepository = new AuthRepositoryHibernate();
-        UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
         UserAuthEntity userAuth = new UserAuthEntity();
         userAuth.setUsername(annotation.username().isEmpty() ? DataUtil.generateRandomUsername() : annotation.username());
         userAuth.setPassword(annotation.password().isEmpty() ? DataUtil.generateRandomPassword() : annotation.password());
@@ -70,8 +71,6 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
 
     @Override
     public void deleteUserById(UUID id, UUID authId) {
-        AuthRepository authRepository = new AuthRepositoryHibernate();
-        UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
         userdataRepository.deleteById(id);
         authRepository.deleteById(authId);
     }

@@ -25,9 +25,7 @@ public enum EmfProvider {
             settings.put("hibernate.connection.password", CFG.dbPassword());
             settings.put("hibernate.connection.driver_class", "com.p6spy.engine.spy.P6SpyDriver");
             settings.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-            return new ThreadSafeEntityManagerFactory(
-                    Persistence.createEntityManagerFactory("rangiffler", settings)
-            );
+            return Persistence.createEntityManagerFactory("rangiffler", settings);
         });
     }
 
