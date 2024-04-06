@@ -36,7 +36,7 @@ public class AvatarTest extends BaseWebTest {
     @DisplayName("Аватар у пользователя с автаром должен быть виден")
     void avatarShouldBeVisibleTest(@User UserModel user) {
         profilePage
-                .checkAvatar(user.getAvatar());
+                .checkAvatar(user.avatar());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class AvatarTest extends BaseWebTest {
     void avatarCanBeUpdatedTest(@User UserModel user) {
         String updatedAvatarClasspath = "img/avatar/2.jpg";
         profilePage
-                .checkAvatar(user.getAvatar())
+                .checkAvatar(user.avatar())
                 .uploadAvatar(updatedAvatarClasspath)
                 .checkAvatar(updatedAvatarClasspath)
                 .clickSave()
@@ -76,11 +76,11 @@ public class AvatarTest extends BaseWebTest {
     void avatarCanBeUpdatedAfterResetButtonClickTest(@User UserModel user) {
         String updatedAvatarClasspath = "img/avatar/2.jpg";
         profilePage
-                .checkAvatar(user.getAvatar())
+                .checkAvatar(user.avatar())
                 .uploadAvatar(updatedAvatarClasspath)
                 .checkAvatar(updatedAvatarClasspath)
                 .clickReset()
-                .checkAvatar(user.getAvatar())
+                .checkAvatar(user.avatar())
                 .uploadAvatar(updatedAvatarClasspath)
                 .checkAvatar(updatedAvatarClasspath)
                 .clickSave()

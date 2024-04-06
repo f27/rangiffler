@@ -1,28 +1,23 @@
 package guru.qa.rangiffler.model;
 
 import guru.qa.grpc.rangiffler.grpc.FriendStatus;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
-public class UserModel {
-
-    private UUID id;
-    private UUID authId;
-    private String username;
-    private String password;
-    private String firstname;
-    private String lastname;
-    private String avatar;
-    private CountryEnum country;
-    private FriendStatus friendStatus;
-    private List<UserModel> friends = new ArrayList<>();
-    private List<PhotoModel> photos = new ArrayList<>();
+public record UserModel(
+        UUID id,
+        UUID authId,
+        String username,
+        String password,
+        String firstname,
+        String lastname,
+        String avatar,
+        CountryEnum country,
+        FriendStatus friendStatus,
+        List<UserModel> friends,
+        List<PhotoModel> photos
+) {
 
     public void addFriend(UserModel friend) {
         friends.add(friend);

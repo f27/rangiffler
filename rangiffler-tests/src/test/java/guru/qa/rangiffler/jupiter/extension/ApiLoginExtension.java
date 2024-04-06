@@ -92,7 +92,7 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
             setCodeVerifier(OAuthUtil.generateCodeVerifier());
             setCodeChallenge(OAuthUtil.generateCodeChallenge(getCodeVerifier()));
 
-            authApiClient.doLogin(generatedUser.getUsername(), generatedUser.getPassword());
+            authApiClient.doLogin(generatedUser.username(), generatedUser.password());
 
             if (initBrowser) {
                 step("Запустить браузер с авторизованным пользователем", () -> {

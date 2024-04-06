@@ -64,15 +64,19 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
             throw t;
         }
 
-        UserModel user = new UserModel();
-        user.setId(userdata.getId());
-        user.setAuthId(userAuth.getId());
-        user.setUsername(userdata.getUsername());
-        user.setPassword(password);
-        user.setFirstname(userdata.getFirstname());
-        user.setLastname(userdata.getLastname());
-        user.setCountry(CountryEnum.findByCode(userdata.getCountryCode()));
-        user.setAvatar(annotation.avatar());
+        UserModel user = new UserModel(
+                userdata.getId(),
+                userAuth.getId(),
+                userdata.getUsername(),
+                password,
+                userdata.getFirstname(),
+                userdata.getLastname(),
+                annotation.avatar(),
+                CountryEnum.findByCode(userdata.getCountryCode()),
+                null,
+                new ArrayList<>(),
+                new ArrayList<>()
+        );
         return user;
     }
 
@@ -80,17 +84,18 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
     public void addPhotos(UserModel user, Photo[] photos) {
         for (Photo photo : photos) {
             PhotoEntity photoEntity = new PhotoEntity();
-            photoEntity.setUserId(user.getId());
+            photoEntity.setUserId(user.id());
             photoEntity.setCountryCode(photo.country().getCode());
             photoEntity.setDescription(photo.description());
             photoEntity.setPhoto(ImageUtil.getImageAsBase64(photo.image()).getBytes(StandardCharsets.UTF_8));
             photoRepository.create(photoEntity);
 
-            PhotoModel photoModel = new PhotoModel();
-            photoModel.setId(photoEntity.getId());
-            photoModel.setCountry(CountryEnum.findByCode(photoEntity.getCountryCode()));
-            photoModel.setDescription(photoEntity.getDescription());
-            photoModel.setPhoto(photo.image());
+            PhotoModel photoModel = new PhotoModel(
+                    photoEntity.getId(),
+                    CountryEnum.findByCode(photoEntity.getCountryCode()),
+                    photoEntity.getDescription(),
+                    photo.image()
+            );
 
             user.addPhoto(photoModel);
         }
@@ -98,10 +103,8 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
 
     @Override
     public void deleteUser(UserModel user) {
-        for (PhotoModel photo : user.getPhotos()) {
-            photoRepository.deleteById(photo.getId());
-        }
-        userdataRepository.deleteById(user.getId());
-        authRepository.deleteById(user.getAuthId());
+        photoRepository.deleteByUserId(user.id());
+        userdataRepository.deleteById(user.id());
+        authRepository.deleteById(user.authId());
     }
 }

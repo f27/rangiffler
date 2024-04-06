@@ -25,8 +25,8 @@ public class LoginTest extends BaseWebTest {
         Selenide.open("/");
         welcomePage.clickLoginButton();
         loginPage
-                .setUsername(user.getUsername())
-                .setPassword(user.getPassword())
+                .setUsername(user.username())
+                .setPassword(user.password())
                 .clickSignIn();
         myTravelsPage
                 .checkSuccessfullyAuthorized();
@@ -39,8 +39,8 @@ public class LoginTest extends BaseWebTest {
         Selenide.open("/");
         welcomePage.clickLoginButton();
         loginPage
-                .setUsername(user.getUsername())
-                .setPassword(user.getPassword() + "1")
+                .setUsername(user.username())
+                .setPassword(user.password() + "1")
                 .clickSignIn();
         loginPage
                 .checkFormHasError("Неверные учетные данные пользователя");
@@ -54,8 +54,8 @@ public class LoginTest extends BaseWebTest {
         Selenide.open("/");
         welcomePage.clickLoginButton();
         loginPage
-                .setUsername(users[0].getUsername())
-                .setPassword(users[1].getPassword())
+                .setUsername(users[0].username())
+                .setPassword(users[1].password())
                 .clickSignIn();
         loginPage
                 .checkFormHasError("Неверные учетные данные пользователя");

@@ -2,15 +2,19 @@ package guru.qa.rangiffler.jupiter.extension;
 
 import guru.qa.rangiffler.db.entity.user.UserEntity;
 import guru.qa.rangiffler.db.repository.AuthRepository;
+import guru.qa.rangiffler.db.repository.PhotoRepository;
 import guru.qa.rangiffler.db.repository.UserdataRepository;
 import guru.qa.rangiffler.db.repository.hibernate.AuthRepositoryHibernate;
+import guru.qa.rangiffler.db.repository.hibernate.PhotoRepositoryHibernate;
 import guru.qa.rangiffler.db.repository.hibernate.UserdataRepositoryHibernate;
 import guru.qa.rangiffler.jupiter.annotation.UserForRegistration;
+import guru.qa.rangiffler.model.CountryEnum;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.util.DataUtil;
 import org.junit.jupiter.api.extension.*;
 
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -32,18 +36,23 @@ public class UserForRegistrationExtension implements AfterEachCallback, Paramete
             step("Удалить зарегистрированного во время теста пользователя", () -> {
                 AuthRepository authRepository = new AuthRepositoryHibernate();
                 UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
+                PhotoRepository photoRepository = new PhotoRepositoryHibernate();
                 // user in userdata can be created with time lag
                 Optional<UserEntity> userInUserdata = Optional.empty();
                 for (int i = 1; i <= 30; i++) {
-                    userInUserdata = userdataRepository.findByUsername(userToDelete.getUsername());
+                    userInUserdata = userdataRepository.findByUsername(userToDelete.username());
                     if (userInUserdata.isPresent())
                         break;
                     sleep(200);
                 }
-                authRepository.findByUsername(userToDelete.getUsername())
+                authRepository.findByUsername(userToDelete.username())
                         .ifPresent(userAuthEntity -> authRepository.deleteById(userAuthEntity.getId()));
                 userInUserdata
-                        .ifPresent(userEntity -> userdataRepository.deleteById(userEntity.getId()));
+                        .ifPresent(userEntity -> {
+                            photoRepository.deleteByUserId(userEntity.getId());
+                            userdataRepository.deleteById(userEntity.getId());
+                        });
+
             });
         }
     }
@@ -59,9 +68,19 @@ public class UserForRegistrationExtension implements AfterEachCallback, Paramete
 
     @Override
     public UserModel resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        UserModel user = new UserModel();
-        user.setUsername(DataUtil.generateRandomUsername());
-        user.setPassword(DataUtil.generateRandomPassword());
+        UserModel user = new UserModel(
+                null,
+                null,
+                DataUtil.generateRandomUsername(),
+                DataUtil.generateRandomPassword(),
+                null,
+                null,
+                null,
+                CountryEnum.RUSSIAN_FEDERATION,
+                null,
+                new ArrayList<>(),
+                new ArrayList<>()
+        );
         extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), user);
         return user;
     }

@@ -32,12 +32,12 @@ public class RegisterTest extends BaseWebTest {
     @DisplayName("Нельзя зарегистрироваться с уже существующим именем пользователя")
     void shouldNotRegisterUserWithSameUsernameTest(@User(FOR_GENERATE_USER) UserModel user) {
         registerPage
-                .setUsername(user.getUsername())
-                .setPassword(user.getPassword())
-                .setPasswordSubmit(user.getPassword())
+                .setUsername(user.username())
+                .setPassword(user.password())
+                .setPasswordSubmit(user.password())
                 .clickSignUp();
         registerPage
-                .checkUsernameHelperHasError(String.format("Username `%s` already exists", user.getUsername()));
+                .checkUsernameHelperHasError(String.format("Username `%s` already exists", user.username()));
     }
 
     @Test
@@ -95,16 +95,16 @@ public class RegisterTest extends BaseWebTest {
     @DisplayName("Успешная регистрация")
     void successfulRegistrationTest(@UserForRegistration UserModel user) {
         registerPage
-                .setUsername(user.getUsername())
-                .setPassword(user.getPassword())
-                .setPasswordSubmit(user.getPassword())
+                .setUsername(user.username())
+                .setPassword(user.password())
+                .setPasswordSubmit(user.password())
                 .clickSignUp();
         registerPage
                 .checkSuccessfulRegistrationMessageExist("Congratulations! You've registered!")
                 .clickSignIn();
         loginPage
-                .setUsername(user.getUsername())
-                .setPassword(user.getPassword())
+                .setUsername(user.username())
+                .setPassword(user.password())
                 .clickSignIn();
         myTravelsPage
                 .checkSuccessfullyAuthorized();

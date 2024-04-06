@@ -30,7 +30,7 @@ public class CountryTest extends BaseWebTest {
     @DisplayName("Страна пользователя быть из профиля")
     void countryShouldHaveUsersValueTest(@User UserModel user) {
         profilePage
-                .checkCountry(user.getCountry());
+                .checkCountry(user.country());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class CountryTest extends BaseWebTest {
     void countryUpdateTest(@User UserModel user) {
         CountryEnum updatedCountry = DataUtil.generateRandomCountry();
         profilePage
-                .checkCountry(user.getCountry())
+                .checkCountry(user.country())
                 .selectCountry(updatedCountry)
                 .checkCountry(updatedCountry)
                 .clickSave()
@@ -63,11 +63,11 @@ public class CountryTest extends BaseWebTest {
     void countryShouldBeRestoredAfterResetButtonClickedTest(@User UserModel user) {
         CountryEnum updatedCountry = DataUtil.generateRandomCountry();
         profilePage
-                .checkCountry(user.getCountry())
+                .checkCountry(user.country())
                 .selectCountry(updatedCountry)
                 .checkCountry(updatedCountry)
                 .clickReset()
-                .checkCountry(user.getCountry());
+                .checkCountry(user.country());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class CountryTest extends BaseWebTest {
     void countryUpdateAfterResetButtonClickedTest(@User UserModel user) {
         CountryEnum updatedCountry = DataUtil.generateRandomCountry();
         profilePage
-                .checkCountry(user.getCountry())
+                .checkCountry(user.country())
                 .selectCountry(updatedCountry)
                 .checkCountry(updatedCountry)
                 .clickReset()

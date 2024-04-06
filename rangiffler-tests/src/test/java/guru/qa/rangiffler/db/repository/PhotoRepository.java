@@ -7,5 +7,5 @@ import java.util.UUID;
 public interface PhotoRepository {
     PhotoEntity create(PhotoEntity photo);
 
-    void deleteById(UUID id);
+    void deleteByUserId(UUID id);
 }

@@ -27,6 +27,6 @@ public class UsernameTest extends BaseWebTest {
     void usernameInputShouldBeDisabled(@User UserModel user) {
         profilePage
                 .checkUsernameInputIsDisabled()
-                .checkUsernameInputValue(user.getUsername());
+                .checkUsernameInputValue(user.username());
     }
 }

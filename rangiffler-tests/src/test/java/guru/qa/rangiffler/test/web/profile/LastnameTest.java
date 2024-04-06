@@ -45,7 +45,7 @@ public class LastnameTest extends BaseWebTest {
     void lastnameUpdateTest(@User UserModel user) {
         String updatedLastname = DataUtil.generateRandomLastname();
         profilePage
-                .checkLastname(user.getLastname())
+                .checkLastname(user.lastname())
                 .setLastname(updatedLastname)
                 .clickSave()
                 .getSnackbar().messageShouldHaveText("Your profile is successfully updated");
@@ -88,7 +88,7 @@ public class LastnameTest extends BaseWebTest {
     @DisplayName("Фамилия по умолчанию должна быть его")
     void lastnameShouldHaveUsersValueTest(@User UserModel user) {
         profilePage
-                .checkLastname(user.getLastname());
+                .checkLastname(user.lastname());
     }
 
     @Test
@@ -97,11 +97,11 @@ public class LastnameTest extends BaseWebTest {
     void lastnameWithValueShouldBeRestoredAfterResetButtonClickedTest(@User UserModel user) {
         String updatedLastname = DataUtil.generateRandomLastname();
         profilePage
-                .checkLastname(user.getLastname())
+                .checkLastname(user.lastname())
                 .setLastname(updatedLastname)
                 .checkLastname(updatedLastname)
                 .clickReset()
-                .checkLastname(user.getLastname());
+                .checkLastname(user.lastname());
     }
 
     @Test
@@ -123,7 +123,7 @@ public class LastnameTest extends BaseWebTest {
     void lastnameUpdateAfterResetButtonClickedTest(@User UserModel user) {
         String updatedLastname = DataUtil.generateRandomLastname();
         profilePage
-                .checkLastname(user.getLastname())
+                .checkLastname(user.lastname())
                 .setLastname(updatedLastname)
                 .checkLastname(updatedLastname)
                 .clickReset()
