@@ -25,7 +25,6 @@ public class AuthRepositoryHibernate extends JpaService implements AuthRepositor
         String notEncodedPassword = user.getPassword();
         user.setPassword(pe.encode(notEncodedPassword));
         persist(user);
-        user.setPassword(notEncodedPassword);
         return user;
     }
 
@@ -40,5 +39,10 @@ public class AuthRepositoryHibernate extends JpaService implements AuthRepositor
     @Override
     public void deleteById(UUID id) {
         removeById(UserAuthEntity.class, id);
+    }
+
+    @Override
+    public void delete(UserAuthEntity user) {
+        remove(user);
     }
 }

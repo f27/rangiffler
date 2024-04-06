@@ -13,4 +13,6 @@ public interface AuthRepository {
 
     void deleteById(UUID id);
 
+    void delete(UserAuthEntity user);
+
 }

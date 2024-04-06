@@ -15,10 +15,6 @@ public abstract class JpaService {
         this.em = em;
     }
 
-    protected <T> T getById(Class<T> entityClass, UUID id) {
-        return txWithResult(em -> em.find(entityClass, id));
-    }
-
     protected <T> void persist(T entity) {
         tx(em -> em.persist(entity));
     }
