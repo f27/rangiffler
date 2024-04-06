@@ -13,4 +13,6 @@ public interface UserdataRepository {
 
     void deleteById(UUID id);
 
+    UserEntity save(UserEntity user);
+
 }

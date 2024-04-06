@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,6 +34,20 @@ public class UserEntity {
 
     @Column(name = "country_code", nullable = false)
     private String countryCode;
+
+    @OneToMany(mappedBy = "requester", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FriendshipEntity> outcomeInvitations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "addressee", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FriendshipEntity> incomeInvitations = new ArrayList<>();
+
+    public void addIncomeInvitation(FriendshipEntity friendship) {
+        incomeInvitations.add(friendship);
+    }
+
+    public void addOutcomeInvitation(FriendshipEntity friendship) {
+        outcomeInvitations.add(friendship);
+    }
 
     @Override
     public final boolean equals(Object o) {

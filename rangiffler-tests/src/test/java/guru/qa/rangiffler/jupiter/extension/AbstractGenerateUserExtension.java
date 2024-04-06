@@ -1,6 +1,7 @@
 package guru.qa.rangiffler.jupiter.extension;
 
 import guru.qa.rangiffler.jupiter.annotation.*;
+import guru.qa.rangiffler.model.FriendStatus;
 import guru.qa.rangiffler.model.UserModel;
 import org.junit.jupiter.api.extension.*;
 
@@ -82,15 +83,31 @@ public abstract class AbstractGenerateUserExtension implements BeforeEachCallbac
         throw new IllegalStateException();
     }
 
-    public abstract UserModel createUser(GenerateUser annotation);
+    public abstract UserModel createUser(String username,
+                                         String password,
+                                         boolean generateFirstname,
+                                         boolean generateLastname,
+                                         boolean generateCountry,
+                                         String avatar,
+                                         FriendStatus status);
 
     public abstract void addPhotos(UserModel user, Photo[] photos);
+
+    public abstract void addFriends(UserModel user, Friend[] friends);
 
     public abstract void deleteUser(UserModel user);
 
     private UserModel generateUser(GenerateUser annotation) {
-        UserModel user = createUser(annotation);
+        UserModel user = createUser(
+                annotation.username(),
+                annotation.password(),
+                annotation.generateFirstname(),
+                annotation.generateLastname(),
+                annotation.generateCountry(),
+                annotation.avatar(),
+                FriendStatus.NONE);
         addPhotos(user, annotation.photos());
+        addFriends(user, annotation.friends());
         return user;
     }
 

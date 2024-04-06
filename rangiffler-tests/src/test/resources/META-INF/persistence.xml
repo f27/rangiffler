@@ -6,6 +6,7 @@
         <class>guru.qa.rangiffler.db.entity.user.UserAuthEntity</class>
         <class>guru.qa.rangiffler.db.entity.user.AuthorityEntity</class>
         <class>guru.qa.rangiffler.db.entity.user.UserEntity</class>
+        <class>guru.qa.rangiffler.db.entity.user.FriendshipEntity</class>
         <class>guru.qa.rangiffler.db.entity.photo.LikeEntity</class>
         <class>guru.qa.rangiffler.db.entity.photo.PhotoEntity</class>
     </persistence-unit>

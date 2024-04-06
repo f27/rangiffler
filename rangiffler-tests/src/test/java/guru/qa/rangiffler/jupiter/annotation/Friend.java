@@ -1,11 +1,15 @@
 package guru.qa.rangiffler.jupiter.annotation;
 
-import java.lang.annotation.*;
+import guru.qa.rangiffler.model.FriendStatus;
 
-@Target(ElementType.METHOD)
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(GenerateUsers.class)
-public @interface GenerateUser {
+public @interface Friend {
 
     String username() default "";
 
@@ -19,8 +23,7 @@ public @interface GenerateUser {
 
     Photo[] photos() default {};
 
-    Friend[] friends() default {};
-
     String avatar() default "";
 
+    FriendStatus status() default FriendStatus.FRIEND;
 }

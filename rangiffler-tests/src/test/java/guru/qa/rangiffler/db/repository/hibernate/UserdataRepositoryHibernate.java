@@ -34,4 +34,10 @@ public class UserdataRepositoryHibernate extends JpaService implements UserdataR
     public void deleteById(UUID id) {
         removeById(UserEntity.class, id);
     }
+
+    @Override
+    public UserEntity save(UserEntity user) {
+        merge(user);
+        return user;
+    }
 }
