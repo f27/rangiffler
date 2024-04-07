@@ -247,11 +247,10 @@ public enum CountryEnum {
     ZAMBIA("Zambia", "zm"),
     ZIMBABWE("Zimbabwe", "zw");
 
+    private static final Random PRNG = new Random();
     private final String name;
     @Getter
     private final String code;
-
-    private static final Random PRNG = new Random();
 
     public static CountryEnum findByCode(String code) {
         return Arrays.stream(CountryEnum.values())

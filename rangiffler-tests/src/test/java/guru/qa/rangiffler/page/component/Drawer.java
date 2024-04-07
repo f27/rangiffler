@@ -6,14 +6,13 @@ import io.qameta.allure.Step;
 import static com.codeborne.selenide.Selenide.$;
 
 public class Drawer extends BaseComponent<Drawer> {
-    public Drawer() {
-        super($("div.MuiDrawer-root"));
-    }
-
     private final SelenideElement expandDrawerButton = self.$("button[aria-label='open drawer']");
     private final SelenideElement profileButton = self.$("a[href='/profile']");
     private final SelenideElement myTravelButton = self.$("a[href='/my-travel']");
     private final SelenideElement peopleButton = self.$("a[href='/people']");
+    public Drawer() {
+        super($("div.MuiDrawer-root"));
+    }
 
     @Step("[DRAWER] Нажать кнопку профиль")
     public void clickProfile() {

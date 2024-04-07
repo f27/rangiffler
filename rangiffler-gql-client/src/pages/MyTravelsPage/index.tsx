@@ -2,7 +2,7 @@ import {Box, Button, Container, Typography} from "@mui/material";
 import {PhotoContainer} from "../../components/PhotoContainer";
 import {WorldMap} from "../../components/WorldMap";
 import {Toggle} from "../../components/Toggle";
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import {PhotoModal} from "../../components/PhotoModal";
 import {formInitialState, PhotoFormProps} from "../../components/PhotoModal/formValidate";
 import {Photo} from "../../types/Photo";
@@ -22,6 +22,11 @@ export const MyTravelsPage = () => {
     const [withMyFriends, setWithMyFriends] = useState(false);
     const [page, setPage] = useState(0);
     const {photos, stat, hasPreviousPage, hasNextPage} = useGetFeed({page, withFriends: withMyFriends});
+    const [photoFilter, setPhotoFilter] = useState<string | null>(null);
+    const filteredPhotos = useMemo<Photo[]>(
+        () => photoFilter ? (photos as Photo[]).filter(photo => photo.country.code.toLowerCase() === photoFilter.toLowerCase()) : photos
+        , [photoFilter, photos]);
+    const [mapTitle, setMapTitle] = useState<string>("All countries");
 
     const handleSelectImage = (photo: Photo) => {
         setModalState({
@@ -44,6 +49,11 @@ export const MyTravelsPage = () => {
             photoId: photo.id
         });
     }
+
+    const handleAllCountriesClick = () => {
+        setMapTitle("All countries")
+        setPhotoFilter(null);
+    };
 
     return (
         <Container sx={{
@@ -74,11 +84,18 @@ export const MyTravelsPage = () => {
                         <Toggle withMyFriends={withMyFriends} setWithMyFriends={setWithMyFriends}/>
                     </Box>
                 </Box>
-                <WorldMap data={stat}/>
-                <Box>
+                <WorldMap
+                    mapTitle={mapTitle}
+                    setMapTitle={setMapTitle}
+                    photoFilter={photoFilter}
+                    setPhotoFilter={setPhotoFilter}
+                    data={stat}
+                />
+                <Box sx={{width: 180}}>
                     <Button
                         variant="contained"
                         sx={{
+                            width: "100%",
                             margin: 1,
                             marginLeft: "auto",
                         }}
@@ -91,11 +108,22 @@ export const MyTravelsPage = () => {
                         }}
                     >Add photo
                     </Button>
+                    <Button
+                        disabled={photoFilter===null}
+                        variant="outlined"
+                        sx={{
+                            width: "100%",
+                            margin: 1,
+                            marginLeft: "auto",
+                        }}
+                        onClick={handleAllCountriesClick}
+                    >All countries
+                    </Button>
                 </Box>
             </Box>
             <PhotoContainer
                 onSelectImage={handleSelectImage}
-                data={photos}
+                data={filteredPhotos}
                 page={page}
                 setPage={setPage}
                 hasNextPage={hasNextPage}

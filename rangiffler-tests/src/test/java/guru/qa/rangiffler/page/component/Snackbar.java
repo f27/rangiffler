@@ -7,11 +7,11 @@ import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class Snackbar extends BaseComponent<Snackbar> {
+    private final SelenideElement message = self.$(".MuiAlert-message");
+
     public Snackbar() {
         super($("div.MuiSnackbar-root"));
     }
-
-    private final SelenideElement message = self.$(".MuiAlert-message");
 
     @Step("[SNACKBAR] Проверить, что появилось сообщение")
     public void messageShouldHaveText(String msg) {

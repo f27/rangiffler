@@ -1,5 +1,6 @@
 package guru.qa.rangiffler.test.web.travel;
 
+import com.codeborne.selenide.Selenide;
 import guru.qa.rangiffler.jupiter.annotation.*;
 import guru.qa.rangiffler.model.CountryEnum;
 import guru.qa.rangiffler.model.FriendStatus;
@@ -99,10 +100,61 @@ public class PhotoTest extends BaseWebTest {
                     avatar = "img/avatar/2.jpg", status = FriendStatus.OUTCOME_INVITATION),
             @Friend(photos = @Photo, status = FriendStatus.NONE),
     }))
-    @DisplayName("Когда выбран [Only my travels] должны быть видны только мои фотографии")
+    @DisplayName("Когда выбран [With friends] должны быть видны мои фотографии и фотографии друзей")
     void whenWithFriendsOnlyMyPhotosAndFriendsPhotosShouldBeVisibleTest(@User UserModel user) {
         myTravelsPage
                 .clickWithFriends()
                 .checkPhotos(user.photosWithAcceptedFriends());
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(photos = @Photo(description = "Happy life")))
+    @DisplayName("На свою фотографию можно поставить и убрать лайк")
+    void addAndRemoveLikeForMyPhotoTest(@User UserModel user) {
+        final String description = user.photos().get(0).description();
+        myTravelsPage
+                .checkPhotoWithDescriptionHasAmountOfLikes(description, 0)
+                .clickLikeToPhotoWithDescription(description)
+                .getSnackbar().messageShouldHaveText("Like status was changed");
+        myTravelsPage
+                .checkPhotoWithDescriptionHasAmountOfLikes(description, 1);
+        Selenide.refresh();
+        myTravelsPage
+                .checkPhotoWithDescriptionHasAmountOfLikes(description, 1)
+                .clickLikeToPhotoWithDescription(description)
+                .getSnackbar().messageShouldHaveText("Like status was changed");
+        myTravelsPage
+                .checkPhotoWithDescriptionHasAmountOfLikes(description, 0);
+        Selenide.refresh();
+        myTravelsPage
+                .checkPhotoWithDescriptionHasAmountOfLikes(description, 0);
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(
+            friends = @Friend(photos = @Photo(description = "Friends photo"))
+    ))
+    @DisplayName("На фотографию друга можно поставить и убрать лайк")
+    void addAndRemoveLikeForFriendsPhotoTest(@User UserModel user) {
+        final String description = user.friends().get(0).photos().get(0).description();
+        myTravelsPage
+                .clickWithFriends()
+                .checkPhotoWithDescriptionHasAmountOfLikes(description, 0)
+                .clickLikeToPhotoWithDescription(description)
+                .getSnackbar().messageShouldHaveText("Like status was changed");
+        myTravelsPage
+                .checkPhotoWithDescriptionHasAmountOfLikes(description, 1);
+        Selenide.refresh();
+        myTravelsPage
+                .clickWithFriends()
+                .checkPhotoWithDescriptionHasAmountOfLikes(description, 1)
+                .clickLikeToPhotoWithDescription(description)
+                .getSnackbar().messageShouldHaveText("Like status was changed");
+        myTravelsPage
+                .checkPhotoWithDescriptionHasAmountOfLikes(description, 0);
+        Selenide.refresh();
+        myTravelsPage
+                .clickWithFriends()
+                .checkPhotoWithDescriptionHasAmountOfLikes(description, 0);
     }
 }

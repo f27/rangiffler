@@ -9,15 +9,14 @@ import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Selenide.$;
 
 public class AddPhotoModal extends BaseComponent<AddPhotoModal> {
-    public AddPhotoModal() {
-        super($("div.MuiModal-root"));
-    }
-
     private final SelenideElement photoInput = $("#image__input");
     private final SelenideElement countryCombobox = $("#country");
     private final SelenideElement countryListbox = $("ul[role=listbox]");
     private final SelenideElement descriptionTextarea = $("#description");
     private final SelenideElement saveButton = $("button[type=submit]");
+    public AddPhotoModal() {
+        super($("div.MuiModal-root"));
+    }
 
     @Step("[ADD PHOTO MODAL] Загрузить фотографию")
     public AddPhotoModal uploadPhoto(PhotoModel photo) {

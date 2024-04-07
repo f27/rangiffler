@@ -23,10 +23,14 @@ public class PhotoRepositoryHibernate extends JpaService implements PhotoReposit
 
     @Override
     public void deleteByUserId(UUID id) {
-        String query = "DELETE PhotoEntity WHERE userId=:id";
-        tx(em -> em.createQuery(query)
+        String query = "SELECT p FROM PhotoEntity p WHERE p.userId=:id";
+        tx(em -> em.createQuery(query, PhotoEntity.class)
                 .setParameter("id", id)
-                .executeUpdate()
+                .getResultStream()
+                .forEach(photoEntity -> {
+                    em.refresh(photoEntity);
+                    em.remove(photoEntity);
+                })
         );
     }
 }

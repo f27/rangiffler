@@ -20,12 +20,12 @@ public class ContextHolderExtension implements BeforeEachCallback, AfterEachCall
 
         private final ThreadLocal<ExtensionContext> tlExtensionContext = new ThreadLocal<>();
 
-        public void setContext(ExtensionContext context) {
-            tlExtensionContext.set(context);
-        }
-
         public ExtensionContext getContext() {
             return tlExtensionContext.get();
+        }
+
+        public void setContext(ExtensionContext context) {
+            tlExtensionContext.set(context);
         }
 
         public void clear() {

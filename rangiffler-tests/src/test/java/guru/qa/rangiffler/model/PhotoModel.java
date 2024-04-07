@@ -10,10 +10,6 @@ public record PhotoModel(
         String description,
         String photo
 ) {
-    public String getPhotoAsBase64() {
-        return ImageUtil.getImageAsBase64(photo);
-    }
-
     public static PhotoModel create(String photoClasspath) {
         return new PhotoModel(
                 null,
@@ -48,5 +44,9 @@ public record PhotoModel(
                 description,
                 photoClasspath
         );
+    }
+
+    public String getPhotoAsBase64() {
+        return ImageUtil.getImageAsBase64(photo);
     }
 }

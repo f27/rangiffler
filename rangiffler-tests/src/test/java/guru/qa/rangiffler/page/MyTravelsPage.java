@@ -9,10 +9,12 @@ import lombok.Getter;
 
 import java.util.List;
 
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selectors.byTagAndText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static guru.qa.rangiffler.selenide.listener.CustomElementsConditions.exactPhotoCards;
+import static guru.qa.rangiffler.selenide.CustomConditions.childElementWithText;
+import static guru.qa.rangiffler.selenide.CustomElementsConditions.exactPhotoCards;
 
 public class MyTravelsPage extends BaseAuthorizedPage<MyTravelsPage> {
 
@@ -56,6 +58,20 @@ public class MyTravelsPage extends BaseAuthorizedPage<MyTravelsPage> {
     @Step("Проверить, что фотографии видны")
     public MyTravelsPage checkPhotos(PhotoModel... photoModels) {
         photoCardsCollection.shouldHave(exactPhotoCards(photoModels));
+        return this;
+    }
+
+    @Step("Проверить, что фотография с описанием [{description}] имеет [{likesAmount}] лайков")
+    public MyTravelsPage checkPhotoWithDescriptionHasAmountOfLikes(String description, int likesAmount) {
+        SelenideElement photoCard = photoCardsCollection.findBy(childElementWithText("p.photo-card__content", description));
+        photoCard.$("p.MuiTypography-root").shouldHave(exactText(likesAmount + " likes"));
+        return this;
+    }
+
+    @Step("Поставить лайк фотографии с описание [{description}]")
+    public MyTravelsPage clickLikeToPhotoWithDescription(String description) {
+        SelenideElement photoCard = photoCardsCollection.findBy(childElementWithText("p.photo-card__content", description));
+        photoCard.$("button[aria-label=like]").click();
         return this;
     }
 }

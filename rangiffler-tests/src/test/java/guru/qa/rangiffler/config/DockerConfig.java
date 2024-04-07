@@ -5,9 +5,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class DockerConfig implements Config {
 
-    private DockerConfig() {
-    }
-
     static final DockerConfig instance = new DockerConfig();
 
     static {
@@ -17,6 +14,9 @@ public class DockerConfig implements Config {
         Configuration.browserVersion = "117.0";
         Configuration.browserCapabilities = new ChromeOptions().addArguments("--no-sandbox");
         Configuration.browserSize = "1980x1024";
+    }
+
+    private DockerConfig() {
     }
 
     @Override

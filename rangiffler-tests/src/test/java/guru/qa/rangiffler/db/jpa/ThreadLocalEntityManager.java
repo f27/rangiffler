@@ -72,13 +72,13 @@ public class ThreadLocalEntityManager implements EntityManager {
     }
 
     @Override
-    public void setFlushMode(FlushModeType flushMode) {
-        threadLocalEm().setFlushMode(flushMode);
+    public FlushModeType getFlushMode() {
+        return threadLocalEm().getFlushMode();
     }
 
     @Override
-    public FlushModeType getFlushMode() {
-        return threadLocalEm().getFlushMode();
+    public void setFlushMode(FlushModeType flushMode) {
+        threadLocalEm().setFlushMode(flushMode);
     }
 
     @Override

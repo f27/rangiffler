@@ -1,4 +1,4 @@
-package guru.qa.rangiffler.selenide.listener;
+package guru.qa.rangiffler.selenide;
 
 import com.codeborne.selenide.WebElementsCondition;
 import guru.qa.rangiffler.model.PhotoModel;
