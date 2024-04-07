@@ -37,12 +37,13 @@ message LikePhotoRequest {
 }
 
 message PhotoResponse {
-  string photoId = 1;
-  string src = 2;
-  string countryCode = 3;
-  string description = 4;
-  string creationDate = 5;
-  Likes likes = 6;
+  bool canEdit = 1;
+  string photoId = 2;
+  string src = 3;
+  string countryCode = 4;
+  string description = 5;
+  string creationDate = 6;
+  Likes likes = 7;
 }
 
 message Likes {

@@ -22,7 +22,7 @@ public class MyTravelsPage extends BaseAuthorizedPage<MyTravelsPage> {
     private final SelenideElement addPhotoButton = $(byTagAndText("button", "Add photo"));
     private final SelenideElement onlyMyTravelsButton = $(byTagAndText("button", "Only my travels"));
     private final SelenideElement withFriendsButton = $(byTagAndText("button", "With friends"));
-    private final ElementsCollection photoCardsCollection = $$("[data-testid=photoCard]");
+    private final ElementsCollection photoCardsCollection = $$(".photo-card__container");
 
     @Step("Проверить, что успешно авторизовались")
     public void checkSuccessfullyAuthorized() {

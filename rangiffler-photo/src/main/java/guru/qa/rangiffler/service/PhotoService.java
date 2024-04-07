@@ -35,7 +35,7 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
         photo.setCountryCode(request.getCountryCode());
         photo.setDescription(request.getDescription());
 
-        responseObserver.onNext(PhotoEntity.toGrpcMessage(photoRepository.saveAndFlush(photo)));
+        responseObserver.onNext(PhotoEntity.toGrpcMessage(photoRepository.saveAndFlush(photo), UUID.fromString(currentUser.getId())));
         responseObserver.onCompleted();
     }
 
@@ -47,7 +47,9 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
                         photoEntity -> {
                             photoEntity.setCountryCode(request.getCountryCode());
                             photoEntity.setDescription(request.getDescription());
-                            responseObserver.onNext(PhotoEntity.toGrpcMessage(photoRepository.saveAndFlush(photoEntity)));
+                            responseObserver.onNext(PhotoEntity
+                                    .toGrpcMessage(photoRepository.saveAndFlush(photoEntity),
+                                            UUID.fromString(currentUser.getId())));
                             responseObserver.onCompleted();
                         },
                         () -> responseObserver.onError(
@@ -64,7 +66,8 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
                 .ifPresentOrElse(
                         photoEntity -> {
                             photoEntity.addLike(currentUserId);
-                            responseObserver.onNext(PhotoEntity.toGrpcMessage(photoRepository.saveAndFlush(photoEntity)));
+                            responseObserver.onNext(PhotoEntity
+                                    .toGrpcMessage(photoRepository.saveAndFlush(photoEntity), currentUserId));
                             responseObserver.onCompleted();
                         },
                         () -> responseObserver.onError(
@@ -109,8 +112,11 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
 
         responseObserver.onNext(
                 PhotoEntity.toGrpcMessage(
-                        photoRepository.findAllByUserIdIn(userIds, PageRequest.of(request.getPage(), request.getSize()))
-                ));
+                        photoRepository
+                                .findAllByUserIdInOrderByCreatedDateDesc(userIds,
+                                        PageRequest.of(request.getPage(),
+                                                request.getSize())),
+                        UUID.fromString(currentUser.getId())));
         responseObserver.onCompleted();
     }
 

@@ -6,6 +6,7 @@ const GET_FEED = gql(`
             photos(page: $page, size: $size) {
                 edges {
                     node {
+                        canEdit
                          id
                         src
                         country {

@@ -21,7 +21,9 @@ public record PhotoModel(
         @JsonProperty("creationDate")
         Timestamp creationDate,
         @JsonProperty("likes")
-        LikesModel likes
+        LikesModel likes,
+        @JsonProperty("canEdit")
+        boolean canEdit
 ) {
     public static PhotoModel fromGrpcMessage(PhotoResponse message) {
         return new PhotoModel(
@@ -36,7 +38,8 @@ public record PhotoModel(
                         message.getLikes().getLikesList().stream()
                                 .map(LikeModel::fromGrpcMessage)
                                 .toList()
-                )
+                ),
+                message.getCanEdit()
         );
     }
 }

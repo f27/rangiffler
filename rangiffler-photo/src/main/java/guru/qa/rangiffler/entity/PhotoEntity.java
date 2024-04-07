@@ -55,7 +55,7 @@ public class PhotoEntity {
             })
     private List<LikeEntity> likes = new ArrayList<>();
 
-    public static PhotoResponse toGrpcMessage(PhotoEntity photo) {
+    public static PhotoResponse toGrpcMessage(PhotoEntity photo, UUID currentUserId) {
         List<Like> likes = photo.getLikes()
                 .stream()
                 .map(LikeEntity::toGrpcMessage)
@@ -65,6 +65,7 @@ public class PhotoEntity {
                 .addAllLikes(likes)
                 .build();
         return PhotoResponse.newBuilder()
+                .setCanEdit(photo.userId.equals(currentUserId))
                 .setPhotoId(photo.getId().toString())
                 .setSrc(new String(photo.getPhoto(), StandardCharsets.UTF_8))
                 .setCountryCode(photo.getCountryCode())
@@ -74,9 +75,9 @@ public class PhotoEntity {
                 .build();
     }
 
-    public static GetPhotosResponse toGrpcMessage(Slice<PhotoEntity> photos) {
+    public static GetPhotosResponse toGrpcMessage(Slice<PhotoEntity> photos, UUID currentUserId) {
         return GetPhotosResponse.newBuilder()
-                .addAllPhotos(photos.map(PhotoEntity::toGrpcMessage).toList())
+                .addAllPhotos(photos.map(entity -> toGrpcMessage(entity, currentUserId)).toList())
                 .setHasNext(photos.hasNext())
                 .build();
     }

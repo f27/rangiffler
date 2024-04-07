@@ -40,6 +40,7 @@ type Stat {
 }
 
 type Photo {
+    canEdit: Boolean
     id: ID!
     src: String!
     country: Country!

@@ -52,7 +52,7 @@ export const PhotoCard: FC<PhotoCardInterface> = ({photo, onEditClick}) => {
     }
 
     return (
-            <Paper elevation={3} data-testId="photoCard">
+            <Paper elevation={3} className="photo-card__container">
                 <img
                     className="photo-card__image"
                     src={photo.src}
@@ -111,8 +111,12 @@ export const PhotoCard: FC<PhotoCardInterface> = ({photo, onEditClick}) => {
                             justifyContent: "space-between",
                         }}
                     >
-                        <Button variant="contained" sx={{margin: 2}} onClick={() => onEditClick(photo)}>Edit</Button>
-                        <Button sx={{margin: 2}} onClick={handleDeletePhoto}>Delete</Button>
+                        {photo.canEdit &&
+                            <>
+                                <Button variant="contained" sx={{margin: 2}} onClick={() => onEditClick(photo)}>Edit</Button>
+                                <Button sx={{margin: 2}} onClick={handleDeletePhoto}>Delete</Button>
+                            </>
+                        }
                     </Box>
                 </Box>
             </Paper>
