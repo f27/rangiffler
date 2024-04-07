@@ -10,6 +10,7 @@ public class Drawer extends BaseComponent<Drawer> {
     private final SelenideElement profileButton = self.$("a[href='/profile']");
     private final SelenideElement myTravelButton = self.$("a[href='/my-travel']");
     private final SelenideElement peopleButton = self.$("a[href='/people']");
+
     public Drawer() {
         super($("div.MuiDrawer-root"));
     }

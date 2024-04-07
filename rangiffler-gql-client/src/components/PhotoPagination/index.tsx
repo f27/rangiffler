@@ -14,7 +14,9 @@ export const PhotoPagination: FC<PhotoPaginationInterface> = ({hasNextValues, ha
             width: "100%",
             alignItems: "center",
             justifyContent: "flex-end",
-        }}>
+        }}
+        data-test-id={"photoPagination"}
+        >
             <Button type="button"
                     sx={{
                         margin: 2,
