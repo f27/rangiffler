@@ -18,7 +18,8 @@ subprojects {
         springKafkaVersion = '3.0.11'
         springGrpcVersion = '2.14.0.RELEASE'
         springGraphqlDateTimeVersion = '6.0.0'
-        oauth2ResourceServerVersion = ''
+        oauth2AuthorizationServerVersion = '1.2.3'
+        oauth2ResourceServerVersion = '3.2.4'
         protobufVersion = '3.24.3'
         grpcVersion = '1.58.0'
 

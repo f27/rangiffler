@@ -11,7 +11,8 @@ import static com.codeborne.selenide.Selenide.$;
 public class AddPhotoModal extends BaseComponent<AddPhotoModal> {
     private final SelenideElement photoInput = self.$("#image__input");
     private final SelenideElement countryCombobox = self.$("#country");
-    private final SelenideElement countryListbox = self.$("ul[role=listbox]");
+    private final SelenideElement countryMenu = $("#menu-country");
+    private final SelenideElement countryListbox = countryMenu.$("ul[role=listbox]");
     private final SelenideElement descriptionTextarea = self.$("#description");
     private final SelenideElement saveButton = self.$("button[type=submit]");
     private final SelenideElement descriptionHelper = self.$("#description-helper-text");
