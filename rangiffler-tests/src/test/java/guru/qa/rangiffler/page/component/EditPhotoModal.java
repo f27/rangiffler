@@ -4,16 +4,16 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.rangiffler.model.CountryEnum;
 import io.qameta.allure.Step;
 
-import static com.codeborne.selenide.Condition.animated;
-import static com.codeborne.selenide.Condition.attribute;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 
 public class EditPhotoModal extends BaseComponent<EditPhotoModal> {
 
-    private final SelenideElement countryCombobox = $("#country");
-    private final SelenideElement countryListbox = $("ul[role=listbox]");
-    private final SelenideElement descriptionTextarea = $("#description");
-    private final SelenideElement saveButton = $("button[type=submit]");
+    private final SelenideElement countryCombobox = self.$("#country");
+    private final SelenideElement countryListbox = self.$("ul[role=listbox]");
+    private final SelenideElement descriptionTextarea = self.$("#description");
+    private final SelenideElement saveButton = self.$("button[type=submit]");
+    private final SelenideElement descriptionHelper = self.$("#description-helper-text");
 
     public EditPhotoModal() {
         super($("div.MuiModal-root"));
@@ -38,7 +38,14 @@ public class EditPhotoModal extends BaseComponent<EditPhotoModal> {
 
 
     @Step("[EDIT PHOTO MODAL] Нажать кнопку [Save]")
-    public void clickSave() {
+    public EditPhotoModal clickSave() {
         saveButton.click();
+        return this;
+    }
+
+    @Step("[EDIT PHOTO MODAL] Проверить, что для описания есть ошибка")
+    public EditPhotoModal checkDescriptionHasError(String msg) {
+        descriptionHelper.shouldHave(exactText(msg));
+        return this;
     }
 }

@@ -12,6 +12,7 @@ public class PhotoCard extends BaseComponent<PhotoCard> {
     private final SelenideElement likeButton = self.$("button[aria-label=like]");
     private final SelenideElement deleteButton = self.$(byTagAndText("button", "Delete"));
     private final SelenideElement editButton = self.$(byTagAndText("button", "Edit"));
+
     public PhotoCard(SelenideElement self) {
         super(self);
     }

@@ -6,6 +6,7 @@ import guru.qa.rangiffler.model.CountryEnum;
 import guru.qa.rangiffler.model.PhotoModel;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.test.web.BaseWebTest;
+import guru.qa.rangiffler.util.DataUtil;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
@@ -114,5 +115,40 @@ public class EditPhotoTest extends BaseWebTest {
                 .clickWithFriends()
                 .checkPhotos(user.photosWithAcceptedFriends())
                 .checkPhotoHasNoEditButton(user.photosWithAcceptedFriends().get(0));
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(photos = @Photo))
+    @DisplayName("Редактирование фотографии на длинное описание (255 символов)")
+    void photoWithLongDescriptionEditTest(@User UserModel user) {
+        PhotoModel originalPhoto = user.photos().get(0);
+        PhotoModel updatedPhoto = new PhotoModel(
+                originalPhoto.id(),
+                originalPhoto.country(),
+                DataUtil.generateStringWithLength(255),
+                originalPhoto.photo()
+        );
+        myTravelsPage
+                .clickEditPhoto(originalPhoto)
+                .getEditPhotoModal()
+                .setDescription(updatedPhoto.description())
+                .clickSave();
+        myTravelsPage
+                .getSnackbar().messageShouldHaveText("Post updated");
+        myTravelsPage
+                .checkPhotos(updatedPhoto);
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(photos = @Photo))
+    @DisplayName("Редактирование фотографии на очень длинное описание (256 символов)")
+    void photoWithTooLongDescriptionEditTest(@User UserModel user) {
+        String description = DataUtil.generateStringWithLength(256);
+        myTravelsPage
+                .clickEditPhoto(user.photos().get(0))
+                .getEditPhotoModal()
+                .setDescription(description)
+                .clickSave()
+                .checkDescriptionHasError("Description length has to be not longer that 255 symbols");
     }
 }
