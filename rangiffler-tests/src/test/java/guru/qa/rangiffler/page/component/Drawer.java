@@ -15,8 +15,18 @@ public class Drawer extends BaseComponent<Drawer> {
         super($("div.MuiDrawer-root"));
     }
 
-    @Step("[DRAWER] Нажать кнопку профиль")
+    @Step("[DRAWER] Нажать кнопку [Profile]")
     public void clickProfile() {
         profileButton.click();
+    }
+
+    @Step("[DRAWER] Нажать кнопку [My map]")
+    public void clickMyMap() {
+        myTravelButton.click();
+    }
+
+    @Step("[DRAWER] Нажать кнопку [People]")
+    public void clickPeople() {
+        peopleButton.click();
     }
 }

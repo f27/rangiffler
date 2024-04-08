@@ -18,5 +18,6 @@ public abstract class BaseWebTest {
     protected final MyTravelsPage myTravelsPage = new MyTravelsPage();
     protected final RegisterPage registerPage = new RegisterPage();
     protected final ProfilePage profilePage = new ProfilePage();
+    protected final PeoplePage peoplePage = new PeoplePage();
 
 }

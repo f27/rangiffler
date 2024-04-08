@@ -1,5 +1,7 @@
 package guru.qa.rangiffler.model;
 
+import guru.qa.rangiffler.util.ImageUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,5 +36,14 @@ public record UserModel(
                 .flatMap(List::stream)
                 .toList());
         return photoWithFriends;
+    }
+
+    public String getAvatarAsBase64() {
+        return ImageUtil.getImageAsBase64(avatar);
+    }
+
+    @Override
+    public String toString() {
+        return username;
     }
 }
