@@ -25,9 +25,9 @@ public class UserdataRepositoryHibernate extends JpaService implements UserdataR
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         String query = "SELECT u FROM UserEntity u where u.username=:username";
-        return em.createQuery(query, UserEntity.class)
+        return txWithResult(em -> em.createQuery(query, UserEntity.class)
                 .setParameter("username", username)
-                .getResultStream().findAny();
+                .getResultStream().findAny());
     }
 
     @Override

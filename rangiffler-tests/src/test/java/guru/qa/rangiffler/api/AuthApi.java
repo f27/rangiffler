@@ -34,4 +34,14 @@ public interface AuthApi {
             @Field("code") String code,
             @Field("code_verifier") String codeVerifier
     );
+
+    @GET("/register")
+    Call<Void> registerForm();
+
+    @POST("/register")
+    @FormUrlEncoded
+    Call<Void> submitRegister(@Field("username") String username,
+                              @Field("password") String password,
+                              @Field("passwordSubmit") String passwordSubmit,
+                              @Field("_csrf") String csrf);
 }

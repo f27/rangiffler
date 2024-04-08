@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserdataKafkaListener {
 
+    private static final String DEFAULT_COUNTRY_CODE = "ru";
+
     private final UserdataRepository userdataRepository;
 
     @Autowired
@@ -25,7 +27,7 @@ public class UserdataKafkaListener {
     public void listener(@Payload UserModel user, ConsumerRecord<String, UserModel> cr) {
         UserEntity userDataEntity = new UserEntity();
         userDataEntity.setUsername(user.username());
-        userDataEntity.setCountryCode(user.countryCode());
+        userDataEntity.setCountryCode(DEFAULT_COUNTRY_CODE);
         userdataRepository.save(userDataEntity);
     }
 }

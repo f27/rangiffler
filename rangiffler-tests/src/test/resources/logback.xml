@@ -17,8 +17,7 @@
     <logger name="com.codeborne.selenide.drivercommands.DisposablesRegistry" level="error"/>
 
     <logger name="guru.qa.rangiffler.api" level="error"/>
-    <logger name="guru.qa.niffler.kafka.KafkaConsumer" level="warn"/>
-    <logger name="guru.qa.niffler.jupiter.extension.AllureDockerExtension" level="debug"/>
+    <logger name="guru.qa.rangiffler.kafka.KafkaService" level="warn"/>
 
     <root level="info">
         <appender-ref ref="STDOUT"/>

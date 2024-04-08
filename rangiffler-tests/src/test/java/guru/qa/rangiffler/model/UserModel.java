@@ -46,4 +46,8 @@ public record UserModel(
     public String toString() {
         return username;
     }
+
+    public String toKafkaJson() {
+        return "{\"username\":\"" + username + "\"}";
+    }
 }

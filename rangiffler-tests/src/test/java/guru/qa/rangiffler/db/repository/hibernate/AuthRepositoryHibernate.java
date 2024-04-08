@@ -31,9 +31,9 @@ public class AuthRepositoryHibernate extends JpaService implements AuthRepositor
     @Override
     public Optional<UserAuthEntity> findByUsername(String username) {
         String query = "SELECT u FROM UserAuthEntity u where u.username=:username";
-        return em.createQuery(query, UserAuthEntity.class)
+        return txWithResult(em -> em.createQuery(query, UserAuthEntity.class)
                 .setParameter("username", username)
-                .getResultStream().findAny();
+                .getResultStream().findAny());
     }
 
     @Override

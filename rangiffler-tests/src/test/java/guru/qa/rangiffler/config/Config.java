@@ -46,7 +46,7 @@ public interface Config {
 
     String kafkaHost();
 
-    default int KafkaPort() {
+    default int kafkaPort() {
         return 9092;
     }
 

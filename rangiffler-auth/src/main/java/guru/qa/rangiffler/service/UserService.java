@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private static final String DEFAULT_COUNTRY_CODE = "ru";
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final KafkaTemplate<String, UserModel> kafkaTemplate;
@@ -54,7 +52,7 @@ public class UserService {
         userEntity.addAuthorities(readAuthorityEntity, writeAuthorityEntity);
         String savedUser = userRepository.save(userEntity).getUsername();
 
-        kafkaTemplate.send("users", new UserModel(savedUser, DEFAULT_COUNTRY_CODE));
+        kafkaTemplate.send("users", new UserModel(savedUser));
         return savedUser;
     }
 }

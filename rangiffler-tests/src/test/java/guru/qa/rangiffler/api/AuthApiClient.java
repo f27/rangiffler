@@ -56,4 +56,10 @@ public class AuthApiClient extends RestClient {
         ApiLoginExtension.setAccessToken(accessToken);
         ApiLoginExtension.setRefreshToken(refreshToken);
     }
+
+    @Step("Зарегистрировать пользователя")
+    public void register(String username, String password) throws IOException {
+        authApi.registerForm().execute();
+        authApi.submitRegister(username, password, password, ApiLoginExtension.getCsrfToken()).execute();
+    }
 }
