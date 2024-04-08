@@ -51,7 +51,9 @@ public class AuthApiClient extends RestClient {
                 ApiLoginExtension.getCodeVerifier()
         ).execute().body();
 
-        final String token = Objects.requireNonNull(responseBody).get("id_token").asText();
-        ApiLoginExtension.setToken(token);
+        final String accessToken = Objects.requireNonNull(responseBody).get("access_token").asText();
+        final String refreshToken = Objects.requireNonNull(responseBody).get("refresh_token").asText();
+        ApiLoginExtension.setAccessToken(accessToken);
+        ApiLoginExtension.setRefreshToken(refreshToken);
     }
 }

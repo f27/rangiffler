@@ -60,14 +60,24 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
         context.getStore(NAMESPACE).put(context.getUniqueId() + "code", code);
     }
 
-    public static String getToken() {
+    public static String getAccessToken() {
         ExtensionContext context = ContextHolderExtension.ContextHolder.INSTANCE.getContext();
-        return context.getStore(NAMESPACE).get(context.getUniqueId() + "id_token", String.class);
+        return context.getStore(NAMESPACE).get(context.getUniqueId() + "access_token", String.class);
     }
 
-    public static void setToken(@Nonnull String token) {
+    public static void setAccessToken(@Nonnull String token) {
         ExtensionContext context = ContextHolderExtension.ContextHolder.INSTANCE.getContext();
-        context.getStore(NAMESPACE).put(context.getUniqueId() + "id_token", token);
+        context.getStore(NAMESPACE).put(context.getUniqueId() + "access_token", token);
+    }
+
+    public static String getRefreshToken() {
+        ExtensionContext context = ContextHolderExtension.ContextHolder.INSTANCE.getContext();
+        return context.getStore(NAMESPACE).get(context.getUniqueId() + "refresh_token", String.class);
+    }
+
+    public static void setRefreshToken(@Nonnull String token) {
+        ExtensionContext context = ContextHolderExtension.ContextHolder.INSTANCE.getContext();
+        context.getStore(NAMESPACE).put(context.getUniqueId() + "refresh_token", token);
     }
 
     public static String getCsrfToken() {
@@ -98,9 +108,8 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
                 step("Запустить браузер с авторизованным пользователем", () -> {
                     Selenide.open("/");
                     LocalStorage localStorage = Selenide.localStorage();
-                    localStorage.setItem("codeChallenge", getCodeChallenge());
-                    localStorage.setItem("id_token", getToken());
-                    localStorage.setItem("codeVerifier", getCodeVerifier());
+                    localStorage.setItem("access_token", getAccessToken());
+                    localStorage.setItem("refresh_token", getRefreshToken());
                     WebDriverRunner.getWebDriver().manage().addCookie(getJsessionCookie());
                     Selenide.refresh();
                 });
@@ -121,6 +130,6 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
 
     @Override
     public String resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return "Bearer " + getToken();
+        return "Bearer " + getAccessToken();
     }
 }
