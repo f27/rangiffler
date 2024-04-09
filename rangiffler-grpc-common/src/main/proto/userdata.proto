@@ -21,6 +21,7 @@ service RangifflerUserdataService {
   rpc AcceptFriend(FriendshipRequest) returns (User);
   rpc RejectFriend(FriendshipRequest) returns (User);
   rpc DeleteFriend(FriendshipRequest) returns (User);
+  rpc DeleteUser(Username) returns (google.protobuf.Empty);
 }
 
 message Username {

@@ -66,6 +66,17 @@ public class UserEntity {
         return builder.build();
     }
 
+    public FriendStatus getStatus(UserEntity friend) {
+        if (getFriends().contains(friend)) {
+            return FriendStatus.FRIEND;
+        } else if (getInvitationSentUsers().contains(friend)) {
+            return FriendStatus.INVITATION_SENT;
+        } else if (getInvitationReceivedUsers().contains(friend)) {
+            return FriendStatus.INVITATION_RECEIVED;
+        }
+        return FriendStatus.NOT_FRIEND;
+    }
+
     public List<UserEntity> getFriends() {
         return outcomeInvitations.stream()
                 .filter(friendshipEntity -> friendshipEntity.getStatus() == FriendshipStatus.ACCEPTED)

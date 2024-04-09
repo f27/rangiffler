@@ -14,6 +14,8 @@ public interface UserdataRepository extends JpaRepository<UserEntity, UUID> {
 
     UserEntity getByUsername(@Nonnull String username);
 
+    void deleteByUsername(@Nonnull String username);
+
     Slice<UserEntity> findByUsernameNot(@Nonnull String username,
                                         @Nonnull Pageable pageable);
 
