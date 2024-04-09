@@ -7,5 +7,5 @@ import org.junit.jupiter.api.Tag;
 @KafkaTest
 @Tag("Kafka")
 @Epic("Kafka")
-public class BaseKafkaTest {
+public abstract class BaseKafkaTest {
 }
