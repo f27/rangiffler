@@ -25,7 +25,8 @@ public record PhotoModel(
         @JsonProperty("canEdit")
         boolean canEdit
 ) {
-    public static PhotoModel fromGrpcMessage(PhotoResponse message) {
+    public static PhotoModel fromGrpcMessage(PhotoResponse message,
+                                             String userId) {
         return new PhotoModel(
                 UUID.fromString(message.getPhotoId()),
                 message.getSrc(),
@@ -39,7 +40,7 @@ public record PhotoModel(
                                 .map(LikeModel::fromGrpcMessage)
                                 .toList()
                 ),
-                message.getCanEdit()
+                userId.equals(message.getUserId())
         );
     }
 }

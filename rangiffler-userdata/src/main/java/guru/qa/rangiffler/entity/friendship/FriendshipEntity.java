@@ -45,7 +45,7 @@ public class FriendshipEntity {
         if (thisEffectiveClass != oEffectiveClass) return false;
         FriendshipEntity that = (FriendshipEntity) o;
         return getRequester() != null && Objects.equals(getRequester(), that.getRequester())
-                && getAddressee()!= null && Objects.equals(getAddressee(), that.getAddressee());
+                && getAddressee() != null && Objects.equals(getAddressee(), that.getAddressee());
     }
 
     @Override

@@ -212,6 +212,19 @@ public class UserdataService extends RangifflerUserdataServiceGrpc.RangifflerUse
     }
 
     @Override
+    public void getFriendsIds(Username request, StreamObserver<FriendsIdsResponse> responseObserver) {
+        UserEntity currentUser = userdataRepository.getByUsername(request.getUsername());
+        FriendsIdsResponse.Builder responseBuilder = FriendsIdsResponse.newBuilder();
+        responseBuilder.addAllFriendsIds(
+                currentUser.getFriends().stream()
+                        .map(user -> user.getId().toString())
+                        .toList()
+        );
+        responseObserver.onNext(responseBuilder.build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void updateCurrentUser(User request, StreamObserver<User> responseObserver) {
         UserEntity currentUser = userdataRepository.getByUsername(request.getUsername());
         currentUser.setFirstname(request.getFirstname());

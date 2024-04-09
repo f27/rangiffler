@@ -13,6 +13,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.UUID;
+
 
 @Component
 public class UserDataClient {
@@ -90,6 +93,14 @@ public class UserDataClient {
             return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.deleteFriend(request));
         }
         throw new RuntimeException("Action '" + input.action() + "' not implemented");
+    }
+
+    public @Nonnull List<UUID> getFriendsIds(@Nonnull String username) {
+        Username request = Username.newBuilder()
+                .setUsername(username)
+                .build();
+        return rangifflerUserdataServiceBlockingStub.getFriendsIds(request).getFriendsIdsList()
+                .stream().map(UUID::fromString).toList();
     }
 
     private UsersRequest createUsersRequestFromParams(@Nonnull String username,

@@ -16,6 +16,8 @@ public interface PhotoRepository extends JpaRepository<PhotoEntity, UUID> {
 
     List<PhotoEntity> findAllByUserIdIn(@Nonnull List<UUID> userIds);
 
+    void removeAllByUserId(@Nonnull UUID userId);
+
     Optional<PhotoEntity> findByUserIdAndId(@Nonnull UUID userId, @Nonnull UUID id);
 
 }

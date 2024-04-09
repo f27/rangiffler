@@ -14,6 +14,7 @@ service RangifflerUserdataService {
   rpc GetFriends(UsersRequest) returns (UsersResponse);
   rpc GetIncomeInvitations(UsersRequest) returns (UsersResponse);
   rpc GetOutcomeInvitations(UsersRequest) returns (UsersResponse);
+  rpc GetFriendsIds(Username) returns (FriendsIdsResponse);
 
   rpc UpdateCurrentUser(User) returns (User);
   rpc AddFriend(FriendshipRequest) returns (User);
@@ -24,6 +25,10 @@ service RangifflerUserdataService {
 
 message Username {
   string username = 1;
+}
+
+message FriendsIdsResponse {
+  repeated string friendsIds = 1;
 }
 
 message User {

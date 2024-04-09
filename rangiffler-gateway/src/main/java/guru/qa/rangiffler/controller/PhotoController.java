@@ -1,6 +1,7 @@
 package guru.qa.rangiffler.controller;
 
 import guru.qa.rangiffler.api.PhotoClient;
+import guru.qa.rangiffler.api.UserDataClient;
 import guru.qa.rangiffler.model.photo.FeedModel;
 import guru.qa.rangiffler.model.photo.PhotoInput;
 import guru.qa.rangiffler.model.photo.PhotoModel;
@@ -17,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,20 +26,24 @@ import java.util.UUID;
 public class PhotoController {
 
     private final PhotoClient photoClient;
+    private final UserDataClient userDataClient;
 
     @Autowired
-    public PhotoController(PhotoClient photoClient) {
+    public PhotoController(PhotoClient photoClient, UserDataClient userDataClient) {
         this.photoClient = photoClient;
+        this.userDataClient = userDataClient;
     }
 
     @SchemaMapping(typeName = "Feed", field = "photos")
     public Slice<PhotoModel> photos(FeedModel feed, @Argument int page, @Argument int size) {
-        return photoClient.getPhotos(feed.username(), feed.withFriends(), page, size);
+
+        return photoClient.getPhotos(
+                feed.id(), feed.friendsIds(), page, size);
     }
 
     @SchemaMapping(typeName = "Feed", field = "stat")
     public List<StatModel> stat(FeedModel feed) {
-        return photoClient.getStat(feed.username(), feed.withFriends());
+        return photoClient.getStat(feed.id(), feed.friendsIds());
     }
 
     @QueryMapping
@@ -45,10 +51,12 @@ public class PhotoController {
                           @Argument @Nonnull Boolean withFriends) {
         String username = principal.getClaim("sub");
         return new FeedModel(
+                userDataClient.currentUser(username).id(),
                 username,
                 withFriends,
                 null,
-                null
+                null,
+                withFriends ? userDataClient.getFriendsIds(username) : new ArrayList<>()
         );
     }
 
@@ -56,13 +64,13 @@ public class PhotoController {
     public PhotoModel photo(@AuthenticationPrincipal Jwt principal,
                             @Argument @Valid PhotoInput input) {
         String username = principal.getClaim("sub");
-        return photoClient.mutatePhoto(username, input);
+        return photoClient.mutatePhoto(userDataClient.currentUser(username).id(), input);
     }
 
     @MutationMapping
     public Boolean deletePhoto(@AuthenticationPrincipal Jwt principal,
                                @Argument UUID id) {
         String username = principal.getClaim("sub");
-        return photoClient.deletePhoto(username, id);
+        return photoClient.deletePhoto(userDataClient.currentUser(username).id(), id);
     }
 }

@@ -20,19 +20,19 @@ public class PhotoClient {
     @GrpcClient("photoClient")
     private RangifflerPhotoServiceGrpc.RangifflerPhotoServiceBlockingStub rangifflerPhotoServiceBlockingStub;
 
-    public @Nonnull PhotoModel mutatePhoto(@Nonnull String username,
+    public @Nonnull PhotoModel mutatePhoto(@Nonnull UUID userId,
                                            @Nonnull PhotoInput input) {
         PhotoResponse response;
         if (input.id() != null) {
             if (input.like() != null) {
                 LikePhotoRequest request = LikePhotoRequest.newBuilder()
-                        .setUsername(username)
+                        .setUserId(userId.toString())
                         .setPhotoId(input.id().toString())
                         .build();
                 response = rangifflerPhotoServiceBlockingStub.likePhoto(request);
             } else {
                 UpdatePhotoRequest request = UpdatePhotoRequest.newBuilder()
-                        .setUsername(username)
+                        .setUserId(userId.toString())
                         .setPhotoId(input.id().toString())
                         .setCountryCode(input.country().code())
                         .setDescription(input.description())
@@ -41,46 +41,52 @@ public class PhotoClient {
             }
         } else {
             CreatePhotoRequest request = CreatePhotoRequest.newBuilder()
-                    .setUsername(username)
+                    .setUserId(userId.toString())
                     .setSrc(input.src())
                     .setCountryCode(input.country().code())
                     .setDescription(input.description())
                     .build();
             response = rangifflerPhotoServiceBlockingStub.createPhoto(request);
         }
-        return PhotoModel.fromGrpcMessage(response);
+        return PhotoModel.fromGrpcMessage(response, userId.toString());
     }
 
-    public @Nonnull Slice<PhotoModel> getPhotos(@Nonnull String username,
-                                                @Nonnull Boolean withFriends,
+    public @Nonnull Slice<PhotoModel> getPhotos(@Nonnull UUID userId,
+                                                @Nonnull List<UUID> friendsId,
                                                 int page,
                                                 int size) {
         GetPhotosRequest request = GetPhotosRequest.newBuilder()
-                .setUsername(username)
-                .setWithFriends(withFriends)
                 .setPage(page)
                 .setSize(size)
+                .addUserId(userId.toString())
+                .addAllUserId(friendsId.stream().map(UUID::toString).toList())
                 .build();
+
         GetPhotosResponse response = rangifflerPhotoServiceBlockingStub.getPhotos(request);
         return new SliceImpl<>(
-                response.getPhotosList().stream().map(PhotoModel::fromGrpcMessage).toList(),
+                response.getPhotosList().stream()
+                        .map(photoResponse ->
+                                PhotoModel.fromGrpcMessage(photoResponse, userId.toString())
+                        ).toList(),
                 PageRequest.of(page, size),
                 response.getHasNext());
     }
 
-    public @Nonnull List<StatModel> getStat(@Nonnull String username, @Nonnull Boolean withFriends) {
+    public @Nonnull List<StatModel> getStat(@Nonnull UUID userId,
+                                            @Nonnull List<UUID> friendsId) {
         GetStatRequest request = GetStatRequest.newBuilder()
-                .setUsername(username)
-                .setWithFriends(withFriends)
+                .addUserId(userId.toString())
+                .addAllUserId(friendsId.stream().map(UUID::toString).toList())
                 .build();
-        return rangifflerPhotoServiceBlockingStub.getStat(request).getStatMap().entrySet().stream()
+        return rangifflerPhotoServiceBlockingStub.getStat(request)
+                .getStatMap().entrySet().stream()
                 .map(entry -> new StatModel(entry.getValue(), entry.getKey(), null))
                 .toList();
     }
 
-    public @Nonnull Boolean deletePhoto(@Nonnull String username, @Nonnull UUID photoId) {
+    public @Nonnull Boolean deletePhoto(@Nonnull UUID userId, @Nonnull UUID photoId) {
         DeletePhotoRequest request = DeletePhotoRequest.newBuilder()
-                .setUsername(username)
+                .setUserId(userId.toString())
                 .setPhotoId(photoId.toString())
                 .build();
         try {
