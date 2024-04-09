@@ -21,8 +21,10 @@ public abstract class JpaService {
 
     protected <T> void removeById(Class<T> entityClass, UUID id) {
         tx(em -> {
-            em.clear();
             T entity = em.find(entityClass, id);
+            em.detach(entity);
+            entity = em.find(entityClass, id);
+            em.refresh(entity);
             em.remove(entity);
         });
     }
