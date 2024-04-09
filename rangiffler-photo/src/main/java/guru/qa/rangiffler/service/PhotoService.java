@@ -91,7 +91,7 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
     }
 
     @Override
-    public void getPhotos(GetPhotosRequest request, StreamObserver<GetPhotosResponse> responseObserver) {
+    public void getPhotos(GetPhotosRequest request, StreamObserver<PhotoSliceResponse> responseObserver) {
         List<UUID> userIdList = request.getUserIdList().stream().map(UUID::fromString).toList();
 
         responseObserver.onNext(
@@ -104,7 +104,7 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
     }
 
     @Override
-    public void getStat(GetStatRequest request, StreamObserver<GetStatResponse> responseObserver) {
+    public void getStat(GetStatRequest request, StreamObserver<StatMapResponse> responseObserver) {
         List<UUID> userIdList = request.getUserIdList().stream().map(UUID::fromString).toList();
 
         List<PhotoEntity> photos = photoRepository.findAllByUserIdIn(userIdList);
@@ -115,13 +115,13 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
             stat.put(countryCode, stat.get(countryCode) + 1);
         });
 
-        responseObserver.onNext(GetStatResponse.newBuilder().putAllStat(stat).build());
+        responseObserver.onNext(StatMapResponse.newBuilder().putAllStat(stat).build());
         responseObserver.onCompleted();
     }
 
     @Override
     @Transactional
-    public void deletePhotos(DeletePhotosRequest request, StreamObserver<Empty> responseObserver) {
+    public void deleteAllPhotos(DeleteAllPhotosRequest request, StreamObserver<Empty> responseObserver) {
         photoRepository.removeAllByUserId(UUID.fromString(request.getUserId()));
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();

@@ -26,7 +26,8 @@ public record PhotoModel(
         boolean canEdit
 ) {
     public static PhotoModel fromGrpcMessage(PhotoResponse message,
-                                             String userId) {
+                                             UUID userId,
+                                             String username) {
         return new PhotoModel(
                 UUID.fromString(message.getPhotoId()),
                 message.getSrc(),
@@ -37,10 +38,10 @@ public record PhotoModel(
                 new LikesModel(
                         message.getLikes().getTotal(),
                         message.getLikes().getLikesList().stream()
-                                .map(LikeModel::fromGrpcMessage)
+                                .map(like -> LikeModel.fromGrpcMessage(like, username))
                                 .toList()
                 ),
-                userId.equals(message.getUserId())
+                userId.toString().equals(message.getUserId())
         );
     }
 }

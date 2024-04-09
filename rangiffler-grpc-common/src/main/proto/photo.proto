@@ -13,9 +13,19 @@ service RangifflerPhotoService {
   rpc UpdatePhoto(UpdatePhotoRequest) returns (PhotoResponse);
   rpc LikePhoto(LikePhotoRequest) returns (PhotoResponse);
   rpc DeletePhoto(DeletePhotoRequest) returns (google.protobuf.Empty);
-  rpc GetPhotos(GetPhotosRequest) returns (GetPhotosResponse);
-  rpc GetStat(GetStatRequest) returns (GetStatResponse);
-  rpc DeletePhotos(DeletePhotosRequest) returns (google.protobuf.Empty);
+  rpc GetPhotos(GetPhotosRequest) returns (PhotoSliceResponse);
+  rpc GetStat(GetStatRequest) returns (StatMapResponse);
+  rpc DeleteAllPhotos(DeleteAllPhotosRequest) returns (google.protobuf.Empty);
+}
+
+message Likes {
+  int32 total = 1;
+  repeated Like likes = 2;
+}
+
+message Like {
+  string userId = 1;
+  string creationDate = 2;
 }
 
 message CreatePhotoRequest {
@@ -37,6 +47,25 @@ message LikePhotoRequest {
   string photoId = 2;
 }
 
+message DeletePhotoRequest {
+  string userId = 1;
+  string photoId = 2;
+}
+
+message GetPhotosRequest {
+  repeated string userId = 1;
+  int32 page = 2;
+  int32 size = 3;
+}
+
+message GetStatRequest {
+  repeated string userId = 1;
+}
+
+message DeleteAllPhotosRequest {
+  string userId = 1;
+}
+
 message PhotoResponse {
   string userId = 1;
   string photoId = 2;
@@ -47,39 +76,11 @@ message PhotoResponse {
   Likes likes = 7;
 }
 
-message Likes {
-  int32 total = 1;
-  repeated Like likes = 2;
-}
-
-message Like {
-  string userId = 1;
-}
-
-message GetPhotosRequest {
-  repeated string userId = 1;
-  int32 page = 2;
-  int32 size = 3;
-}
-
-message GetPhotosResponse {
+message PhotoSliceResponse {
   repeated PhotoResponse photos = 1;
   bool hasNext = 2;
 }
 
-message GetStatRequest {
-  repeated string userId = 1;
-}
-
-message GetStatResponse {
+message StatMapResponse {
   map<string, int32> stat = 1;
-}
-
-message DeletePhotoRequest {
-  string userId = 1;
-  string photoId = 2;
-}
-
-message DeletePhotosRequest {
-  string userId = 1;
 }

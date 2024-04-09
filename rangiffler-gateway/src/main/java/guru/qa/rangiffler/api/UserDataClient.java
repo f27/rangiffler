@@ -1,7 +1,6 @@
 package guru.qa.rangiffler.api;
 
 import guru.qa.grpc.rangiffler.grpc.*;
-import guru.qa.rangiffler.model.friendship.FriendshipAction;
 import guru.qa.rangiffler.model.friendship.FriendshipInput;
 import guru.qa.rangiffler.model.user.UpdateUserInput;
 import guru.qa.rangiffler.model.user.UserModel;
@@ -83,14 +82,19 @@ public class UserDataClient {
                 .setTargetUserId(input.user().toString())
                 .build();
 
-        if (input.action().equals(FriendshipAction.ADD)) {
-            return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.addFriend(request));
-        } else if (input.action().equals(FriendshipAction.ACCEPT)) {
-            return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.acceptFriend(request));
-        } else if (input.action().equals(FriendshipAction.REJECT)) {
-            return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.rejectFriend(request));
-        } else if (input.action().equals(FriendshipAction.DELETE)) {
-            return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.deleteFriend(request));
+        switch (input.action()) {
+            case ADD -> {
+                return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.addFriend(request));
+            }
+            case ACCEPT -> {
+                return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.acceptFriend(request));
+            }
+            case REJECT -> {
+                return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.rejectFriend(request));
+            }
+            case DELETE -> {
+                return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.deleteFriend(request));
+            }
         }
         throw new RuntimeException("Action '" + input.action() + "' not implemented");
     }

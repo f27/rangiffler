@@ -36,9 +36,7 @@ public class PhotoController {
 
     @SchemaMapping(typeName = "Feed", field = "photos")
     public Slice<PhotoModel> photos(FeedModel feed, @Argument int page, @Argument int size) {
-
-        return photoClient.getPhotos(
-                feed.id(), feed.friendsIds(), page, size);
+        return photoClient.getPhotos(feed.username(), feed.id(), feed.friendsIds(), page, size);
     }
 
     @SchemaMapping(typeName = "Feed", field = "stat")
@@ -64,7 +62,17 @@ public class PhotoController {
     public PhotoModel photo(@AuthenticationPrincipal Jwt principal,
                             @Argument @Valid PhotoInput input) {
         String username = principal.getClaim("sub");
-        return photoClient.mutatePhoto(userDataClient.currentUser(username).id(), input);
+        UUID currentUserId = userDataClient.currentUser(username).id();
+
+        boolean isLikePhotoMutation = input.id() != null && input.like() != null;
+        if (isLikePhotoMutation)
+            return photoClient.likePhoto(username, currentUserId, input);
+
+        boolean isUpdatePhotoMutation = input.id() != null;
+        if (isUpdatePhotoMutation)
+            return photoClient.updatePhoto(username, currentUserId, input);
+
+        return photoClient.createPhoto(username, currentUserId, input);
     }
 
     @MutationMapping

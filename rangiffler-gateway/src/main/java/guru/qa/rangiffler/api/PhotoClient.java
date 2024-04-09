@@ -20,38 +20,42 @@ public class PhotoClient {
     @GrpcClient("photoClient")
     private RangifflerPhotoServiceGrpc.RangifflerPhotoServiceBlockingStub rangifflerPhotoServiceBlockingStub;
 
-    public @Nonnull PhotoModel mutatePhoto(@Nonnull UUID userId,
-                                           @Nonnull PhotoInput input) {
-        PhotoResponse response;
-        if (input.id() != null) {
-            if (input.like() != null) {
-                LikePhotoRequest request = LikePhotoRequest.newBuilder()
-                        .setUserId(userId.toString())
-                        .setPhotoId(input.id().toString())
-                        .build();
-                response = rangifflerPhotoServiceBlockingStub.likePhoto(request);
-            } else {
-                UpdatePhotoRequest request = UpdatePhotoRequest.newBuilder()
-                        .setUserId(userId.toString())
-                        .setPhotoId(input.id().toString())
-                        .setCountryCode(input.country().code())
-                        .setDescription(input.description())
-                        .build();
-                response = rangifflerPhotoServiceBlockingStub.updatePhoto(request);
-            }
-        } else {
-            CreatePhotoRequest request = CreatePhotoRequest.newBuilder()
-                    .setUserId(userId.toString())
-                    .setSrc(input.src())
-                    .setCountryCode(input.country().code())
-                    .setDescription(input.description())
-                    .build();
-            response = rangifflerPhotoServiceBlockingStub.createPhoto(request);
-        }
-        return PhotoModel.fromGrpcMessage(response, userId.toString());
+    public @Nonnull PhotoModel likePhoto(@Nonnull String username,
+                                         @Nonnull UUID userId,
+                                         @Nonnull PhotoInput input) {
+        LikePhotoRequest request = LikePhotoRequest.newBuilder()
+                .setUserId(userId.toString())
+                .setPhotoId(input.id().toString())
+                .build();
+        return PhotoModel.fromGrpcMessage(rangifflerPhotoServiceBlockingStub.likePhoto(request), userId, username);
     }
 
-    public @Nonnull Slice<PhotoModel> getPhotos(@Nonnull UUID userId,
+    public @Nonnull PhotoModel updatePhoto(@Nonnull String username,
+                                           @Nonnull UUID userId,
+                                           @Nonnull PhotoInput input) {
+        UpdatePhotoRequest request = UpdatePhotoRequest.newBuilder()
+                .setUserId(userId.toString())
+                .setPhotoId(input.id().toString())
+                .setCountryCode(input.country().code())
+                .setDescription(input.description())
+                .build();
+        return PhotoModel.fromGrpcMessage(rangifflerPhotoServiceBlockingStub.updatePhoto(request), userId, username);
+    }
+
+    public @Nonnull PhotoModel createPhoto(@Nonnull String username,
+                                           @Nonnull UUID userId,
+                                           @Nonnull PhotoInput input) {
+        CreatePhotoRequest request = CreatePhotoRequest.newBuilder()
+                .setUserId(userId.toString())
+                .setSrc(input.src())
+                .setCountryCode(input.country().code())
+                .setDescription(input.description())
+                .build();
+        return PhotoModel.fromGrpcMessage(rangifflerPhotoServiceBlockingStub.createPhoto(request), userId, username);
+    }
+
+    public @Nonnull Slice<PhotoModel> getPhotos(@Nonnull String username,
+                                                @Nonnull UUID userId,
                                                 @Nonnull List<UUID> friendsId,
                                                 int page,
                                                 int size) {
@@ -62,11 +66,11 @@ public class PhotoClient {
                 .addAllUserId(friendsId.stream().map(UUID::toString).toList())
                 .build();
 
-        GetPhotosResponse response = rangifflerPhotoServiceBlockingStub.getPhotos(request);
+        PhotoSliceResponse response = rangifflerPhotoServiceBlockingStub.getPhotos(request);
         return new SliceImpl<>(
                 response.getPhotosList().stream()
                         .map(photoResponse ->
-                                PhotoModel.fromGrpcMessage(photoResponse, userId.toString())
+                                PhotoModel.fromGrpcMessage(photoResponse, userId, username)
                         ).toList(),
                 PageRequest.of(page, size),
                 response.getHasNext());
