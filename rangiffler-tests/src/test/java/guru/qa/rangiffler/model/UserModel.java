@@ -1,5 +1,6 @@
 package guru.qa.rangiffler.model;
 
+import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.rangiffler.util.ImageUtil;
 
 import java.util.ArrayList;

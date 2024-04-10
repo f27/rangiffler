@@ -1,6 +1,6 @@
 package guru.qa.rangiffler.jupiter.annotation.meta;
 
-import guru.qa.rangiffler.jupiter.extension.*;
+import guru.qa.rangiffler.jupiter.extension.ContextHolderExtension;
 import io.qameta.allure.junit5.AllureJunit5;
 import org.junit.jupiter.api.extension.ExtendWith;
 

@@ -11,7 +11,7 @@ public abstract class GrpcClient {
     protected final Channel channel;
 
     public GrpcClient(String host, int port) {
-        this.channel  = ManagedChannelBuilder.forAddress(host, port)
+        this.channel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext()
                 .build();
     }

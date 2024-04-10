@@ -1,8 +1,8 @@
 package guru.qa.rangiffler.test.web.travel;
 
+import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.rangiffler.jupiter.annotation.*;
 import guru.qa.rangiffler.model.CountryEnum;
-import guru.qa.rangiffler.model.FriendStatus;
 import guru.qa.rangiffler.model.PhotoModel;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.test.web.BaseWebTest;
@@ -42,12 +42,12 @@ public class FeedTest extends BaseWebTest {
                     description = "Waiting friend",
                     image = "img/photo/4.jpg"),
                     avatar = "img/avatar/1.jpg",
-                    status = FriendStatus.INCOME_INVITATION),
+                    status = FriendStatus.INVITATION_RECEIVED),
             @Friend(photos = @Photo(
                     description = "Will accept friend",
                     image = "img/photo/5.jpg"),
-                    avatar = "img/avatar/2.jpg", status = FriendStatus.OUTCOME_INVITATION),
-            @Friend(photos = @Photo, status = FriendStatus.NONE),
+                    avatar = "img/avatar/2.jpg", status = FriendStatus.INVITATION_SENT),
+            @Friend(photos = @Photo, status = FriendStatus.NOT_FRIEND),
     }))
     @DisplayName("Лента фотографий при выбранном [Only my travels] должна отображать только мои фотографии")
     void whenOnlyMyTravelsOnlyMyPhotosShouldBeVisibleTest(@User UserModel user) {
@@ -68,12 +68,12 @@ public class FeedTest extends BaseWebTest {
                     description = "Waiting friend",
                     image = "img/photo/4.jpg"),
                     avatar = "img/avatar/1.jpg",
-                    status = FriendStatus.INCOME_INVITATION),
+                    status = FriendStatus.INVITATION_RECEIVED),
             @Friend(photos = @Photo(
                     description = "Will accept friend",
                     image = "img/photo/5.jpg"),
-                    avatar = "img/avatar/2.jpg", status = FriendStatus.OUTCOME_INVITATION),
-            @Friend(photos = @Photo, status = FriendStatus.NONE),
+                    avatar = "img/avatar/2.jpg", status = FriendStatus.INVITATION_SENT),
+            @Friend(photos = @Photo, status = FriendStatus.NOT_FRIEND),
     }))
     @DisplayName("Лента фотографий при выбранном [Only my travels] должна отображать только мои фотографии и моих друзей")
     void whenWithFriendsOnlyMyPhotosAndFriendsPhotosShouldBeVisibleTest(@User UserModel user) {

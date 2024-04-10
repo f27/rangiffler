@@ -1,6 +1,6 @@
 package guru.qa.rangiffler.jupiter.annotation;
 
-import guru.qa.rangiffler.model.FriendStatus;
+import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

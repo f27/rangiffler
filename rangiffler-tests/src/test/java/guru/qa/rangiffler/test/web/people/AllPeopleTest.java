@@ -1,10 +1,10 @@
 package guru.qa.rangiffler.test.web.people;
 
+import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.rangiffler.jupiter.annotation.ApiLogin;
 import guru.qa.rangiffler.jupiter.annotation.Friend;
 import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
 import guru.qa.rangiffler.jupiter.annotation.User;
-import guru.qa.rangiffler.model.FriendStatus;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.test.web.BaseWebTest;
 import io.qameta.allure.Feature;
@@ -46,7 +46,7 @@ public class AllPeopleTest extends BaseWebTest {
     }
 
     @Test
-    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.OUTCOME_INVITATION)))
+    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_SENT)))
     @DisplayName("Все люди: должен быть виден друг, которому отправили приглашение")
     void invitedFriendShouldBeVisibleTest(@User UserModel user) {
         UserModel friend = user.friends().get(0);
@@ -56,7 +56,7 @@ public class AllPeopleTest extends BaseWebTest {
     }
 
     @Test
-    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INCOME_INVITATION)))
+    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_RECEIVED)))
     @DisplayName("Все люди: должен быть виден друг, от которого пришло приглашение")
     void friendWhoInvitedMeShouldBeVisibleTest(@User UserModel user) {
         UserModel friend = user.friends().get(0);
@@ -66,7 +66,7 @@ public class AllPeopleTest extends BaseWebTest {
     }
 
     @Test
-    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.NONE)))
+    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.NOT_FRIEND)))
     @DisplayName("Все люди: должен быть виден человек, который без статуса")
     void notFriendShouldBeVisibleTest(@User UserModel user) {
         UserModel friend = user.friends().get(0);

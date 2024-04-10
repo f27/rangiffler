@@ -1,11 +1,11 @@
 package guru.qa.rangiffler.test.web.people;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.rangiffler.jupiter.annotation.ApiLogin;
 import guru.qa.rangiffler.jupiter.annotation.Friend;
 import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
 import guru.qa.rangiffler.jupiter.annotation.User;
-import guru.qa.rangiffler.model.FriendStatus;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.test.web.BaseWebTest;
 import io.qameta.allure.Feature;
@@ -28,7 +28,7 @@ public class ActionTest extends BaseWebTest {
     }
 
     @Test
-    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.NONE)))
+    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.NOT_FRIEND)))
     @DisplayName("Отправить приглашение в друзья")
     void sendInviteToFriendsTest(@User UserModel user) {
         UserModel friend = user.friends().get(0);
@@ -45,7 +45,7 @@ public class ActionTest extends BaseWebTest {
     }
 
     @Test
-    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INCOME_INVITATION)))
+    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_RECEIVED)))
     @DisplayName("Принять приглашение в друзья")
     void acceptInviteToFriendsTest(@User UserModel user) {
         UserModel friend = user.friends().get(0);
@@ -62,7 +62,7 @@ public class ActionTest extends BaseWebTest {
     }
 
     @Test
-    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INCOME_INVITATION)))
+    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_RECEIVED)))
     @DisplayName("Отклонить приглашение в друзья")
     void declineInviteToFriendsTest(@User UserModel user) {
         UserModel friend = user.friends().get(0);

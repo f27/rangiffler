@@ -66,6 +66,16 @@ public class UserEntity {
         return builder.build();
     }
 
+    @PreRemove
+    private void removeInvites() {
+        outcomeInvitations.forEach(friendship -> {
+            friendship.getAddressee().removeIncomeInvitation(friendship);
+        });
+        incomeInvitations.forEach(friendship -> {
+            friendship.getRequester().removeOutcomeInvitation(friendship);
+        });
+    }
+
     public FriendStatus getStatus(UserEntity friend) {
         if (getFriends().contains(friend)) {
             return FriendStatus.FRIEND;
@@ -134,7 +144,8 @@ public class UserEntity {
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         UserEntity that = (UserEntity) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
+        return getId() != null && Objects.equals(getId(), that.getId())
+                && getUsername() != null && Objects.equals(getUsername(), that.getUsername());
     }
 
     @Override

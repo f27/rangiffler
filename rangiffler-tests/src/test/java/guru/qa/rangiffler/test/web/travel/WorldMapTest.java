@@ -50,7 +50,7 @@ public class WorldMapTest extends BaseWebTest {
 
     @Test
     @ApiLogin(user = @GenerateUser(photos = @Photo(country = CountryEnum.EGYPT)))
-    @DisplayName("Карта мира при [Only my travels] должна подсвечивать страну из которой есть мои фотографии")
+    @DisplayName("Карта мира при [Only my travels] должна подсвечиваться страну из которой есть мои фотографии")
     void worldMapShouldHighlightCountryWithPhotosTest() {
         myTravelsPage.getWorldMap()
                 .checkCountryIsNotHighlighted(CountryEnum.RUSSIAN_FEDERATION)

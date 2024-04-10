@@ -1,10 +1,11 @@
 package guru.qa.rangiffler.jupiter.extension;
 
+import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.rangiffler.jupiter.annotation.*;
-import guru.qa.rangiffler.model.FriendStatus;
 import guru.qa.rangiffler.model.UserModel;
 import org.junit.jupiter.api.extension.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,15 +90,15 @@ public abstract class AbstractGenerateUserExtension implements BeforeEachCallbac
                                          boolean generateLastname,
                                          boolean generateCountry,
                                          String avatar,
-                                         FriendStatus status);
+                                         FriendStatus status) throws IOException;
 
     public abstract void addPhotos(UserModel user, Photo[] photos);
 
-    public abstract void addFriends(UserModel user, Friend[] friends);
+    public abstract void addFriends(UserModel user, Friend[] friends) throws IOException;
 
     public abstract void deleteUser(UserModel user);
 
-    private UserModel generateUser(GenerateUser annotation) {
+    private UserModel generateUser(GenerateUser annotation) throws IOException {
         UserModel user = createUser(
                 annotation.username(),
                 annotation.password(),
@@ -105,7 +106,7 @@ public abstract class AbstractGenerateUserExtension implements BeforeEachCallbac
                 annotation.generateLastname(),
                 annotation.generateCountry(),
                 annotation.avatar(),
-                FriendStatus.NONE);
+                FriendStatus.NOT_FRIEND);
         addPhotos(user, annotation.photos());
         addFriends(user, annotation.friends());
         return user;

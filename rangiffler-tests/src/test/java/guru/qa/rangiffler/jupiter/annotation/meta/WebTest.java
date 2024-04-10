@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @ExtendWith({
         ContextHolderExtension.class,
-        DBGenerateUserExtension.class,
         BrowserExtension.class,
+        ApiGenerateUserExtension.class,
         AllureJunit5.class,
         UserForRegistrationExtension.class,
         ApiLoginExtension.class

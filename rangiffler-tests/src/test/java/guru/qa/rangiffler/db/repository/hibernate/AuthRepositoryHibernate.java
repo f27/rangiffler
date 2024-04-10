@@ -40,9 +40,4 @@ public class AuthRepositoryHibernate extends JpaService implements AuthRepositor
     public void deleteById(UUID id) {
         removeById(UserAuthEntity.class, id);
     }
-
-    @Override
-    public void delete(UserAuthEntity user) {
-        remove(user);
-    }
 }

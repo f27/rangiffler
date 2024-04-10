@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
-<html lang="ru" xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>Login to Rangiffler</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <link rel="icon" th:href="@{images/favicon.ico}"/>
-    <link href="../static/styles/styles.css" th:href="@{styles/styles.css}" rel="stylesheet"
+    <link href="../static/styles/styles.css" rel="stylesheet" th:href="@{styles/styles.css}"
           type="text/css"/>
 </head>
 <body>
@@ -15,9 +15,9 @@
             <h1 class="header">
                 <span class="header__accent">R</span>angiffler
             </h1>
-            <img class="header__logo" src="./../static/images/deer-logo.svg" width="90" th:src="@{images/deer-logo.svg}"
-                 alt="Rangiffler logo"/>
-            <form class="form" action="#" th:action="@{/login}" method="post">
+            <img alt="Rangiffler logo" class="header__logo" src="./../static/images/deer-logo.svg" th:src="@{images/deer-logo.svg}"
+                 width="90"/>
+            <form action="#" class="form" method="post" th:action="@{/login}">
                 <div th:if="${param.error}">
                     <p class="form__error">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
                 </div>
@@ -25,27 +25,27 @@
                     <p class="text-warning">You have been logged out.</p>
                 </div>
                 <label class="form__label">Username:
-                    <input class="form__input"
-                           type="text"
+                    <input autocomplete="false"
+                           class="form__input"
                            name="username"
                            placeholder="Type your username"
-                           autocomplete="false"
-                           required/>
+                           required
+                           type="text"/>
                 </label>
                 <label class="form__label">Password:
-                    <input class="form__input"
-                           type="password"
+                    <input autocomplete="false"
+                           class="form__input"
                            name="password"
                            placeholder="Type your password"
-                           autocomplete="false"
-                           required/>
-                    <button type="button" class="form__password-button"></button>
+                           required
+                           type="password"/>
+                    <button class="form__password-button" type="button"></button>
                 </label>
                 <button class="form__submit" type="submit">
                     Sign In
                 </button>
-                <p class="form__paragraph">Have no account? <a class="form__link" th:href="@{/register}"
-                                                               href="/register">Sign up!</a></p>
+                <p class="form__paragraph">Have no account? <a class="form__link" href="/register"
+                                                               th:href="@{/register}">Sign up!</a></p>
             </form>
         </section>
     </div>

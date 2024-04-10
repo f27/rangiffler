@@ -1,5 +1,6 @@
 package guru.qa.rangiffler.jupiter.extension;
 
+import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.rangiffler.db.entity.photo.PhotoEntity;
 import guru.qa.rangiffler.db.entity.user.*;
 import guru.qa.rangiffler.db.repository.AuthRepository;
@@ -11,7 +12,6 @@ import guru.qa.rangiffler.db.repository.hibernate.UserdataRepositoryHibernate;
 import guru.qa.rangiffler.jupiter.annotation.Friend;
 import guru.qa.rangiffler.jupiter.annotation.Photo;
 import guru.qa.rangiffler.model.CountryEnum;
-import guru.qa.rangiffler.model.FriendStatus;
 import guru.qa.rangiffler.model.PhotoModel;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.util.DataUtil;
@@ -64,7 +64,7 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
         try {
             userdataRepository.create(userdata);
         } catch (Throwable t) {
-            authRepository.delete(userAuth);
+            authRepository.deleteById(userAuth.getId());
             throw t;
         }
 
@@ -117,7 +117,7 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
                     friend.status()
             );
             addPhotos(createdFriend, friend.photos());
-            if (createdFriend.friendStatus() != FriendStatus.NONE) {
+            if (createdFriend.friendStatus() != FriendStatus.NOT_FRIEND) {
                 UserEntity mainUser = userdataRepository.findByUsername(user.username()).orElseThrow();
                 UserEntity friendUser = userdataRepository.findByUsername(createdFriend.username()).orElseThrow();
                 if (createdFriend.friendStatus().equals(FriendStatus.FRIEND)) {
@@ -134,7 +134,7 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
                     mainUser.addIncomeInvitation(incomeFriendship);
                     mainUser.addOutcomeInvitation(outcomeFriendship);
                     userdataRepository.save(mainUser);
-                } else if (createdFriend.friendStatus().equals(FriendStatus.INCOME_INVITATION)) {
+                } else if (createdFriend.friendStatus().equals(FriendStatus.INVITATION_RECEIVED)) {
                     FriendshipEntity incomeFriendship = new FriendshipEntity();
                     incomeFriendship.setRequester(friendUser);
                     incomeFriendship.setAddressee(mainUser);
@@ -142,7 +142,7 @@ public class DBGenerateUserExtension extends AbstractGenerateUserExtension {
 
                     mainUser.addIncomeInvitation(incomeFriendship);
                     userdataRepository.save(mainUser);
-                } else if (createdFriend.friendStatus().equals(FriendStatus.OUTCOME_INVITATION)) {
+                } else if (createdFriend.friendStatus().equals(FriendStatus.INVITATION_SENT)) {
                     FriendshipEntity outcomeFriendship = new FriendshipEntity();
                     outcomeFriendship.setRequester(mainUser);
                     outcomeFriendship.setAddressee(friendUser);

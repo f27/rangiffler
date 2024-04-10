@@ -7,6 +7,7 @@ import guru.qa.rangiffler.entity.friendship.FriendshipStatus;
 import guru.qa.rangiffler.entity.user.UserEntity;
 import guru.qa.rangiffler.repository.UserdataRepository;
 import io.grpc.stub.StreamObserver;
+import jakarta.transaction.Transactional;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -288,6 +289,7 @@ public class UserdataService extends RangifflerUserdataServiceGrpc.RangifflerUse
     }
 
     @Override
+    @Transactional
     public void deleteUser(Username request, StreamObserver<Empty> responseObserver) {
         userdataRepository.deleteByUsername(request.getUsername());
         responseObserver.onNext(Empty.getDefaultInstance());
