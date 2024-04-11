@@ -1,7 +1,7 @@
-package guru.qa.rangiffler.api;
+package guru.qa.rangiffler.api.rest;
 
-import guru.qa.rangiffler.api.cookie.ThreadSafeCookieManager;
-import guru.qa.rangiffler.api.interceptor.AllureInterceptor;
+import guru.qa.rangiffler.api.rest.cookie.ThreadSafeCookieManager;
+import guru.qa.rangiffler.api.rest.interceptor.AllureInterceptor;
 import guru.qa.rangiffler.config.Config;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;

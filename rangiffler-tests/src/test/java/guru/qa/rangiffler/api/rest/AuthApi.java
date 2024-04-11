@@ -1,4 +1,4 @@
-package guru.qa.rangiffler.api;
+package guru.qa.rangiffler.api.rest;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import retrofit2.Call;

@@ -1,4 +1,4 @@
-package guru.qa.rangiffler.api;
+package guru.qa.rangiffler.api.rest;
 
 import guru.qa.rangiffler.model.gql.GqlRequest;
 import guru.qa.rangiffler.model.gql.response.GqlUser;

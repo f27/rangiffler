@@ -2,7 +2,7 @@ package guru.qa.rangiffler.jupiter.extension;
 
 import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.grpc.rangiffler.grpc.User;
-import guru.qa.rangiffler.api.AuthApiClient;
+import guru.qa.rangiffler.api.rest.AuthApiClient;
 import guru.qa.rangiffler.api.grpc.PhotoGrpcClient;
 import guru.qa.rangiffler.api.grpc.UserdataGrpcClient;
 import guru.qa.rangiffler.db.entity.user.UserAuthEntity;

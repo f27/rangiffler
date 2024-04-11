@@ -1,4 +1,4 @@
-package guru.qa.rangiffler.api.interceptor;
+package guru.qa.rangiffler.api.rest.interceptor;
 
 import io.qameta.allure.okhttp3.AllureOkHttp3;
 

@@ -1,6 +1,6 @@
 package guru.qa.rangiffler.test.gql;
 
-import guru.qa.rangiffler.api.GatewayApiClient;
+import guru.qa.rangiffler.api.rest.GatewayApiClient;
 import guru.qa.rangiffler.config.Config;
 import guru.qa.rangiffler.jupiter.annotation.meta.GqlTest;
 import guru.qa.rangiffler.jupiter.extension.ApiLoginExtension;
