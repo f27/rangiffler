@@ -127,9 +127,6 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
     public void deleteUser(UserModel user) {
         photoGrpcClient.deleteAllPhotos(user.id());
         userdataGrpcClient.deleteUser(user.username());
-        System.out.println(user.id());
-        System.out.println(user.authId());
-        System.out.println(user.username());
         UUID userAuthId;
         if (user.authId() == null) {
             final UserAuthEntity authEntity = authRepository.findByUsername(user.username()).orElseThrow();

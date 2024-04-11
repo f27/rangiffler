@@ -17,7 +17,7 @@ public class GqlExceptionResolver extends DataFetcherExceptionResolverAdapter {
                     .location(env.getField().getSourceLocation())
                     .build();
         } else {
-            return null;
+            return super.resolveToSingleError(ex, env);
         }
     }
 }
