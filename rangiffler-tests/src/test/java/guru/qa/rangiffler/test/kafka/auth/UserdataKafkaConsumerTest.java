@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import static com.codeborne.selenide.Selenide.sleep;
+import static io.qameta.allure.Allure.step;
 
 @Feature("Userdata")
 @Story("Получение сообщения из Kafka")
@@ -27,7 +28,7 @@ public class UserdataKafkaConsumerTest extends BaseKafkaTest {
     @Test
     @DisplayName("После получения сообщения из Kafka [Userdata] должна создать запись в БД")
     void userdataKafkaConsumerTest(@UserForRegistration UserModel user) throws ExecutionException, InterruptedException {
-        KafkaProducerForUserdata.sendMessage(user);
+        step("Отправить сообщение в Kafka", () -> KafkaProducerForUserdata.sendMessage(user));
         Optional<UserEntity> userInUserdata = Optional.empty();
         for (int i = 1; i <= 20; i++) {
             userInUserdata = userdataRepository.findByUsername(user.username());
@@ -38,7 +39,9 @@ public class UserdataKafkaConsumerTest extends BaseKafkaTest {
         if (userInUserdata.isEmpty()) {
             Assertions.fail("Пользователь не был найден в БД userdata");
         } else {
-            Assertions.assertEquals(user.username(), userInUserdata.get().getUsername());
+            final String usernameFromDb = userInUserdata.get().getUsername();
+            step("Проверить, что username в БД совпадает с отправленным",
+                    () -> Assertions.assertEquals(user.username(), usernameFromDb));
         }
     }
 }

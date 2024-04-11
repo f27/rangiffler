@@ -40,6 +40,6 @@ public class GeoGrpcTest extends BaseGrpcTest {
     @DisplayName("Когда получаем список всех стран он не должен быть пустым")
     void getAllCountriesTest() {
         List<CountryModel> countriesFromGrpc = GEO_GRPC_CLIENT.getAllCountries();
-        Assertions.assertFalse(countriesFromGrpc.isEmpty());
+        step("Проверить, что список не пуст", () -> Assertions.assertFalse(countriesFromGrpc.isEmpty()));
     }
 }

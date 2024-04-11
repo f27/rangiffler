@@ -4,6 +4,7 @@ import com.google.protobuf.Empty;
 import guru.qa.grpc.rangiffler.grpc.CountryCode;
 import guru.qa.grpc.rangiffler.grpc.RangifflerGeoServiceGrpc;
 import guru.qa.rangiffler.model.CountryModel;
+import io.qameta.allure.grpc.AllureGrpc;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -14,7 +15,7 @@ public class GeoGrpcClient extends GrpcClient {
 
     public GeoGrpcClient() {
         super(CFG.geoGrpcHost(), CFG.geoGrpcPort());
-        this.blockingStub = RangifflerGeoServiceGrpc.newBlockingStub(channel);
+        this.blockingStub = RangifflerGeoServiceGrpc.newBlockingStub(channel).withInterceptors(new AllureGrpc());
     }
 
     public @Nonnull CountryModel getCountryByCode(String countryCode) {

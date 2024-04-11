@@ -1,6 +1,7 @@
 package guru.qa.rangiffler.api.grpc;
 
 import guru.qa.grpc.rangiffler.grpc.*;
+import io.qameta.allure.grpc.AllureGrpc;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,7 +13,7 @@ public class UserdataGrpcClient extends GrpcClient {
 
     public UserdataGrpcClient() {
         super(CFG.userdataGrpcHost(), CFG.userdataGrpcPort());
-        this.blockingStub = RangifflerUserdataServiceGrpc.newBlockingStub(channel);
+        this.blockingStub = RangifflerUserdataServiceGrpc.newBlockingStub(channel).withInterceptors(new AllureGrpc());
     }
 
     public User getUser(String username) {
