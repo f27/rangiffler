@@ -1,0 +1,5 @@
+{
+  "operationName": "GetUser",
+  "variables": {},
+  "query": "query GetUser {\n  user {\n    id\n    username\n    firstname\n    surname\n    avatar\n    location {\n      code\n      name\n      __typename\n    }\n    __typename\n  }\n}"
+}

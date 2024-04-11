@@ -10,6 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.LoggerFactory;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,6 +23,15 @@ public abstract class RestClient {
 
     protected final OkHttpClient okHttpClient;
     protected final Retrofit retrofit;
+
+    public RestClient(@Nonnull String baseUri) {
+        this(
+                baseUri,
+                false,
+                JacksonConverterFactory.create(),
+                null
+        );
+    }
 
     public RestClient(@Nonnull String baseUri,
                       boolean followRedirect,
