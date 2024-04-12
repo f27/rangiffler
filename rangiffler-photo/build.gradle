@@ -47,6 +47,12 @@ jib {
     }
 }
 
+tasks.register('printVersion') {
+    doLast {
+        println project.version
+    }
+}
+
 test {
     useJUnitPlatform()
 }
