@@ -1,6 +1,7 @@
 package guru.qa.rangiffler.config;
 
 import com.codeborne.selenide.Configuration;
+import guru.qa.rangiffler.model.grpc.GrpcAddress;
 
 public class LocalConfig implements Config {
 
@@ -30,18 +31,18 @@ public class LocalConfig implements Config {
     }
 
     @Override
-    public String geoGrpcHost() {
-        return "127.0.0.1";
+    public GrpcAddress geoGrpcAddress() {
+        return new GrpcAddress("127.0.0.1", 8092);
     }
 
     @Override
-    public String photoGrpcHost() {
-        return "127.0.0.1";
+    public GrpcAddress photoGrpcAddress() {
+        return new GrpcAddress("127.0.0.1", 8093);
     }
 
     @Override
-    public String userdataGrpcHost() {
-        return "127.0.0.1";
+    public GrpcAddress userdataGrpcAddress() {
+        return new GrpcAddress("127.0.0.1", 8091);
     }
 
     @Override
@@ -62,5 +63,10 @@ public class LocalConfig implements Config {
     @Override
     public String kafkaHost() {
         return "127.0.0.1";
+    }
+
+    @Override
+    public String allureDockerUrl() {
+        return "http://127.0.0.1:5050/";
     }
 }

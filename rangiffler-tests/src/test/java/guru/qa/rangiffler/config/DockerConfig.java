@@ -1,6 +1,7 @@
 package guru.qa.rangiffler.config;
 
 import com.codeborne.selenide.Configuration;
+import guru.qa.rangiffler.model.grpc.GrpcAddress;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 public class DockerConfig implements Config {
@@ -11,6 +12,7 @@ public class DockerConfig implements Config {
         Configuration.baseUrl = instance.frontUrl();
         Configuration.remote = "http://selenoid:4444/wd/hub";
         Configuration.browser = "chrome";
+        Configuration.browserVersion = "123.0";
         Configuration.browserCapabilities = new ChromeOptions().addArguments("--no-sandbox");
         Configuration.browserSize = "1980x1024";
     }
@@ -34,18 +36,18 @@ public class DockerConfig implements Config {
     }
 
     @Override
-    public String geoGrpcHost() {
-        return "geo.rangiffler.dc";
+    public GrpcAddress geoGrpcAddress() {
+        return new GrpcAddress("geo.rangiffler.dc", 8092);
     }
 
     @Override
-    public String photoGrpcHost() {
-        return "photo.rangiffler.dc";
+    public GrpcAddress photoGrpcAddress() {
+        return new GrpcAddress("photo.rangiffler.dc", 8093);
     }
 
     @Override
-    public String userdataGrpcHost() {
-        return "userdata.rangiffler.dc";
+    public GrpcAddress userdataGrpcAddress() {
+        return new GrpcAddress("userdata.rangiffler.dc", 8091);
     }
 
     @Override
@@ -66,5 +68,10 @@ public class DockerConfig implements Config {
     @Override
     public String kafkaHost() {
         return "kafka";
+    }
+
+    @Override
+    public String allureDockerUrl() {
+        return System.getenv("ALLURE_DOCKER_API");
     }
 }

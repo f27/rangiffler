@@ -14,6 +14,7 @@ import org.openqa.selenium.Cookie;
 
 import javax.annotation.Nonnull;
 
+import static com.codeborne.selenide.Selenide.sleep;
 import static io.qameta.allure.Allure.step;
 
 public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
@@ -111,6 +112,7 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
                     localStorage.setItem("access_token", getAccessToken());
                     localStorage.setItem("refresh_token", getRefreshToken());
                     WebDriverRunner.getWebDriver().manage().addCookie(getJsessionCookie());
+                    sleep(1000);
                     Selenide.refresh();
                 });
             }

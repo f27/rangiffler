@@ -14,7 +14,7 @@ public class PhotoGrpcClient extends GrpcClient {
     private final RangifflerPhotoServiceGrpc.RangifflerPhotoServiceBlockingStub blockingStub;
 
     public PhotoGrpcClient() {
-        super(CFG.photoGrpcHost(), CFG.photoGrpcPort());
+        super(GrpcChannelProvider.INSTANCE.channel(CFG.photoGrpcAddress()));
         this.blockingStub = RangifflerPhotoServiceGrpc.newBlockingStub(channel).withInterceptors(new AllureGrpc());
     }
 

@@ -1,11 +1,13 @@
 package guru.qa.rangiffler.config;
 
+import guru.qa.rangiffler.model.grpc.GrpcAddress;
+
 import java.util.List;
 
 public interface Config {
 
     static Config getInstance() {
-        return "docker".equals(System.getProperty("test.env"))
+        return "docker".equals(System.getenv("TEST_ENV"))
                 ? DockerConfig.instance
                 : LocalConfig.instance;
     }
@@ -16,23 +18,11 @@ public interface Config {
 
     String gatewayUrl();
 
-    String geoGrpcHost();
+    GrpcAddress geoGrpcAddress();
 
-    default int geoGrpcPort() {
-        return 8092;
-    }
+    GrpcAddress photoGrpcAddress();
 
-    String photoGrpcHost();
-
-    default int photoGrpcPort() {
-        return 8093;
-    }
-
-    String userdataGrpcHost();
-
-    default int userdataGrpcPort() {
-        return 8091;
-    }
+    GrpcAddress userdataGrpcAddress();
 
     String dbHost();
 
@@ -53,4 +43,6 @@ public interface Config {
     default List<String> kafkaTopics() {
         return List.of("users");
     }
+
+    String allureDockerUrl();
 }

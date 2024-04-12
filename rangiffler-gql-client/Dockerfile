@@ -3,6 +3,8 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install
 COPY . ./
+RUN sed -i 's/\r$//' ./.env
+RUN sed -i 's/\r$//' ./.env.docker
 RUN npm run build:docker
 
 # release step

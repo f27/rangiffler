@@ -14,7 +14,7 @@ public class GeoGrpcClient extends GrpcClient {
     private final RangifflerGeoServiceGrpc.RangifflerGeoServiceBlockingStub blockingStub;
 
     public GeoGrpcClient() {
-        super(CFG.geoGrpcHost(), CFG.geoGrpcPort());
+        super(GrpcChannelProvider.INSTANCE.channel(CFG.geoGrpcAddress()));
         this.blockingStub = RangifflerGeoServiceGrpc.newBlockingStub(channel).withInterceptors(new AllureGrpc());
     }
 

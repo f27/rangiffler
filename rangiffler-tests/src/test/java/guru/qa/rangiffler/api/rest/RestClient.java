@@ -16,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.time.Duration;
 
 public abstract class RestClient {
 
@@ -28,8 +29,7 @@ public abstract class RestClient {
         this(
                 baseUri,
                 false,
-                JacksonConverterFactory.create(),
-                null
+                JacksonConverterFactory.create()
         );
     }
 
@@ -50,6 +50,10 @@ public abstract class RestClient {
                 ).setLevel(HttpLoggingInterceptor.Level.BODY)
         );
         builder.cookieJar(new JavaNetCookieJar(new CookieManager(ThreadSafeCookieManager.INSTANCE, CookiePolicy.ACCEPT_ALL)));
+        builder
+                .connectTimeout(Duration.ofSeconds(30))
+                .writeTimeout(Duration.ofSeconds(30))
+                .readTimeout(Duration.ofSeconds(30));
         this.okHttpClient = builder.build();
         this.retrofit = new Retrofit.Builder()
                 .client(okHttpClient)

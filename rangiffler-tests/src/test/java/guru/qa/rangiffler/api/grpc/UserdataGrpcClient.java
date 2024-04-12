@@ -12,7 +12,7 @@ public class UserdataGrpcClient extends GrpcClient {
     private final RangifflerUserdataServiceGrpc.RangifflerUserdataServiceBlockingStub blockingStub;
 
     public UserdataGrpcClient() {
-        super(CFG.userdataGrpcHost(), CFG.userdataGrpcPort());
+        super(GrpcChannelProvider.INSTANCE.channel(CFG.userdataGrpcAddress()));
         this.blockingStub = RangifflerUserdataServiceGrpc.newBlockingStub(channel).withInterceptors(new AllureGrpc());
     }
 
