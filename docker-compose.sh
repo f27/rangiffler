@@ -1,6 +1,6 @@
 #!/bin/bash
 source ./docker.properties
-export PROFILE="${PROFILE:=docker}"
+export PROFILE=${PROFILE}
 
 echo '### Java version ###'
 java --version
@@ -26,12 +26,16 @@ if [ ! -z "$docker_images" ]; then
 fi
 
 if [ "$1" = "push" ]; then
-  echo "### Build & push images (front_path: $front_path) ###"
+  echo "### Build & push backend ###"
   bash ./gradlew jib
   docker build -t ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:${FRONT_VERSION} -t ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:latest "$front_path"
+  echo "### Build & push frontend (front_path: $front_path) ###"
+  docker push ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:${FRONT_VERSION}
+  docker push ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:latest
 else
-  echo "### Build images (front_path: $front_path) ###"
+  echo "### Build backend ###"
   bash ./gradlew jibDockerBuild
+  echo "### Build frontend (front_path: $front_path) ###"
   docker build -t ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:${FRONT_VERSION} -t ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:latest "$front_path"
 fi
 

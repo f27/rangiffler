@@ -6,8 +6,8 @@ services:
     image: mysql:8.3.0
     environment:
       - MYSQL_ROOT_PASSWORD=secret
-    volumes:
-      - rangiffler-all-db:/var/lib/mysql
+#    volumes:
+#      - rangiffler-all-db:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       interval: 3s
@@ -56,7 +56,7 @@ services:
     healthcheck:
       test: "wget --spider http://localhost:9000/actuator/health || exit 1"
       interval: 5s
-      timeout: 5s
+      timeout: 15s
       retries: 10
     restart: always
     depends_on:
