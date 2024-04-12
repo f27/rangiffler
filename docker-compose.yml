@@ -137,9 +137,9 @@ services:
     networks:
       - rangiffler-network
     dns_search: .
-volumes:
-  rangiffler-all-db:
-    external: true
+#volumes:
+#  rangiffler-all-db:
+#    external: true
 
 networks:
   rangiffler-network:
