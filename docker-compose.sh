@@ -11,7 +11,6 @@ front_image="${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}"
 echo '### Docker-compose down ###'
 FRONT_IMAGE="${IMAGE_PREFIX}/${FRONT_IMAGE_NAME_GQL}-${PROFILE}:latest" PREFIX="${IMAGE_PREFIX}" PROFILE="${PROFILE}" docker-compose down
 
-echo '### Java version ###'
 docker_containers="$(docker ps -a -q)"
 docker_images="$(docker images --format '{{.Repository}}:{{.Tag}}' | grep 'rangiffler')"
 
