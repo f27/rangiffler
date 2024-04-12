@@ -17,7 +17,6 @@ import guru.qa.rangiffler.util.DataUtil;
 import guru.qa.rangiffler.util.ImageUtil;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -63,7 +62,7 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
             }
         }
         if (updateUserResponse == null) {
-            throw new RemoteException("User not found in userdata db");
+            throw new RuntimeException("User not found in userdata db");
         }
 
         return new UserModel(

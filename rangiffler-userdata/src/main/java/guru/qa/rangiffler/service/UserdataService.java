@@ -6,6 +6,7 @@ import guru.qa.rangiffler.entity.friendship.FriendshipEntity;
 import guru.qa.rangiffler.entity.friendship.FriendshipStatus;
 import guru.qa.rangiffler.entity.user.UserEntity;
 import guru.qa.rangiffler.repository.UserdataRepository;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import jakarta.transaction.Transactional;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -28,10 +29,14 @@ public class UserdataService extends RangifflerUserdataServiceGrpc.RangifflerUse
 
     @Override
     public void getUser(Username request, StreamObserver<User> responseObserver) {
-        responseObserver.onNext(UserEntity.toGrpcMessage(
-                userdataRepository.getByUsername(request.getUsername()),
-                FriendStatus.NOT_FRIEND));
-        responseObserver.onCompleted();
+        try {
+            responseObserver.onNext(UserEntity.toGrpcMessage(
+                    userdataRepository.getByUsername(request.getUsername()),
+                    FriendStatus.NOT_FRIEND));
+            responseObserver.onCompleted();
+        } catch (Throwable t) {
+            responseObserver.onError(Status.NOT_FOUND.withDescription("User not found").asRuntimeException());
+        }
     }
 
     @Override

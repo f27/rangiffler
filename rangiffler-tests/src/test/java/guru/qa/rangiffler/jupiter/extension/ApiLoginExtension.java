@@ -107,13 +107,12 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
 
             if (initBrowser) {
                 step("Запустить браузер с авторизованным пользователем", () -> {
-                    Selenide.open("/");
+                    Selenide.open("/favicon.ico");
                     LocalStorage localStorage = Selenide.localStorage();
                     localStorage.setItem("access_token", getAccessToken());
                     localStorage.setItem("refresh_token", getRefreshToken());
                     WebDriverRunner.getWebDriver().manage().addCookie(getJsessionCookie());
-                    sleep(1000);
-                    Selenide.refresh();
+                    Selenide.open("/");
                 });
             }
         }
