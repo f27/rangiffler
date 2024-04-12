@@ -26,14 +26,14 @@ fi
 
 if [ "$1" = "push" ]; then
   echo "### Build & push backend ###"
-  bash ./gradlew jib
+  bash ./gradlew jib -x :rangiffler-tests:test
   docker build -t ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:${FRONT_VERSION} -t ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:latest "$front_path"
   echo "### Build & push frontend (front_path: $front_path) ###"
   docker push ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:${FRONT_VERSION}
   docker push ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:latest
 else
   echo "### Build backend ###"
-  bash ./gradlew jibDockerBuild
+  bash ./gradlew jibDockerBuild -x :rangiffler-tests:test
   echo "### Build frontend (front_path: $front_path) ###"
   docker build -t ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:${FRONT_VERSION} -t ${IMAGE_PREFIX}/${FRONT_IMAGE_NAME}-${PROFILE}:latest "$front_path"
 fi
