@@ -1,13 +1,13 @@
 package guru.qa.rangiffler.api.grpc;
 
 import com.google.protobuf.Empty;
+import guru.qa.grpc.rangiffler.grpc.AllCountriesResponse;
 import guru.qa.grpc.rangiffler.grpc.CountryCode;
+import guru.qa.grpc.rangiffler.grpc.CountryResponse;
 import guru.qa.grpc.rangiffler.grpc.RangifflerGeoServiceGrpc;
-import guru.qa.rangiffler.model.CountryModel;
 import io.qameta.allure.grpc.AllureGrpc;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 public class GeoGrpcClient extends GrpcClient {
 
@@ -18,14 +18,11 @@ public class GeoGrpcClient extends GrpcClient {
         this.blockingStub = RangifflerGeoServiceGrpc.newBlockingStub(channel).withInterceptors(new AllureGrpc());
     }
 
-    public @Nonnull CountryModel getCountryByCode(String countryCode) {
-        CountryCode request = CountryCode.newBuilder()
-                .setCode(countryCode)
-                .build();
-        return CountryModel.fromGrpcMessage(blockingStub.getCountryByCode(request));
+    public @Nonnull CountryResponse getCountryByCode(CountryCode countryCode) {
+        return blockingStub.getCountryByCode(countryCode);
     }
 
-    public @Nonnull List<CountryModel> getAllCountries() {
-        return CountryModel.fromGrpcMessage(blockingStub.getAllCountries(Empty.getDefaultInstance()));
+    public @Nonnull AllCountriesResponse getAllCountries() {
+        return blockingStub.getAllCountries(Empty.getDefaultInstance());
     }
 }

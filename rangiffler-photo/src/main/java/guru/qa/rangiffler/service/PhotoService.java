@@ -4,16 +4,14 @@ import com.google.protobuf.Empty;
 import guru.qa.grpc.rangiffler.grpc.*;
 import guru.qa.rangiffler.entity.PhotoEntity;
 import guru.qa.rangiffler.repository.PhotoRepository;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import jakarta.transaction.Transactional;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static io.grpc.Status.NOT_FOUND;
 
@@ -30,10 +28,31 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
     @Override
     public void createPhoto(CreatePhotoRequest request, StreamObserver<PhotoResponse> responseObserver) {
         PhotoEntity photo = new PhotoEntity();
-        photo.setUserId(UUID.fromString(request.getUserId()));
-        photo.setPhoto(request.getSrc().getBytes());
-        photo.setCountryCode(request.getCountryCode());
-        photo.setDescription(request.getDescription());
+        try {
+            photo.setUserId(UUID.fromString(request.getUserId()));
+        } catch (IllegalArgumentException e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException());
+            return;
+        }
+
+        String photoSrc = request.getSrc();
+        if (!isCorrectImageDataBase64(photoSrc)) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException());
+            return;
+        }
+        String photoCountryCode = request.getCountryCode();
+        if (photoCountryCode.length() > 50) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Too long country code").asRuntimeException());
+            return;
+        }
+        String photoDescription = request.getDescription();
+        if (photoDescription.length() > 255) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Too long description").asRuntimeException());
+            return;
+        }
+        photo.setPhoto(photoSrc.getBytes());
+        photo.setCountryCode(photoCountryCode);
+        photo.setDescription(photoDescription);
 
         responseObserver.onNext(PhotoEntity.toGrpcMessage(photoRepository.saveAndFlush(photo)));
         responseObserver.onCompleted();
@@ -125,5 +144,21 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
         photoRepository.removeAllByUserId(UUID.fromString(request.getUserId()));
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
+    }
+
+    private boolean isCorrectImageDataBase64(String src) {
+        boolean isDataImage = src.contains("data:image");
+        if (src.contains("base64,")) {
+            String[] splitedSrc = src.split("base64,");
+            if (splitedSrc.length > 1) {
+                try {
+                    Base64.getDecoder().decode(splitedSrc[1]);
+                    return isDataImage;
+                } catch (IllegalArgumentException e) {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 }

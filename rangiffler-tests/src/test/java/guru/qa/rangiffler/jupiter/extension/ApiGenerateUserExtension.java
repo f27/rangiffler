@@ -1,5 +1,7 @@
 package guru.qa.rangiffler.jupiter.extension;
 
+import guru.qa.grpc.rangiffler.grpc.CreatePhotoRequest;
+import guru.qa.grpc.rangiffler.grpc.DeleteAllPhotosRequest;
 import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.grpc.rangiffler.grpc.User;
 import guru.qa.rangiffler.api.grpc.PhotoGrpcClient;
@@ -89,7 +91,12 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
                     photo.description(),
                     photo.image()
             );
-            photoGrpcClient.createPhoto(user.id(), photoModel);
+            photoGrpcClient.createPhoto(CreatePhotoRequest.newBuilder()
+                    .setUserId(user.id().toString())
+                    .setSrc(photoModel.getPhotoAsBase64())
+                    .setCountryCode(photoModel.country().getCode())
+                    .setDescription(photoModel.description())
+                    .build());
             user.addPhoto(photoModel);
         }
     }
@@ -124,7 +131,7 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
 
     @Override
     public void deleteUser(UserModel user) {
-        photoGrpcClient.deleteAllPhotos(user.id());
+        photoGrpcClient.deleteAllPhotos(DeleteAllPhotosRequest.newBuilder().setUserId(user.id().toString()).build());
         userdataGrpcClient.deleteUser(user.username());
         UUID userAuthId;
         if (user.authId() == null) {

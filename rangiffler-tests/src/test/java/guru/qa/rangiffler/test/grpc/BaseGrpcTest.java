@@ -13,9 +13,10 @@ import org.junit.jupiter.api.Tag;
 @Epic("gRPC")
 public abstract class BaseGrpcTest {
 
-    protected final Config CFG = Config.getInstance();
-    protected final GeoGrpcClient GEO_GRPC_CLIENT = new GeoGrpcClient();
-    protected final PhotoGrpcClient PHOTO_GRPC_CLIENT = new PhotoGrpcClient();
-    protected final UserdataGrpcClient USERDATA_GRPC_CLIENT = new UserdataGrpcClient();
+    protected static final Config CFG = Config.getInstance();
+
+    protected final GeoGrpcClient geoGrpcClient = new GeoGrpcClient();
+    protected final PhotoGrpcClient photoGrpcClient = new PhotoGrpcClient();
+    protected final UserdataGrpcClient userdataGrpcClient = new UserdataGrpcClient();
 
 }

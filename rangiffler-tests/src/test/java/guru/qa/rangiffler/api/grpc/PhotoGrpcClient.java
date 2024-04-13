@@ -4,10 +4,7 @@ import guru.qa.grpc.rangiffler.grpc.CreatePhotoRequest;
 import guru.qa.grpc.rangiffler.grpc.DeleteAllPhotosRequest;
 import guru.qa.grpc.rangiffler.grpc.PhotoResponse;
 import guru.qa.grpc.rangiffler.grpc.RangifflerPhotoServiceGrpc;
-import guru.qa.rangiffler.model.PhotoModel;
 import io.qameta.allure.grpc.AllureGrpc;
-
-import java.util.UUID;
 
 public class PhotoGrpcClient extends GrpcClient {
 
@@ -18,20 +15,11 @@ public class PhotoGrpcClient extends GrpcClient {
         this.blockingStub = RangifflerPhotoServiceGrpc.newBlockingStub(channel).withInterceptors(new AllureGrpc());
     }
 
-    public PhotoResponse createPhoto(UUID userId, PhotoModel photoModel) {
-        CreatePhotoRequest request = CreatePhotoRequest.newBuilder()
-                .setUserId(userId.toString())
-                .setSrc(photoModel.getPhotoAsBase64())
-                .setCountryCode(photoModel.country().getCode())
-                .setDescription(photoModel.description())
-                .build();
+    public PhotoResponse createPhoto(CreatePhotoRequest request) {
         return blockingStub.createPhoto(request);
     }
 
-    public void deleteAllPhotos(UUID userId) {
-        DeleteAllPhotosRequest request = DeleteAllPhotosRequest.newBuilder()
-                .setUserId(userId.toString())
-                .build();
+    public void deleteAllPhotos(DeleteAllPhotosRequest request) {
         blockingStub.deleteAllPhotos(request);
     }
 }
