@@ -3,10 +3,6 @@ package guru.qa.rangiffler.api.grpc;
 import guru.qa.grpc.rangiffler.grpc.*;
 import io.qameta.allure.grpc.AllureGrpc;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.UUID;
-
 public class UserdataGrpcClient extends GrpcClient {
 
     private final RangifflerUserdataServiceGrpc.RangifflerUserdataServiceBlockingStub blockingStub;
@@ -24,34 +20,19 @@ public class UserdataGrpcClient extends GrpcClient {
         return blockingStub.getPeople(request);
     }
 
-    public UsersResponse getFriends(String username,
-                                    String searchQuery,
-                                    int page,
-                                    int size) {
-        UsersRequest request = createUsersRequestFromParams(username, searchQuery, page, size);
+    public UsersResponse getFriends(UsersRequest request) {
         return blockingStub.getFriends(request);
     }
 
-    public UsersResponse getIncomeInvitations(String username,
-                                              String searchQuery,
-                                              int page,
-                                              int size) {
-        UsersRequest request = createUsersRequestFromParams(username, searchQuery, page, size);
+    public UsersResponse getIncomeInvitations(UsersRequest request) {
         return blockingStub.getIncomeInvitations(request);
     }
 
-    public UsersResponse getOutcomeInvitations(String username,
-                                               String searchQuery,
-                                               int page,
-                                               int size) {
-        UsersRequest request = createUsersRequestFromParams(username, searchQuery, page, size);
+    public UsersResponse getOutcomeInvitations(UsersRequest request) {
         return blockingStub.getOutcomeInvitations(request);
     }
 
-    public FriendsIdsResponse getFriendsIds(String username) {
-        Username request = Username.newBuilder()
-                .setUsername(username)
-                .build();
+    public FriendsIdsResponse getFriendsIds(Username request) {
         return blockingStub.getFriendsIds(request);
     }
 
@@ -59,57 +40,23 @@ public class UserdataGrpcClient extends GrpcClient {
         return blockingStub.updateCurrentUser(user);
     }
 
-    public GrpcUser inviteFriend(String fromUsername, UUID toId) {
-        FriendshipRequest request = FriendshipRequest.newBuilder()
-                .setUsername(fromUsername)
-                .setTargetUserId(toId.toString())
-                .build();
+    public GrpcUser inviteFriend(FriendshipRequest request) {
         return blockingStub.addFriend(request);
     }
 
-    public GrpcUser acceptFriend(String fromUsername, UUID toId) {
-        FriendshipRequest request = FriendshipRequest.newBuilder()
-                .setUsername(fromUsername)
-                .setTargetUserId(toId.toString())
-                .build();
+    public GrpcUser acceptFriend(FriendshipRequest request) {
         return blockingStub.acceptFriend(request);
     }
 
-    public GrpcUser rejectFriend(String fromUsername, UUID toId) {
-        FriendshipRequest request = FriendshipRequest.newBuilder()
-                .setUsername(fromUsername)
-                .setTargetUserId(toId.toString())
-                .build();
+    public GrpcUser rejectFriend(FriendshipRequest request) {
         return blockingStub.rejectFriend(request);
     }
 
-    public GrpcUser deleteFriend(String fromUsername, UUID toId) {
-        FriendshipRequest request = FriendshipRequest.newBuilder()
-                .setUsername(fromUsername)
-                .setTargetUserId(toId.toString())
-                .build();
+    public GrpcUser deleteFriend(FriendshipRequest request) {
         return blockingStub.rejectFriend(request);
     }
 
-    public void deleteUser(String username) {
-        Username request = Username.newBuilder()
-                .setUsername(username)
-                .build();
+    public void deleteUser(Username request) {
         blockingStub.deleteUser(request);
-    }
-
-    private UsersRequest createUsersRequestFromParams(@Nonnull String username,
-                                                      @Nullable String searchQuery,
-                                                      int page,
-                                                      int size) {
-        UsersRequest.Builder requestBuilder = UsersRequest.newBuilder()
-                .setUsername(username);
-        if (searchQuery != null) {
-            requestBuilder.setSearchQuery(searchQuery);
-        }
-        return requestBuilder
-                .setPage(page)
-                .setSize(size)
-                .build();
     }
 }

@@ -1,9 +1,6 @@
 package guru.qa.rangiffler.jupiter.extension;
 
-import guru.qa.grpc.rangiffler.grpc.CreatePhotoRequest;
-import guru.qa.grpc.rangiffler.grpc.DeleteAllPhotosRequest;
-import guru.qa.grpc.rangiffler.grpc.FriendStatus;
-import guru.qa.grpc.rangiffler.grpc.GrpcUser;
+import guru.qa.grpc.rangiffler.grpc.*;
 import guru.qa.rangiffler.api.grpc.PhotoGrpcClient;
 import guru.qa.rangiffler.api.grpc.UserdataGrpcClient;
 import guru.qa.rangiffler.api.rest.AuthApiClient;
@@ -116,12 +113,32 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
 
             switch (createdFriend.friendStatus()) {
                 case FRIEND -> {
-                    userdataGrpcClient.inviteFriend(user.username(), createdFriend.id());
-                    userdataGrpcClient.acceptFriend(createdFriend.username(), user.id());
+                    FriendshipRequest inviteRequest = FriendshipRequest.newBuilder()
+                            .setUsername(user.username())
+                            .setTargetUserId(createdFriend.id().toString())
+                            .build();
+                    FriendshipRequest acceptInviteRequest = FriendshipRequest.newBuilder()
+                            .setUsername(createdFriend.username())
+                            .setTargetUserId(user.id().toString())
+                            .build();
+                    userdataGrpcClient.inviteFriend(inviteRequest);
+                    userdataGrpcClient.acceptFriend(acceptInviteRequest);
                 }
-                case INVITATION_RECEIVED -> userdataGrpcClient.inviteFriend(createdFriend.username(), user.id());
+                case INVITATION_RECEIVED -> {
+                    FriendshipRequest request = FriendshipRequest.newBuilder()
+                            .setUsername(createdFriend.username())
+                            .setTargetUserId(user.id().toString())
+                            .build();
+                    userdataGrpcClient.inviteFriend(request);
+                }
 
-                case INVITATION_SENT -> userdataGrpcClient.inviteFriend(user.username(), createdFriend.id());
+                case INVITATION_SENT -> {
+                    FriendshipRequest request = FriendshipRequest.newBuilder()
+                            .setUsername(user.username())
+                            .setTargetUserId(createdFriend.id().toString())
+                            .build();
+                    userdataGrpcClient.inviteFriend(request);
+                }
 
             }
             user.addFriend(createdFriend);
@@ -131,7 +148,7 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
     @Override
     public void deleteUser(UserModel user) {
         photoGrpcClient.deleteAllPhotos(DeleteAllPhotosRequest.newBuilder().setUserId(user.id().toString()).build());
-        userdataGrpcClient.deleteUser(user.username());
+        userdataGrpcClient.deleteUser(Username.newBuilder().setUsername(user.username()).build());
         UUID userAuthId;
         if (user.authId() == null) {
             final UserAuthEntity authEntity = authRepository.findByUsername(user.username()).orElseThrow();

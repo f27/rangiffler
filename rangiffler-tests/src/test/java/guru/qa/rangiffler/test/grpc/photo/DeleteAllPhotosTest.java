@@ -64,7 +64,7 @@ public class DeleteAllPhotosTest extends BaseGrpcTest {
                 () -> photoGrpcClient.deleteAllPhotos(request)
         );
         Assertions.assertEquals(
-                Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException().getMessage(),
+                Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
                 e.getMessage());
         step("Фотографии должны быть в БД", () -> {
             List<PhotoEntity> allUsersPhotos = photoRepository.findByUserId(user.id());
