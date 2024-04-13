@@ -28,6 +28,10 @@ public class PhotoGrpcClient extends GrpcClient {
         return blockingStub.getPhotos(request);
     }
 
+    public StatMapResponse getStat(GetStatRequest request) {
+        return blockingStub.getStat(request);
+    }
+
     public void deletePhoto(DeletePhotoRequest request) {
         blockingStub.deletePhoto(request);
     }

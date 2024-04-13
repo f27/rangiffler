@@ -194,7 +194,13 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
 
     @Override
     public void getStat(GetStatRequest request, StreamObserver<StatMapResponse> responseObserver) {
-        List<UUID> userIdList = request.getUserIdList().stream().map(UUID::fromString).toList();
+        List<UUID> userIdList;
+        try {
+            userIdList = request.getUserIdList().stream().map(UUID::fromString).toList();
+        } catch (IllegalArgumentException e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException());
+            return;
+        }
 
         List<PhotoEntity> photos = photoRepository.findAllByUserIdIn(userIdList);
         Map<String, Integer> stat = new HashMap<>();
@@ -225,13 +231,15 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
     }
 
     private boolean isCorrectImageDataBase64(String src) {
-        boolean isDataImage = src.contains("data:image");
+        if (!src.contains("data:image")) {
+            return false;
+        }
         if (src.contains("base64,")) {
             String[] splitedSrc = src.split("base64,");
             if (splitedSrc.length > 1) {
                 try {
                     Base64.getDecoder().decode(splitedSrc[1]);
-                    return isDataImage;
+                    return true;
                 } catch (IllegalArgumentException e) {
                     return false;
                 }
