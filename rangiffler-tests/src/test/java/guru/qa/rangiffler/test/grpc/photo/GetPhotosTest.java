@@ -174,7 +174,7 @@ public class GetPhotosTest extends BaseGrpcTest {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcClient.getPhotos(request));
         Assertions.assertEquals(
-                Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException().getMessage(),
+                Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
                 e.getMessage());
     }
 
@@ -191,7 +191,7 @@ public class GetPhotosTest extends BaseGrpcTest {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcClient.getPhotos(request));
         Assertions.assertEquals(
-                Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException().getMessage(),
+                Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
                 e.getMessage());
     }
 

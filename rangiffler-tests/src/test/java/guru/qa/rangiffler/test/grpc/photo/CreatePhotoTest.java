@@ -160,7 +160,7 @@ public class CreatePhotoTest extends BaseGrpcTest {
                                 .build())
         );
         Assertions.assertEquals(
-                Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException().getMessage(),
+                Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
                 e.getMessage());
     }
 }

@@ -99,7 +99,7 @@ public class UpdatePhotoTest extends BaseGrpcTest {
                                 .build())
         );
         Assertions.assertEquals(
-                Status.INVALID_ARGUMENT.withDescription("Bad photo id").asRuntimeException().getMessage(),
+                Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
                 e.getMessage());
         step("Фотография не должна быть обновлена в БД", () -> {
             List<PhotoEntity> allUsersPhotos = photoRepository.findByUserId(user.id());
@@ -139,7 +139,7 @@ public class UpdatePhotoTest extends BaseGrpcTest {
                                 .build())
         );
         Assertions.assertEquals(
-                Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException().getMessage(),
+                Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
                 e.getMessage());
         step("Фотография не должна быть обновлена в БД", () -> {
             List<PhotoEntity> allUsersPhotos = photoRepository.findByUserId(user.id());
