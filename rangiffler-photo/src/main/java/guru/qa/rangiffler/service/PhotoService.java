@@ -105,10 +105,25 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
 
     @Override
     public void likePhoto(LikePhotoRequest request, StreamObserver<PhotoResponse> responseObserver) {
-        photoRepository.findById(UUID.fromString(request.getPhotoId()))
+        UUID currentUserId;
+        try {
+            currentUserId = UUID.fromString(request.getUserId());
+        } catch (IllegalArgumentException e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException());
+            return;
+        }
+
+        UUID photoId;
+        try {
+            photoId = UUID.fromString(request.getPhotoId());
+        } catch (IllegalArgumentException e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad photo id").asRuntimeException());
+            return;
+        }
+        photoRepository.findById(photoId)
                 .ifPresentOrElse(
                         photoEntity -> {
-                            photoEntity.addLike(UUID.fromString(request.getUserId()));
+                            photoEntity.addLike(currentUserId);
                             responseObserver.onNext(PhotoEntity
                                     .toGrpcMessage(photoRepository.saveAndFlush(photoEntity)));
                             responseObserver.onCompleted();

@@ -20,6 +20,10 @@ public class PhotoGrpcClient extends GrpcClient {
         return blockingStub.updatePhoto(request);
     }
 
+    public PhotoResponse likePhoto(LikePhotoRequest request) {
+        return blockingStub.likePhoto(request);
+    }
+
     public void deleteAllPhotos(DeleteAllPhotosRequest request) {
         blockingStub.deleteAllPhotos(request);
     }

@@ -23,7 +23,7 @@ import java.util.UUID;
 import static guru.qa.rangiffler.jupiter.annotation.User.GenerationType.FOR_GENERATE_USER;
 import static io.qameta.allure.Allure.step;
 
-@Feature("GEO")
+@Feature("PHOTO")
 @Story("UpdatePhoto")
 @DisplayName("UpdatePhoto")
 public class UpdatePhotoTest extends BaseGrpcTest {
