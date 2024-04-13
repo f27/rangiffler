@@ -217,7 +217,15 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
     @Override
     @Transactional
     public void deleteAllPhotos(DeleteAllPhotosRequest request, StreamObserver<Empty> responseObserver) {
-        photoRepository.removeAllByUserId(UUID.fromString(request.getUserId()));
+        UUID currentUserId;
+        try {
+            currentUserId = UUID.fromString(request.getUserId());
+        } catch (IllegalArgumentException e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException());
+            return;
+        }
+
+        photoRepository.removeAllByUserId(currentUserId);
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
