@@ -7,6 +7,7 @@ import guru.qa.rangiffler.db.jpa.JpaService;
 import guru.qa.rangiffler.db.jpa.ThreadLocalEntityManager;
 import guru.qa.rangiffler.db.repository.PhotoRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 public class PhotoRepositoryHibernate extends JpaService implements PhotoRepository {
@@ -31,6 +32,17 @@ public class PhotoRepositoryHibernate extends JpaService implements PhotoReposit
                     em.refresh(photoEntity);
                     em.remove(photoEntity);
                 })
+        );
+    }
+
+    @Override
+    public List<PhotoEntity> findByUserId(UUID userId) {
+        String query = "SELECT p FROM PhotoEntity p WHERE p.userId=:id";
+        return txWithResult(em -> em.createQuery(query, PhotoEntity.class)
+                .setParameter("id", userId)
+                .getResultStream()
+                .peek(em::refresh)
+                .toList()
         );
     }
 }

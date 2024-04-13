@@ -2,6 +2,9 @@ package guru.qa.rangiffler.test.grpc.photo;
 
 import guru.qa.grpc.rangiffler.grpc.CreatePhotoRequest;
 import guru.qa.grpc.rangiffler.grpc.PhotoResponse;
+import guru.qa.rangiffler.db.entity.photo.PhotoEntity;
+import guru.qa.rangiffler.db.repository.PhotoRepository;
+import guru.qa.rangiffler.db.repository.hibernate.PhotoRepositoryHibernate;
 import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
 import guru.qa.rangiffler.jupiter.annotation.User;
 import guru.qa.rangiffler.model.PhotoModel;
@@ -17,6 +20,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 
 import static guru.qa.rangiffler.jupiter.annotation.User.GenerationType.FOR_GENERATE_USER;
@@ -26,6 +31,7 @@ import static io.qameta.allure.Allure.step;
 @Story("CreatePhoto")
 @DisplayName("CreatePhoto")
 public class CreatePhotoTest extends BaseGrpcTest {
+    private final PhotoRepository photoRepository = new PhotoRepositoryHibernate();
 
     @Test
     @GenerateUser
@@ -53,6 +59,25 @@ public class CreatePhotoTest extends BaseGrpcTest {
                 () -> Assertions.assertEquals(photo.description(), response.getDescription()));
         step("Лайков должно быть 0",
                 () -> Assertions.assertEquals(0, response.getLikes().getLikesCount()));
+
+        step("Фотография должна быть в БД", () -> {
+            List<PhotoEntity> allUsersPhotos = photoRepository.findByUserId(user.id());
+            Assertions.assertEquals(1, allUsersPhotos.size());
+            PhotoEntity photoEntity = allUsersPhotos.get(0);
+
+            step("id пользователя должен быть тот, что отправили",
+                    () -> Assertions.assertEquals(user.id(), photoEntity.getUserId()));
+            step("id фотографии должно быть тем же, что и в ответе на создание",
+                    () -> Assertions.assertEquals(UUID.fromString(response.getPhotoId()), photoEntity.getId()));
+            step("Фотография должна быть той же, что и отправили",
+                    () -> Assertions.assertEquals(photo.getPhotoAsBase64(), new String(photoEntity.getPhoto(), StandardCharsets.UTF_8)));
+            step("Код страны фотографии должен быть тем же, что и отправили",
+                    () -> Assertions.assertEquals(photo.country().getCode(), photoEntity.getCountryCode()));
+            step("Описание фотографии должно быть тем же, что и отправили",
+                    () -> Assertions.assertEquals(photo.description(), photoEntity.getDescription()));
+            step("Лайков должно быть 0",
+                    () -> Assertions.assertEquals(0, photoEntity.getLikes().size()));
+        });
     }
 
     @Test
@@ -71,6 +96,10 @@ public class CreatePhotoTest extends BaseGrpcTest {
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException().getMessage(),
                 e.getMessage());
+        step("Фотография не должна быть в БД", () -> {
+            List<PhotoEntity> allUsersPhotos = photoRepository.findByUserId(user.id());
+            Assertions.assertEquals(0, allUsersPhotos.size());
+        });
     }
 
     @Test
@@ -89,6 +118,10 @@ public class CreatePhotoTest extends BaseGrpcTest {
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Too long description").asRuntimeException().getMessage(),
                 e.getMessage());
+        step("Фотография не должна быть в БД", () -> {
+            List<PhotoEntity> allUsersPhotos = photoRepository.findByUserId(user.id());
+            Assertions.assertEquals(0, allUsersPhotos.size());
+        });
     }
 
     @Test
@@ -107,6 +140,10 @@ public class CreatePhotoTest extends BaseGrpcTest {
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Too long country code").asRuntimeException().getMessage(),
                 e.getMessage());
+        step("Фотография не должна быть в БД", () -> {
+            List<PhotoEntity> allUsersPhotos = photoRepository.findByUserId(user.id());
+            Assertions.assertEquals(0, allUsersPhotos.size());
+        });
     }
 
     @Test
