@@ -24,6 +24,10 @@ public class PhotoGrpcClient extends GrpcClient {
         return blockingStub.likePhoto(request);
     }
 
+    public void deletePhoto(DeletePhotoRequest request) {
+        blockingStub.deletePhoto(request);
+    }
+
     public void deleteAllPhotos(DeleteAllPhotosRequest request) {
         blockingStub.deleteAllPhotos(request);
     }

@@ -5,7 +5,6 @@ import guru.qa.grpc.rangiffler.grpc.PhotoResponse;
 import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
 import guru.qa.rangiffler.jupiter.annotation.Photo;
 import guru.qa.rangiffler.jupiter.annotation.User;
-import guru.qa.rangiffler.model.CountryEnum;
 import guru.qa.rangiffler.model.PhotoModel;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.test.grpc.BaseGrpcTest;
@@ -28,7 +27,7 @@ import static io.qameta.allure.Allure.step;
 public class LikePhotoTest extends BaseGrpcTest {
 
     @Test
-    @GenerateUser(photos = @Photo(country = CountryEnum.KAZAKHSTAN))
+    @GenerateUser(photos = @Photo)
     @DisplayName("Ответ на лайк фотографии должен содержать информацию о фотографии и должен добавить лайк")
     void likePhotoResponseShouldHavePhotoInfoWithLikesTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
@@ -53,7 +52,7 @@ public class LikePhotoTest extends BaseGrpcTest {
     }
 
     @Test
-    @GenerateUser(photos = @Photo(country = CountryEnum.KAZAKHSTAN))
+    @GenerateUser(photos = @Photo)
     @DisplayName("Ответ на повторный лайк фотографии должен содержать информацию о фотографии и должен убрать лайк")
     void unlikePhotoResponseShouldHavePhotoInfoWithLikesTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
@@ -82,7 +81,7 @@ public class LikePhotoTest extends BaseGrpcTest {
     }
 
     @Test
-    @GenerateUser(photos = @Photo(country = CountryEnum.KAZAKHSTAN))
+    @GenerateUser(photos = @Photo)
     @DisplayName("Лайк фотографии с некорректным user id должно возвращать INVALID_ARGUMENT")
     void shouldNotLikePhotoWithIncorrectUserIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
@@ -99,7 +98,7 @@ public class LikePhotoTest extends BaseGrpcTest {
     }
 
     @Test
-    @GenerateUser(photos = @Photo(country = CountryEnum.KAZAKHSTAN))
+    @GenerateUser(photos = @Photo)
     @DisplayName("Лайк фотографии с некорректным photo id должно возвращать INVALID_ARGUMENT")
     void shouldNotLikePhotoWithIncorrectPhotoIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
@@ -114,7 +113,7 @@ public class LikePhotoTest extends BaseGrpcTest {
     }
 
     @Test
-    @GenerateUser(photos = @Photo(country = CountryEnum.KAZAKHSTAN))
+    @GenerateUser(photos = @Photo)
     @DisplayName("Лайк фотографии с несуществующим photo id должно возвращать NOT_FOUND")
     void shouldNotLikePhotoWithNotExistingPhotoIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
