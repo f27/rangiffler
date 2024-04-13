@@ -9,18 +9,18 @@ option java_package = "guru.qa.grpc.rangiffler.grpc";
 option java_outer_classname = "UserdataProto";
 
 service RangifflerUserdataService {
-  rpc GetUser(Username) returns (User);
-  rpc GetUsers(UsersRequest) returns (UsersResponse);
+  rpc GetUser(Username) returns (GrpcUser);
+  rpc GetPeople(UsersRequest) returns (UsersResponse);
   rpc GetFriends(UsersRequest) returns (UsersResponse);
   rpc GetIncomeInvitations(UsersRequest) returns (UsersResponse);
   rpc GetOutcomeInvitations(UsersRequest) returns (UsersResponse);
   rpc GetFriendsIds(Username) returns (FriendsIdsResponse);
 
-  rpc UpdateCurrentUser(User) returns (User);
-  rpc AddFriend(FriendshipRequest) returns (User);
-  rpc AcceptFriend(FriendshipRequest) returns (User);
-  rpc RejectFriend(FriendshipRequest) returns (User);
-  rpc DeleteFriend(FriendshipRequest) returns (User);
+  rpc UpdateCurrentUser(GrpcUser) returns (GrpcUser);
+  rpc AddFriend(FriendshipRequest) returns (GrpcUser);
+  rpc AcceptFriend(FriendshipRequest) returns (GrpcUser);
+  rpc RejectFriend(FriendshipRequest) returns (GrpcUser);
+  rpc DeleteFriend(FriendshipRequest) returns (GrpcUser);
   rpc DeleteUser(Username) returns (google.protobuf.Empty);
 }
 
@@ -32,7 +32,7 @@ message FriendsIdsResponse {
   repeated string friendsIds = 1;
 }
 
-message User {
+message GrpcUser {
   string id = 1;
   string username = 2;
   string firstname = 3;
@@ -50,7 +50,7 @@ message UsersRequest {
 }
 
 message UsersResponse {
-  repeated User users = 1;
+  repeated GrpcUser users = 1;
   bool hasNext = 2;
 }
 

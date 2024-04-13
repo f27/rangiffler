@@ -16,19 +16,12 @@ public class UserdataGrpcClient extends GrpcClient {
         this.blockingStub = RangifflerUserdataServiceGrpc.newBlockingStub(channel).withInterceptors(new AllureGrpc());
     }
 
-    public User getUser(String username) {
-        Username request = Username.newBuilder()
-                .setUsername(username)
-                .build();
+    public GrpcUser getUser(Username request) {
         return blockingStub.getUser(request);
     }
 
-    public UsersResponse getUsers(String username,
-                                  String searchQuery,
-                                  int page,
-                                  int size) {
-        UsersRequest request = createUsersRequestFromParams(username, searchQuery, page, size);
-        return blockingStub.getUsers(request);
+    public UsersResponse getPeople(UsersRequest request) {
+        return blockingStub.getPeople(request);
     }
 
     public UsersResponse getFriends(String username,
@@ -62,11 +55,11 @@ public class UserdataGrpcClient extends GrpcClient {
         return blockingStub.getFriendsIds(request);
     }
 
-    public User updateUser(User user) {
+    public GrpcUser updateUser(GrpcUser user) {
         return blockingStub.updateCurrentUser(user);
     }
 
-    public User inviteFriend(String fromUsername, UUID toId) {
+    public GrpcUser inviteFriend(String fromUsername, UUID toId) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(fromUsername)
                 .setTargetUserId(toId.toString())
@@ -74,7 +67,7 @@ public class UserdataGrpcClient extends GrpcClient {
         return blockingStub.addFriend(request);
     }
 
-    public User acceptFriend(String fromUsername, UUID toId) {
+    public GrpcUser acceptFriend(String fromUsername, UUID toId) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(fromUsername)
                 .setTargetUserId(toId.toString())
@@ -82,7 +75,7 @@ public class UserdataGrpcClient extends GrpcClient {
         return blockingStub.acceptFriend(request);
     }
 
-    public User rejectFriend(String fromUsername, UUID toId) {
+    public GrpcUser rejectFriend(String fromUsername, UUID toId) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(fromUsername)
                 .setTargetUserId(toId.toString())
@@ -90,7 +83,7 @@ public class UserdataGrpcClient extends GrpcClient {
         return blockingStub.rejectFriend(request);
     }
 
-    public User deleteFriend(String fromUsername, UUID toId) {
+    public GrpcUser deleteFriend(String fromUsername, UUID toId) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(fromUsername)
                 .setTargetUserId(toId.toString())

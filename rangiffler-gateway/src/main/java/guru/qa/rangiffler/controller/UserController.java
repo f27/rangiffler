@@ -45,7 +45,7 @@ public class UserController {
                                   @Nonnull DataFetchingEnvironment env) {
         String username = principal.getClaim("sub");
         checkSubQueries(env, 1, "friends", "incomeInvitations", "outcomeInvitations");
-        return userDataClient.getUsers(username, searchQuery, page, size);
+        return userDataClient.getPeople(username, searchQuery, page, size);
     }
 
     @MutationMapping

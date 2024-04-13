@@ -1,7 +1,6 @@
 package guru.qa.rangiffler.test.grpc.photo;
 
 import guru.qa.grpc.rangiffler.grpc.DeleteAllPhotosRequest;
-import guru.qa.grpc.rangiffler.grpc.DeletePhotoRequest;
 import guru.qa.rangiffler.db.entity.photo.PhotoEntity;
 import guru.qa.rangiffler.db.repository.PhotoRepository;
 import guru.qa.rangiffler.db.repository.hibernate.PhotoRepositoryHibernate;

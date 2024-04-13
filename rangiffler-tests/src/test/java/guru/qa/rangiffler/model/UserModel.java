@@ -40,6 +40,9 @@ public record UserModel(
     }
 
     public String getAvatarAsBase64() {
+        if (avatar.isEmpty()) {
+            return "";
+        }
         return ImageUtil.getImageAsBase64(avatar);
     }
 

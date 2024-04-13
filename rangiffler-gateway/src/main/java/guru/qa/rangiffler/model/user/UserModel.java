@@ -2,7 +2,7 @@ package guru.qa.rangiffler.model.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.grpc.rangiffler.grpc.FriendStatus;
-import guru.qa.grpc.rangiffler.grpc.User;
+import guru.qa.grpc.rangiffler.grpc.GrpcUser;
 import guru.qa.rangiffler.model.country.CountryModel;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Slice;
@@ -36,7 +36,7 @@ public record UserModel(
         Slice<UserModel> outcomeInvitations
 
 ) {
-    public static UserModel fromGrpcMessage(User user) {
+    public static UserModel fromGrpcMessage(GrpcUser user) {
         return new UserModel(
                 UUID.fromString(user.getId()),
                 user.getUsername(),

@@ -14,7 +14,6 @@ import org.openqa.selenium.Cookie;
 
 import javax.annotation.Nonnull;
 
-import static com.codeborne.selenide.Selenide.sleep;
 import static io.qameta.allure.Allure.step;
 
 public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {

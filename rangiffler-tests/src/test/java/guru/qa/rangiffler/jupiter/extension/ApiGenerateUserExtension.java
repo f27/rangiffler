@@ -3,7 +3,7 @@ package guru.qa.rangiffler.jupiter.extension;
 import guru.qa.grpc.rangiffler.grpc.CreatePhotoRequest;
 import guru.qa.grpc.rangiffler.grpc.DeleteAllPhotosRequest;
 import guru.qa.grpc.rangiffler.grpc.FriendStatus;
-import guru.qa.grpc.rangiffler.grpc.User;
+import guru.qa.grpc.rangiffler.grpc.GrpcUser;
 import guru.qa.rangiffler.api.grpc.PhotoGrpcClient;
 import guru.qa.rangiffler.api.grpc.UserdataGrpcClient;
 import guru.qa.rangiffler.api.rest.AuthApiClient;
@@ -46,7 +46,7 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
         final String realPassword = password.isEmpty() ? DataUtil.generateRandomPassword() : password;
         authClient.register(realUsername, realPassword);
 
-        User updateUserRequest = User.newBuilder()
+        GrpcUser updateUserRequest = GrpcUser.newBuilder()
                 .setUsername(realUsername)
                 .setFirstname(generateFirstname ? DataUtil.generateRandomFirstname() : "")
                 .setLastname(generateLastname ? DataUtil.generateRandomLastname() : "")
@@ -54,7 +54,7 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
                 .setAvatar(avatar.isEmpty() ? "" : ImageUtil.getImageAsBase64(avatar))
                 .build();
 
-        User updateUserResponse = null;
+        GrpcUser updateUserResponse = null;
         for (int i = 1; i <= 30; i++) {
             try {
                 updateUserResponse = userdataGrpcClient.updateUser(updateUserRequest);

@@ -27,16 +27,16 @@ public class UserDataClient {
                 .setUsername(username)
                 .build();
 
-        User response = rangifflerUserdataServiceBlockingStub.getUser(request);
+        GrpcUser response = rangifflerUserdataServiceBlockingStub.getUser(request);
         return UserModel.fromGrpcMessage(response);
     }
 
-    public @Nonnull Slice<UserModel> getUsers(@Nonnull String username,
-                                              @Nullable String searchQuery,
-                                              int page,
-                                              int size) {
+    public @Nonnull Slice<UserModel> getPeople(@Nonnull String username,
+                                               @Nullable String searchQuery,
+                                               int page,
+                                               int size) {
         UsersRequest request = createUsersRequestFromParams(username, searchQuery, page, size);
-        return usersReasponseToUsersSlice(rangifflerUserdataServiceBlockingStub.getUsers(request), page, size);
+        return usersReasponseToUsersSlice(rangifflerUserdataServiceBlockingStub.getPeople(request), page, size);
     }
 
     public @Nonnull Slice<UserModel> getFriends(@Nonnull String username,
@@ -65,7 +65,7 @@ public class UserDataClient {
 
     public @Nonnull UserModel updateCurrentUser(@Nonnull String username,
                                                 @Nonnull UpdateUserInput user) {
-        User request = User.newBuilder()
+        GrpcUser request = GrpcUser.newBuilder()
                 .setUsername(username)
                 .setFirstname(user.firstname())
                 .setLastname(user.surname())

@@ -1,7 +1,7 @@
 package guru.qa.rangiffler.entity.user;
 
 import guru.qa.grpc.rangiffler.grpc.FriendStatus;
-import guru.qa.grpc.rangiffler.grpc.User;
+import guru.qa.grpc.rangiffler.grpc.GrpcUser;
 import guru.qa.rangiffler.entity.friendship.FriendshipEntity;
 import guru.qa.rangiffler.entity.friendship.FriendshipStatus;
 import jakarta.persistence.*;
@@ -46,8 +46,8 @@ public class UserEntity {
     @OneToMany(mappedBy = "addressee", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendshipEntity> incomeInvitations;
 
-    public static User toGrpcMessage(UserEntity entity, FriendStatus status) {
-        User.Builder builder = User.newBuilder()
+    public static GrpcUser toGrpcMessage(UserEntity entity, FriendStatus status) {
+        GrpcUser.Builder builder = GrpcUser.newBuilder()
                 .setId(entity.getId().toString())
                 .setUsername(entity.getUsername())
                 .setCountryCode(entity.getCountryCode())
@@ -68,12 +68,8 @@ public class UserEntity {
 
     @PreRemove
     private void removeInvites() {
-        outcomeInvitations.forEach(friendship -> {
-            friendship.getAddressee().removeIncomeInvitation(friendship);
-        });
-        incomeInvitations.forEach(friendship -> {
-            friendship.getRequester().removeOutcomeInvitation(friendship);
-        });
+        outcomeInvitations.forEach(friendship -> friendship.getAddressee().removeIncomeInvitation(friendship));
+        incomeInvitations.forEach(friendship -> friendship.getRequester().removeOutcomeInvitation(friendship));
     }
 
     public FriendStatus getStatus(UserEntity friend) {
