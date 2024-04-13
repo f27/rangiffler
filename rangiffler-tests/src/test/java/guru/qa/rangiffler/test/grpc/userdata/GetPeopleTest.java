@@ -6,6 +6,8 @@ import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
 import guru.qa.rangiffler.jupiter.annotation.User;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.test.grpc.BaseGrpcTest;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.Assertions;
@@ -104,5 +106,20 @@ public class GetPeopleTest extends BaseGrpcTest {
             step("Проверить, что в ответе hasNext = true",
                     () -> Assertions.assertTrue(response.getHasNext()));
         });
+    }
+
+    @Test
+    @GenerateUser
+    @DisplayName("GetPeople с некорректным username должно возвращать NOT_FOUND")
+    void getUsersWithIncorrectUsernameTest() {
+        UsersRequest request = UsersRequest.newBuilder()
+                .setUsername("")
+                .build();
+        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                () -> userdataGrpcClient.getPeople(request)
+        );
+        Assertions.assertEquals(
+                Status.NOT_FOUND.withDescription("User not found").asRuntimeException().getMessage(),
+                e.getMessage());
     }
 }
