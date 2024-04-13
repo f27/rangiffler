@@ -41,12 +41,12 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
             return;
         }
         String photoCountryCode = request.getCountryCode();
-        if (photoCountryCode.length() > 50) {
+        if (isBadCountryCode(photoCountryCode)) {
             responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Too long country code").asRuntimeException());
             return;
         }
         String photoDescription = request.getDescription();
-        if (photoDescription.length() > 255) {
+        if (isBadDescription(photoDescription)) {
             responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Too long description").asRuntimeException());
             return;
         }
@@ -60,11 +60,38 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
 
     @Override
     public void updatePhoto(UpdatePhotoRequest request, StreamObserver<PhotoResponse> responseObserver) {
-        photoRepository.findByUserIdAndId(UUID.fromString(request.getUserId()), UUID.fromString(request.getPhotoId()))
+        UUID currentUserId;
+        try {
+            currentUserId = UUID.fromString(request.getUserId());
+        } catch (IllegalArgumentException e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException());
+            return;
+        }
+
+        UUID photoId;
+        try {
+            photoId = UUID.fromString(request.getPhotoId());
+        } catch (IllegalArgumentException e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad photo id").asRuntimeException());
+            return;
+        }
+
+        String photoCountryCode = request.getCountryCode();
+        if (isBadCountryCode(photoCountryCode)) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Too long country code").asRuntimeException());
+            return;
+        }
+        String photoDescription = request.getDescription();
+        if (isBadDescription(photoDescription)) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Too long description").asRuntimeException());
+            return;
+        }
+
+        photoRepository.findByUserIdAndId(currentUserId, photoId)
                 .ifPresentOrElse(
                         photoEntity -> {
-                            photoEntity.setCountryCode(request.getCountryCode());
-                            photoEntity.setDescription(request.getDescription());
+                            photoEntity.setCountryCode(photoCountryCode);
+                            photoEntity.setDescription(photoDescription);
                             responseObserver.onNext(PhotoEntity
                                     .toGrpcMessage(photoRepository.saveAndFlush(photoEntity)));
                             responseObserver.onCompleted();
@@ -144,6 +171,14 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
         photoRepository.removeAllByUserId(UUID.fromString(request.getUserId()));
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
+    }
+
+    private boolean isBadCountryCode(String countryCode) {
+        return countryCode.length() > 50;
+    }
+
+    private boolean isBadDescription(String description) {
+        return description.length() > 255;
     }
 
     private boolean isCorrectImageDataBase64(String src) {

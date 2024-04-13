@@ -86,17 +86,16 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
     public void addPhotos(UserModel user, Photo[] photos) {
         for (Photo photo : photos) {
             PhotoModel photoModel = new PhotoModel(
-                    null,
+                    UUID.fromString(photoGrpcClient.createPhoto(CreatePhotoRequest.newBuilder()
+                            .setUserId(user.id().toString())
+                            .setSrc(ImageUtil.getImageAsBase64(photo.image()))
+                            .setCountryCode(photo.country().getCode())
+                            .setDescription(photo.description())
+                            .build()).getPhotoId()),
                     photo.country(),
                     photo.description(),
                     photo.image()
             );
-            photoGrpcClient.createPhoto(CreatePhotoRequest.newBuilder()
-                    .setUserId(user.id().toString())
-                    .setSrc(photoModel.getPhotoAsBase64())
-                    .setCountryCode(photoModel.country().getCode())
-                    .setDescription(photoModel.description())
-                    .build());
             user.addPhoto(photoModel);
         }
     }

@@ -1,9 +1,6 @@
 package guru.qa.rangiffler.api.grpc;
 
-import guru.qa.grpc.rangiffler.grpc.CreatePhotoRequest;
-import guru.qa.grpc.rangiffler.grpc.DeleteAllPhotosRequest;
-import guru.qa.grpc.rangiffler.grpc.PhotoResponse;
-import guru.qa.grpc.rangiffler.grpc.RangifflerPhotoServiceGrpc;
+import guru.qa.grpc.rangiffler.grpc.*;
 import io.qameta.allure.grpc.AllureGrpc;
 
 public class PhotoGrpcClient extends GrpcClient {
@@ -17,6 +14,10 @@ public class PhotoGrpcClient extends GrpcClient {
 
     public PhotoResponse createPhoto(CreatePhotoRequest request) {
         return blockingStub.createPhoto(request);
+    }
+
+    public PhotoResponse updatePhoto(UpdatePhotoRequest request) {
+        return blockingStub.updatePhoto(request);
     }
 
     public void deleteAllPhotos(DeleteAllPhotosRequest request) {
