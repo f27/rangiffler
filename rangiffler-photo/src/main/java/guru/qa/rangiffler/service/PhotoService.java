@@ -168,8 +168,21 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
 
     @Override
     public void getPhotos(GetPhotosRequest request, StreamObserver<PhotoSliceResponse> responseObserver) {
-        List<UUID> userIdList = request.getUserIdList().stream().map(UUID::fromString).toList();
-
+        List<UUID> userIdList;
+        try {
+            userIdList = request.getUserIdList().stream().map(UUID::fromString).toList();
+        } catch (IllegalArgumentException e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad user id").asRuntimeException());
+            return;
+        }
+        if (request.getPage() < 0) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad page").asRuntimeException());
+            return;
+        }
+        if (request.getSize() < 1) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad size").asRuntimeException());
+            return;
+        }
         responseObserver.onNext(
                 PhotoEntity.toGrpcMessage(
                         photoRepository
