@@ -30,21 +30,12 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
     public void createPhoto(CreatePhotoRequest request, StreamObserver<PhotoResponse> responseObserver) {
         PhotoEntity photo = new PhotoEntity();
         try {
-            photo.setUserId(UUID.fromString(request.getUserId()));
-            String photoSrc = request.getSrc();
-            String photoCountryCode = request.getCountryCode();
-            String photoDescription = request.getDescription();
-            checkImageDataBase64(photoSrc);
-            checkCountryCode(photoCountryCode);
-            checkDescription(photoDescription);
-
-            photo.setPhoto(photoSrc.getBytes());
-            photo.setCountryCode(photoCountryCode);
-            photo.setDescription(photoDescription);
+            photo.setUserId(validUUID(request.getUserId()));
+            photo.setPhoto(validImageDataBase64(request.getSrc()).getBytes());
+            photo.setCountryCode(validCountryCode(request.getCountryCode()));
+            photo.setDescription(validDescription(request.getDescription()));
             responseObserver.onNext(PhotoEntity.toGrpcMessage(photoRepository.saveAndFlush(photo)));
             responseObserver.onCompleted();
-        } catch (IllegalArgumentException e) {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException());
         } catch (StatusRuntimeException e) {
             responseObserver.onError(e);
         }
@@ -53,17 +44,11 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
     @Override
     public void updatePhoto(UpdatePhotoRequest request, StreamObserver<PhotoResponse> responseObserver) {
         try {
-            UUID currentUserId = UUID.fromString(request.getUserId());
-            UUID photoId = UUID.fromString(request.getPhotoId());
-            String photoCountryCode = request.getCountryCode();
-            String photoDescription = request.getDescription();
-            checkCountryCode(photoCountryCode);
-            checkDescription(photoDescription);
-            photoRepository.findByUserIdAndId(currentUserId, photoId)
+            photoRepository.findByUserIdAndId(validUUID(request.getUserId()), validUUID(request.getPhotoId()))
                     .ifPresentOrElse(
                             photoEntity -> {
-                                photoEntity.setCountryCode(photoCountryCode);
-                                photoEntity.setDescription(photoDescription);
+                                photoEntity.setCountryCode(validCountryCode(request.getCountryCode()));
+                                photoEntity.setDescription(validDescription(request.getDescription()));
                                 responseObserver.onNext(PhotoEntity
                                         .toGrpcMessage(photoRepository.saveAndFlush(photoEntity)));
                                 responseObserver.onCompleted();
@@ -73,8 +58,6 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
                                             .asRuntimeException()
                             )
                     );
-        } catch (IllegalArgumentException e) {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException());
         } catch (StatusRuntimeException e) {
             responseObserver.onError(e);
         }
@@ -83,13 +66,10 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
     @Override
     public void likePhoto(LikePhotoRequest request, StreamObserver<PhotoResponse> responseObserver) {
         try {
-            UUID currentUserId = UUID.fromString(request.getUserId());
-            UUID photoId = UUID.fromString(request.getPhotoId());
-
-            photoRepository.findById(photoId)
+            photoRepository.findById(validUUID(request.getPhotoId()))
                     .ifPresentOrElse(
                             photoEntity -> {
-                                photoEntity.addLike(currentUserId);
+                                photoEntity.addLike(validUUID(request.getUserId()));
                                 responseObserver.onNext(PhotoEntity
                                         .toGrpcMessage(photoRepository.saveAndFlush(photoEntity)));
                                 responseObserver.onCompleted();
@@ -99,18 +79,15 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
                                             .asRuntimeException()
                             )
                     );
-        } catch (IllegalArgumentException e) {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException());
+        } catch (StatusRuntimeException e) {
+            responseObserver.onError(e);
         }
     }
 
     @Override
     public void deletePhoto(DeletePhotoRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            UUID currentUserId = UUID.fromString(request.getUserId());
-            UUID photoId = UUID.fromString(request.getPhotoId());
-
-            photoRepository.findByUserIdAndId(currentUserId, photoId)
+            photoRepository.findByUserIdAndId(validUUID(request.getUserId()), validUUID(request.getPhotoId()))
                     .ifPresentOrElse(
                             photoEntity -> {
                                 photoRepository.delete(photoEntity);
@@ -122,27 +99,22 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
                                             .asRuntimeException()
                             )
                     );
-        } catch (IllegalArgumentException e) {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException());
+        } catch (StatusRuntimeException e) {
+            responseObserver.onError(e);
         }
     }
 
     @Override
     public void getPhotos(GetPhotosRequest request, StreamObserver<PhotoSliceResponse> responseObserver) {
         try {
-            List<UUID> userIdList = request.getUserIdList().stream().map(UUID::fromString).toList();
-            checkPage(request.getPage());
-            checkSize(request.getSize());
-
+            List<UUID> userIdList = request.getUserIdList().stream().map(this::validUUID).toList();
             responseObserver.onNext(
                     PhotoEntity.toGrpcMessage(
                             photoRepository
                                     .findAllByUserIdInOrderByCreatedDateDesc(userIdList,
-                                            PageRequest.of(request.getPage(),
-                                                    request.getSize()))));
+                                            PageRequest.of(validPage(request.getPage()),
+                                                    validSize(request.getSize())))));
             responseObserver.onCompleted();
-        } catch (IllegalArgumentException e) {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException());
         } catch (StatusRuntimeException e) {
             responseObserver.onError(e);
         }
@@ -151,7 +123,7 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
     @Override
     public void getStat(GetStatRequest request, StreamObserver<StatMapResponse> responseObserver) {
         try {
-            List<UUID> userIdList = request.getUserIdList().stream().map(UUID::fromString).toList();
+            List<UUID> userIdList = request.getUserIdList().stream().map(this::validUUID).toList();
 
             List<PhotoEntity> photos = photoRepository.findAllByUserIdIn(userIdList);
             Map<String, Integer> stat = new HashMap<>();
@@ -163,8 +135,8 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
 
             responseObserver.onNext(StatMapResponse.newBuilder().putAllStat(stat).build());
             responseObserver.onCompleted();
-        } catch (IllegalArgumentException e) {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException());
+        } catch (StatusRuntimeException e) {
+            responseObserver.onError(e);
         }
     }
 
@@ -172,41 +144,54 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
     @Transactional
     public void deleteAllPhotos(DeleteAllPhotosRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            UUID currentUserId = UUID.fromString(request.getUserId());
-
-            photoRepository.removeAllByUserId(currentUserId);
+            photoRepository.removeAllByUserId(validUUID(request.getUserId()));
             responseObserver.onNext(Empty.getDefaultInstance());
             responseObserver.onCompleted();
-        } catch (IllegalArgumentException e) {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException());
+        } catch (StatusRuntimeException e) {
+            responseObserver.onError(e);
         }
     }
 
-    private void checkPage(int page) {
+    private UUID validUUID(String uuid) {
+        try {
+            return UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            throw Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException();
+        }
+    }
+
+    private int validPage(int page) {
         if (page < 0) {
             throw Status.INVALID_ARGUMENT.withDescription("Bad page").asRuntimeException();
         }
+        return page;
     }
 
-    private void checkSize(int size) {
+    private int validSize(int size) {
         if (size < 1) {
             throw Status.INVALID_ARGUMENT.withDescription("Bad size").asRuntimeException();
         }
+        return size;
     }
 
-    private void checkCountryCode(String countryCode) {
+    private String validCountryCode(String countryCode) {
         if (countryCode.length() > 50) {
             throw Status.INVALID_ARGUMENT.withDescription("Too long country code").asRuntimeException();
         }
+        if (countryCode.isEmpty()) {
+            throw Status.INVALID_ARGUMENT.withDescription("Country code can't be empty").asRuntimeException();
+        }
+        return countryCode;
     }
 
-    private void checkDescription(String description) {
+    private String validDescription(String description) {
         if (description.length() > 255) {
             throw Status.INVALID_ARGUMENT.withDescription("Too long description").asRuntimeException();
         }
+        return description;
     }
 
-    private void checkImageDataBase64(String src) {
+    private String validImageDataBase64(String src) {
         if (!src.contains("data:image")) {
             throw Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException();
         }
@@ -215,7 +200,7 @@ public class PhotoService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServ
             if (splitedSrc.length > 1) {
                 try {
                     Base64.getDecoder().decode(splitedSrc[1]);
-                    return;
+                    return src;
                 } catch (IllegalArgumentException e) {
                     throw Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException();
                 }
