@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -273,10 +274,10 @@ public class UserdataService extends RangifflerUserdataServiceGrpc.RangifflerUse
     public void updateUser(GrpcUser request, StreamObserver<GrpcUser> responseObserver) {
         try {
             UserEntity currentUser = getCurrentUser(request.getUsername());
-            currentUser.setFirstname(request.getFirstname());
-            currentUser.setLastname(request.getLastname());
-            currentUser.setAvatar(request.getAvatar().getBytes());
-            currentUser.setCountryCode(request.getCountryCode());
+            currentUser.setFirstname(validFirstname(request.getFirstname()));
+            currentUser.setLastname(validLastname(request.getLastname()));
+            currentUser.setAvatar(validImageDataBase64(request.getAvatar()).getBytes());
+            currentUser.setCountryCode(validCountryCode(request.getCountryCode()));
             responseObserver.onNext(UserEntity.toGrpcMessage(userdataRepository.save(currentUser), FriendStatus.NOT_FRIEND));
             responseObserver.onCompleted();
         } catch (StatusRuntimeException e) {
@@ -362,6 +363,51 @@ public class UserdataService extends RangifflerUserdataServiceGrpc.RangifflerUse
         userdataRepository.deleteByUsername(request.getUsername());
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
+    }
+
+    private String validFirstname(String firstname) {
+        if (firstname.length() > 50) {
+            throw Status.INVALID_ARGUMENT.withDescription("Too long firstname").asRuntimeException();
+        }
+        return firstname;
+    }
+
+    private String validLastname(String lastname) {
+        if (lastname.length() > 50) {
+            throw Status.INVALID_ARGUMENT.withDescription("Too long lastname").asRuntimeException();
+        }
+        return lastname;
+    }
+
+    private String validCountryCode(String countryCode) {
+        if (countryCode.length() > 50) {
+            throw Status.INVALID_ARGUMENT.withDescription("Too long country code").asRuntimeException();
+        }
+        if (countryCode.isEmpty()) {
+            throw Status.INVALID_ARGUMENT.withDescription("Country code can't be empty").asRuntimeException();
+        }
+        return countryCode;
+    }
+
+    private String validImageDataBase64(String src) {
+        if (src.isEmpty()) {
+            return src;
+        }
+        if (!src.contains("data:image")) {
+            throw Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException();
+        }
+        if (src.contains("base64,")) {
+            String[] splitedSrc = src.split("base64,");
+            if (splitedSrc.length > 1) {
+                try {
+                    Base64.getDecoder().decode(splitedSrc[1]);
+                    return src;
+                } catch (IllegalArgumentException e) {
+                    throw Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException();
+                }
+            }
+        }
+        throw Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException();
     }
 
     private UserEntity getCurrentUser(String username) {
