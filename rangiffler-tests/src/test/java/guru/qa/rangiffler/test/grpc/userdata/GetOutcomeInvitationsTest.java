@@ -1,5 +1,6 @@
 package guru.qa.rangiffler.test.grpc.userdata;
 
+import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.grpc.rangiffler.grpc.UsersRequest;
 import guru.qa.grpc.rangiffler.grpc.UsersResponse;
 import guru.qa.rangiffler.jupiter.annotation.Friend;
@@ -21,112 +22,112 @@ import static guru.qa.rangiffler.jupiter.annotation.User.GenerationType.FOR_GENE
 import static io.qameta.allure.Allure.step;
 
 @Feature("USERDATA")
-@Story("GetFriends")
-@DisplayName("GetFriends")
-public class GetFriendsTest extends BaseGrpcTest {
+@Story("GetOutcomeInvitations")
+@DisplayName("GetOutcomeInvitations")
+public class GetOutcomeInvitationsTest extends BaseGrpcTest {
 
     @Test
-    @GenerateUser(friends = @Friend)
-    @DisplayName("GetFriends: правильный username, без searchQuery, page, size")
-    @Description("Должен вернуть список пользователей без запрашивающего и с другом, hasNext = false")
-    void getFriendsWithCorrectUsernameTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_SENT))
+    @DisplayName("GetOutcomeInvitations: правильный username, без searchQuery, page, size")
+    @Description("Должен вернуть список пользователей без запрашивающего и с пользователем кому отправлено приглашение, hasNext = false")
+    void getOutcomeInvitationsWithCorrectUsernameTest(@User(FOR_GENERATE_USER) UserModel user) {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername(user.username())
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcClient.getOutcomeInvitations(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
                         .filter(grpcUser -> user.username().equals(grpcUser.getUsername()))
                         .findAny().orElse(null)
                 ));
-        step("Список пользователей должен содержать друга",
+        step("Список пользователей должен содержать пользователя кому отправлено приглашение",
                 () -> Assertions.assertEquals(user.friends().get(0).username(), response.getUsers(0).getUsername()));
         step("hasNext должен быть false",
                 () -> Assertions.assertFalse(response.getHasNext()));
     }
 
     @Test
-    @GenerateUser(friends = @Friend)
-    @DisplayName("GetFriends: правильный username, с указанием searchQuery(username существующего пользователя), без page, size")
-    @Description("Должен вернуть список пользователей без запрашивающего и с другом, hasNext = false")
-    void getFriendsWithCorrectUsernameAndSearchQueryUsernameTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_SENT))
+    @DisplayName("GetOutcomeInvitations: правильный username, с указанием searchQuery(username существующего пользователя), без page, size")
+    @Description("Должен вернуть список пользователей без запрашивающего и с пользователем кому отправлено приглашение, hasNext = false")
+    void getOutcomeInvitationsWithCorrectUsernameAndSearchQueryUsernameTest(@User(FOR_GENERATE_USER) UserModel user) {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername(user.username())
                 .setSearchQuery(user.friends().get(0).username())
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcClient.getOutcomeInvitations(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
                         .filter(grpcUser -> user.username().equals(grpcUser.getUsername()))
                         .findAny().orElse(null)
                 ));
-        step("Список пользователей должен содержать друга",
+        step("Список пользователей должен содержать пользователя кому отправлено приглашение",
                 () -> Assertions.assertEquals(user.friends().get(0).username(), response.getUsers(0).getUsername()));
         step("hasNext должен быть false",
                 () -> Assertions.assertFalse(response.getHasNext()));
     }
 
     @Test
-    @GenerateUser(friends = @Friend(generateFirstname = true))
-    @DisplayName("GetFriends: правильный username, с указанием searchQuery(firstname существующего пользователя), без page, size")
-    @Description("Должен вернуть список пользователей без запрашивающего и с другом, hasNext = false")
-    void getFriendsWithCorrectUsernameAndSearchQueryFirstnameTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @GenerateUser(friends = @Friend(generateFirstname = true, status = FriendStatus.INVITATION_SENT))
+    @DisplayName("GetOutcomeInvitations: правильный username, с указанием searchQuery(firstname существующего пользователя), без page, size")
+    @Description("Должен вернуть список пользователей без запрашивающего и с пользователем кому отправлено приглашение, hasNext = false")
+    void getOutcomeInvitationsWithCorrectUsernameAndSearchQueryFirstnameTest(@User(FOR_GENERATE_USER) UserModel user) {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername(user.username())
                 .setSearchQuery(user.friends().get(0).firstname())
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcClient.getOutcomeInvitations(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
                         .filter(grpcUser -> user.username().equals(grpcUser.getUsername()))
                         .findAny().orElse(null)
                 ));
-        step("Список пользователей должен содержать друга",
+        step("Список пользователей должен содержать пользователя кому отправлено приглашение",
                 () -> Assertions.assertEquals(user.friends().get(0).username(), response.getUsers(0).getUsername()));
         step("hasNext должен быть false",
                 () -> Assertions.assertFalse(response.getHasNext()));
     }
 
     @Test
-    @GenerateUser(friends = @Friend(generateLastname = true))
-    @DisplayName("GetFriends: правильный username, с указанием searchQuery(lastname существующего пользователя), без page, size")
-    @Description("Должен вернуть список пользователей без запрашивающего и с другом, hasNext = false")
-    void getFriendsWithCorrectUsernameAndSearchQueryLastnameTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @GenerateUser(friends = @Friend(generateLastname = true, status = FriendStatus.INVITATION_SENT))
+    @DisplayName("GetOutcomeInvitations: правильный username, с указанием searchQuery(lastname существующего пользователя), без page, size")
+    @Description("Должен вернуть список пользователей без запрашивающего и с пользователем кому отправлено приглашение, hasNext = false")
+    void getOutcomeInvitationsWithCorrectUsernameAndSearchQueryLastnameTest(@User(FOR_GENERATE_USER) UserModel user) {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername(user.username())
                 .setSearchQuery(user.friends().get(0).lastname())
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcClient.getOutcomeInvitations(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
                         .filter(grpcUser -> user.username().equals(grpcUser.getUsername()))
                         .findAny().orElse(null)
                 ));
-        step("Список пользователей должен содержать друга",
+        step("Список пользователей должен содержать пользователя кому отправлено приглашение",
                 () -> Assertions.assertEquals(user.friends().get(0).username(), response.getUsers(0).getUsername()));
         step("hasNext должен быть false",
                 () -> Assertions.assertFalse(response.getHasNext()));
     }
 
     @Test
-    @GenerateUser(friends = @Friend)
-    @DisplayName("GetFriends: правильный username, с указанием searchQuery(случайная длинная строка), без page, size")
+    @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_SENT))
+    @DisplayName("GetOutcomeInvitations: правильный username, с указанием searchQuery(случайная длинная строка), без page, size")
     @Description("Должен вернуть пустой список пользователей, hasNext = false")
-    void getFriendsWithCorrectUsernameAndSearchQueryRandomLongStringTest(@User(FOR_GENERATE_USER) UserModel user) {
+    void getOutcomeInvitationsWithCorrectUsernameAndSearchQueryRandomLongStringTest(@User(FOR_GENERATE_USER) UserModel user) {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername(user.username())
                 .setSearchQuery(DataUtil.generateStringWithLength(255))
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcClient.getOutcomeInvitations(request);
 
         step("Список пользователей должен быть пустым",
                 () -> Assertions.assertEquals(0, response.getUsersCount()));
@@ -135,10 +136,10 @@ public class GetFriendsTest extends BaseGrpcTest {
     }
 
     @Test
-    @GenerateUser(friends = @Friend)
-    @DisplayName("GetFriends: правильный username, с указанием searchQuery(username существующего пользователя), page, size")
-    @Description("Должен вернуть список пользователей без запрашивающего и с другом")
-    void getFriendsWithCorrectUsernameAndSearchQueryUsernameAndPageableTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_SENT))
+    @DisplayName("GetOutcomeInvitations: правильный username, с указанием searchQuery(username существующего пользователя), page, size")
+    @Description("Должен вернуть список пользователей без запрашивающего и с пользователем кому отправлено приглашение")
+    void getOutcomeInvitationsWithCorrectUsernameAndSearchQueryUsernameAndPageableTest(@User(FOR_GENERATE_USER) UserModel user) {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername(user.username())
                 .setSearchQuery(user.friends().get(0).username())
@@ -146,32 +147,32 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .setSize(1)
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcClient.getOutcomeInvitations(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
                         .filter(grpcUser -> user.username().equals(grpcUser.getUsername()))
                         .findAny().orElse(null)
                 ));
-        step("Список пользователей должен содержать друга",
+        step("Список пользователей должен содержать пользователя кому отправлено приглашение",
                 () -> Assertions.assertEquals(user.friends().get(0).username(), response.getUsers(0).getUsername()));
     }
 
     @Test
     @GenerateUser(friends = {
-            @Friend,
-            @Friend
+            @Friend(status = FriendStatus.INVITATION_SENT),
+            @Friend(status = FriendStatus.INVITATION_SENT)
     })
-    @DisplayName("GetFriends: правильный username, без searchQuery, с указанием page, size")
+    @DisplayName("GetOutcomeInvitations: правильный username, без searchQuery, с указанием page, size")
     @Description("Должен вернуть список пользователей без запрашивающего и размером не 0, hasNext = true")
-    void getFriendsWithCorrectUsernameAndPageableTest(@User(FOR_GENERATE_USER) UserModel user) {
+    void getOutcomeInvitationsWithCorrectUsernameAndPageableTest(@User(FOR_GENERATE_USER) UserModel user) {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername(user.username())
                 .setPage(0)
                 .setSize(1)
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcClient.getOutcomeInvitations(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
@@ -186,14 +187,14 @@ public class GetFriendsTest extends BaseGrpcTest {
 
     @Test
     @GenerateUser
-    @DisplayName("GetFriends: неправильный username, без searchQuery, page, size. Должен вернуть NOT_FOUND")
-    void getFriendsWithIncorrectUsernameTest() {
+    @DisplayName("GetOutcomeInvitations: неправильный username, без searchQuery, page, size. Должен вернуть NOT_FOUND")
+    void getOutcomeInvitationsWithIncorrectUsernameTest() {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername("")
                 .build();
 
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> userdataGrpcClient.getFriends(request)
+                () -> userdataGrpcClient.getOutcomeInvitations(request)
         );
         Assertions.assertEquals(
                 Status.NOT_FOUND.withDescription("User not found").asRuntimeException().getMessage(),

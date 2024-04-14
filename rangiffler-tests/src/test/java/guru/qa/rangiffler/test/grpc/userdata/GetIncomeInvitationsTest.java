@@ -188,7 +188,7 @@ public class GetIncomeInvitationsTest extends BaseGrpcTest {
     @Test
     @GenerateUser
     @DisplayName("GetIncomeInvitations: неправильный username, без searchQuery, page, size. Должен вернуть NOT_FOUND")
-    void getIncomeInvitationsWithIncorrectTest() {
+    void getIncomeInvitationsWithIncorrectUsernameTest() {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername("")
                 .build();
