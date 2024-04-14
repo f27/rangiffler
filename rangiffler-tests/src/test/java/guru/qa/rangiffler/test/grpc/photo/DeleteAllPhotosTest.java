@@ -21,7 +21,6 @@ import java.util.List;
 
 import static guru.qa.rangiffler.jupiter.annotation.User.GenerationType.FOR_GENERATE_USER;
 import static io.qameta.allure.Allure.step;
-import static java.lang.Thread.sleep;
 
 @Feature("PHOTO")
 @Story("DeleteAllPhotos")
@@ -44,7 +43,6 @@ public class DeleteAllPhotosTest extends BaseGrpcTest {
                         () -> photoGrpcClient.deleteAllPhotos(request))
         );
         step("Фотографий не должно быть в БД", () -> {
-            sleep(50);
             List<PhotoEntity> allUsersPhotos = photoRepository.findByUserId(user.id());
             Assertions.assertEquals(0, allUsersPhotos.size());
         });

@@ -189,7 +189,7 @@ public class GetFriendsTest extends BaseGrpcTest {
     @DisplayName("GetFriends: неправильный username, без searchQuery, page, size. Должен вернуть NOT_FOUND")
     void getFriendsWithIncorrectUsernameTest() {
         UsersRequest request = UsersRequest.newBuilder()
-                .setUsername("")
+                .setUsername(".")
                 .build();
 
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
@@ -197,6 +197,22 @@ public class GetFriendsTest extends BaseGrpcTest {
         );
         Assertions.assertEquals(
                 Status.NOT_FOUND.withDescription("User not found").asRuntimeException().getMessage(),
+                e.getMessage());
+    }
+
+    @Test
+    @GenerateUser
+    @DisplayName("GetFriends: пустой username, без searchQuery, page, size. Должен вернуть INVALID_ARGUMENT")
+    void getFriendsWithEmptyUsernameTest() {
+        UsersRequest request = UsersRequest.newBuilder()
+                .setUsername("")
+                .build();
+
+        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                () -> userdataGrpcClient.getFriends(request)
+        );
+        Assertions.assertEquals(
+                Status.INVALID_ARGUMENT.withDescription("Username can't be empty").asRuntimeException().getMessage(),
                 e.getMessage());
     }
 }

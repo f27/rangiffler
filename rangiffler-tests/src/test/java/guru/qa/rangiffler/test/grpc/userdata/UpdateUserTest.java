@@ -286,12 +286,29 @@ public class UpdateUserTest extends BaseGrpcTest {
 
     @Test
     @GenerateUser
+    @DisplayName("UpdateUser: пустой username должен возвращать INVALID_ARGUMENT")
+    void updateUserWithEmptyUsernameTest() {
+        step("Проверить исключение",
+                () -> {
+                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                            () -> userdataGrpcClient.updateUser(GrpcUser.newBuilder().setUsername("").build())
+                    );
+                    Assertions.assertEquals(
+                            Status.INVALID_ARGUMENT.withDescription("Username can't be empty").asRuntimeException().getMessage(),
+                            e.getMessage());
+                });
+    }
+
+    @Test
+    @GenerateUser
     @DisplayName("UpdateUser: некорректный username должен возвращать NOT_FOUND")
     void updateUserWithIncorrectUsernameTest() {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.updateUser(GrpcUser.newBuilder().setUsername("").build())
+                            () -> userdataGrpcClient.updateUser(GrpcUser.newBuilder()
+                                    .setCountryCode(CountryEnum.getRandom().getCode())
+                                    .setUsername(".").build())
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("User not found").asRuntimeException().getMessage(),
