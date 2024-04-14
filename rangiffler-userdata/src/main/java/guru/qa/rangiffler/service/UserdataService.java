@@ -344,9 +344,9 @@ public class UserdataService extends RangifflerUserdataServiceGrpc.RangifflerUse
             UserEntity currentUser = getCurrentUser(request.getUsername());
             UserEntity targetUser = getCorrectTargetUser(currentUser.getId(), UUID.fromString(request.getTargetUserId()));
             FriendshipEntity incomeInvitation = currentUser.findIncomeInvitation(targetUser)
-                    .orElseThrow(() -> new RuntimeException("Invitation not exist"));
+                    .orElseThrow(() -> Status.NOT_FOUND.withDescription("Invitation not exist").asRuntimeException());
             FriendshipEntity outcomeInvitation = currentUser.findOutcomeInvitation(targetUser)
-                    .orElseThrow(() -> new RuntimeException("Invitation not exist"));
+                    .orElseThrow(() -> Status.NOT_FOUND.withDescription("Invitation not exist").asRuntimeException());
             currentUser.removeIncomeInvitation(incomeInvitation);
             currentUser.removeOutcomeInvitation(outcomeInvitation);
             userdataRepository.save(currentUser);
