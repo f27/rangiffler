@@ -72,7 +72,7 @@ public class UserDataClient {
                 .setAvatar(user.avatar())
                 .setCountryCode(user.location().code())
                 .build();
-        return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.updateCurrentUser(request));
+        return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.updateUser(request));
     }
 
     public @Nonnull UserModel friendshipMutation(@Nonnull String username,
@@ -84,7 +84,7 @@ public class UserDataClient {
 
         switch (input.action()) {
             case ADD -> {
-                return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.addFriend(request));
+                return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.inviteFriend(request));
             }
             case ACCEPT -> {
                 return UserModel.fromGrpcMessage(rangifflerUserdataServiceBlockingStub.acceptFriend(request));

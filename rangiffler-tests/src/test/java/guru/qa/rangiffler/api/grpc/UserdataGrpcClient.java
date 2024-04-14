@@ -36,12 +36,12 @@ public class UserdataGrpcClient extends GrpcClient {
         return blockingStub.getFriendsIds(request);
     }
 
-    public GrpcUser updateUser(GrpcUser user) {
-        return blockingStub.updateCurrentUser(user);
+    public GrpcUser updateUser(GrpcUser request) {
+        return blockingStub.updateUser(request);
     }
 
     public GrpcUser inviteFriend(FriendshipRequest request) {
-        return blockingStub.addFriend(request);
+        return blockingStub.inviteFriend(request);
     }
 
     public GrpcUser acceptFriend(FriendshipRequest request) {

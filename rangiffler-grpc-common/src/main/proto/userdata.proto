@@ -16,8 +16,8 @@ service RangifflerUserdataService {
   rpc GetOutcomeInvitations(UsersRequest) returns (UsersResponse);
   rpc GetFriendsIds(Username) returns (FriendsIdsResponse);
 
-  rpc UpdateCurrentUser(GrpcUser) returns (GrpcUser);
-  rpc AddFriend(FriendshipRequest) returns (GrpcUser);
+  rpc UpdateUser(GrpcUser) returns (GrpcUser);
+  rpc InviteFriend(FriendshipRequest) returns (GrpcUser);
   rpc AcceptFriend(FriendshipRequest) returns (GrpcUser);
   rpc RejectFriend(FriendshipRequest) returns (GrpcUser);
   rpc DeleteFriend(FriendshipRequest) returns (GrpcUser);

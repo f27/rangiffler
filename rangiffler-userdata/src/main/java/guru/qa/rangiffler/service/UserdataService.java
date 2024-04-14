@@ -270,7 +270,7 @@ public class UserdataService extends RangifflerUserdataServiceGrpc.RangifflerUse
     }
 
     @Override
-    public void updateCurrentUser(GrpcUser request, StreamObserver<GrpcUser> responseObserver) {
+    public void updateUser(GrpcUser request, StreamObserver<GrpcUser> responseObserver) {
         try {
             UserEntity currentUser = getCurrentUser(request.getUsername());
             currentUser.setFirstname(request.getFirstname());
@@ -285,7 +285,7 @@ public class UserdataService extends RangifflerUserdataServiceGrpc.RangifflerUse
     }
 
     @Override
-    public void addFriend(FriendshipRequest request, StreamObserver<GrpcUser> responseObserver) {
+    public void inviteFriend(FriendshipRequest request, StreamObserver<GrpcUser> responseObserver) {
         try {
             UserEntity currentUser = getCurrentUser(request.getUsername());
             UserEntity targetUser = getCorrectTargetUser(currentUser.getId(), UUID.fromString(request.getTargetUserId()));
