@@ -266,9 +266,13 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
 
     @Override
     public void deleteUser(Username request, StreamObserver<Empty> responseObserver) {
-        validationService.validate(request);
-        userdataService.deleteUser(request.getUsername());
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
+        try {
+            validationService.validate(request);
+            userdataService.deleteUser(request.getUsername());
+            responseObserver.onNext(Empty.getDefaultInstance());
+            responseObserver.onCompleted();
+        } catch (StatusRuntimeException e) {
+            responseObserver.onError(e);
+        }
     }
 }
