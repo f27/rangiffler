@@ -1,8 +1,11 @@
 package guru.qa.rangiffler.controller;
 
-import guru.qa.rangiffler.api.UserDataClient;
+import graphql.schema.DataFetchingEnvironment;
 import guru.qa.rangiffler.model.friendship.FriendshipInput;
 import guru.qa.rangiffler.model.user.UserModel;
+import guru.qa.rangiffler.service.GqlValidationService;
+import guru.qa.rangiffler.service.UserdataService;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +20,13 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class FriendsController {
 
-    private final UserDataClient userDataClient;
+    private final UserdataService userdataService;
+    private final GqlValidationService gqlValidationService;
 
     @Autowired
-    public FriendsController(UserDataClient userDataClient) {
-        this.userDataClient = userDataClient;
+    public FriendsController(UserdataService userdataService, GqlValidationService gqlValidationService) {
+        this.userdataService = userdataService;
+        this.gqlValidationService = gqlValidationService;
     }
 
     @SchemaMapping(typeName = "User", field = "friends")
@@ -29,8 +34,7 @@ public class FriendsController {
                                     @Argument int page,
                                     @Argument int size,
                                     @Argument @Nullable String searchQuery) {
-
-        return userDataClient.getFriends(user.username(), searchQuery, page, size);
+        return userdataService.getFriends(user.username(), searchQuery, page, size);
     }
 
     @SchemaMapping(typeName = "User", field = "outcomeInvitations")
@@ -38,7 +42,7 @@ public class FriendsController {
                                               @Argument int page,
                                               @Argument int size,
                                               @Argument @Nullable String searchQuery) {
-        return userDataClient.getOutcomeInvitations(user.username(), searchQuery, page, size);
+        return userdataService.getOutcomeInvitations(user.username(), searchQuery, page, size);
     }
 
     @SchemaMapping(typeName = "User", field = "incomeInvitations")
@@ -46,13 +50,15 @@ public class FriendsController {
                                                @Argument int page,
                                                @Argument int size,
                                                @Argument @Nullable String searchQuery) {
-        return userDataClient.getIncomeInvitations(user.username(), searchQuery, page, size);
+        return userdataService.getIncomeInvitations(user.username(), searchQuery, page, size);
     }
 
     @MutationMapping
     public UserModel friendship(@AuthenticationPrincipal Jwt principal,
-                                @Argument @Valid FriendshipInput input) {
+                                @Argument @Valid FriendshipInput input,
+                                @Nonnull DataFetchingEnvironment env) {
         String username = principal.getClaim("sub");
-        return userDataClient.friendshipMutation(username, input);
+        gqlValidationService.checkSubQueries(env, 1, "friends", "incomeInvitations", "outcomeInvitations");
+        return userdataService.friendshipMutation(username, input);
     }
 }

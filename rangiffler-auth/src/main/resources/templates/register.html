@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
-<html lang="ru" xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>Register to Rangiffler</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <link rel="icon" th:href="@{images/favicon.ico}"/>
-    <link href="../static/styles/styles.css" th:href="@{styles/styles.css}" rel="stylesheet"
+    <link href="../static/styles/styles.css" rel="stylesheet" th:href="@{styles/styles.css}"
           type="text/css"/>
 </head>
 <body>
@@ -15,30 +15,30 @@
             <h1 class="header">
                 <span class="header__accent">R</span>angiffler
             </h1>
-            <img class="header__logo" src="./../static/images/deer-logo.svg" width="90" th:src="@{images/deer-logo.svg}"
-                 alt="Rangiffler logo"/>
-            <form th:if="${username == null}" class="form" id="register-form" th:object="${registrationModel}"
-                  action="/register" th:action="@{/register}"
-                  method="post">
+            <img alt="Rangiffler logo" class="header__logo" src="./../static/images/deer-logo.svg" th:src="@{images/deer-logo.svg}"
+                 width="90"/>
+            <form action="/register" class="form" id="register-form" method="post"
+                  th:action="@{/register}" th:if="${username == null}"
+                  th:object="${registrationModel}">
                 <label class="form__label">Username:
-                    <input class="form__input" type="text" id="username" th:field="*{username}" name="username"
-                           placeholder="Type your username" required/>
-                    <span class="form__error" th:if="${#fields.hasErrors('username')}"
-                          th:errors="*{username}"></span>
+                    <input class="form__input" id="username" name="username" placeholder="Type your username" required
+                           th:field="*{username}" type="text"/>
+                    <span class="form__error" th:errors="*{username}"
+                          th:if="${#fields.hasErrors('username')}"></span>
                 </label>
                 <label class="form__label">Password:
-                    <input class="form__input" type="password" id="password" name="password"
-                           th:field="*{password}" placeholder="Type your password" required/>
-                    <button type="button" class="form__password-button" id="passwordBtn"></button>
-                    <span class="form__error" th:if="${#fields.hasErrors('password')}"
-                          th:errors="*{password}"></span>
+                    <input class="form__input" id="password" name="password" placeholder="Type your password"
+                           required th:field="*{password}" type="password"/>
+                    <button class="form__password-button" id="passwordBtn" type="button"></button>
+                    <span class="form__error" th:errors="*{password}"
+                          th:if="${#fields.hasErrors('password')}"></span>
                 </label>
                 <label class="form__label">Submit Password:
-                    <input class="form__input" type="password" id="passwordSubmit" name="passwordSubmit"
-                           th:field="*{passwordSubmit}" placeholder="Submit your password" required/>
-                    <button type="button" class="form__password-button" id="passwordSubmitBtn"></button>
-                    <span class="form__error" th:if="${#fields.hasErrors('passwordSubmit')}"
-                          th:errors="*{passwordSubmit}"></span>
+                    <input class="form__input" id="passwordSubmit" name="passwordSubmit" placeholder="Submit your password"
+                           required th:field="*{passwordSubmit}" type="password"/>
+                    <button class="form__password-button" id="passwordSubmitBtn" type="button"></button>
+                    <span class="form__error" th:errors="*{passwordSubmit}"
+                          th:if="${#fields.hasErrors('passwordSubmit')}"></span>
                 </label>
                 <button class="form__submit" type="submit">
                     Sign Up

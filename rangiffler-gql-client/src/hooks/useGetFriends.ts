@@ -2,29 +2,30 @@ import {gql, useQuery} from "@apollo/client";
 
 const GET_FRIENDS = gql(`
     query GetFriends($page: Int, $size: Int, $searchQuery: String) {
-        user {
-            friends(page: $page, size: $size, searchQuery: $searchQuery) {
-                edges {
-                    node {
-                        id
-                        username
-                        firstname
-                        surname
-                        avatar
-                        location {
-                            code
-                            name
-                            flag
-                        }
-                        friendStatus
-                    }
-                }
-                pageInfo {
-                    hasPreviousPage
-                    hasNextPage
-                }        
+      user {
+        id
+        friends(page: $page, size: $size, searchQuery: $searchQuery) {
+          edges {
+            node {
+              id
+              username
+              firstname
+              surname
+              avatar
+              location {
+                code
+                name
+                flag
+              }
+              friendStatus
             }
+          }
+          pageInfo {
+            hasPreviousPage
+            hasNextPage
+          }
         }
+      }
     }
 `);
 

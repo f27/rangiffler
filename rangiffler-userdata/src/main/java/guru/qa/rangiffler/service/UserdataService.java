@@ -1,23 +1,21 @@
 package guru.qa.rangiffler.service;
 
-import guru.qa.grpc.rangiffler.grpc.*;
 import guru.qa.rangiffler.entity.friendship.FriendshipEntity;
 import guru.qa.rangiffler.entity.friendship.FriendshipStatus;
 import guru.qa.rangiffler.entity.user.UserEntity;
 import guru.qa.rangiffler.repository.UserdataRepository;
-import io.grpc.stub.StreamObserver;
-import net.devh.boot.grpc.server.service.GrpcService;
+import io.grpc.Status;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-@GrpcService
-public class UserdataService extends RangifflerUserdataServiceGrpc.RangifflerUserdataServiceImplBase {
+@Service
+public class UserdataService {
 
     private final UserdataRepository userdataRepository;
 
@@ -26,343 +24,163 @@ public class UserdataService extends RangifflerUserdataServiceGrpc.RangifflerUse
         this.userdataRepository = userdataRepository;
     }
 
-    @Override
-    public void getUser(Username request, StreamObserver<User> responseObserver) {
-        responseObserver.onNext(UserEntity.toGrpcMessage(
-                userdataRepository.getByUsername(request.getUsername()),
-                FriendStatus.NOT_FRIEND));
-        responseObserver.onCompleted();
+    public UserEntity getUser(String username) {
+        UserEntity user = userdataRepository.getByUsername(username);
+        if (user == null) {
+            throw Status.NOT_FOUND.withDescription("User not found").asRuntimeException();
+        }
+        return user;
     }
 
-    @Override
-    public void getUsers(UsersRequest request, StreamObserver<UsersResponse> responseObserver) {
-        String username = request.getUsername();
-
-        UserEntity currentUser = userdataRepository.getByUsername(username);
-
-        List<UserEntity> currentUserFriends = currentUser.getFriends();
-        List<UserEntity> currentUserInvitationSent = currentUser.getInvitationSentUsers();
-        List<UserEntity> currentUserInvitationReceived = currentUser.getInvitationReceivedUsers();
-
-        Slice<UserEntity> users;
-        if (request.getSearchQuery().isEmpty()) {
-            users = userdataRepository.findByUsernameNot(username,
-                    PageRequest.of(request.getPage(),
-                            request.getSize()));
-        } else {
-            users = userdataRepository.findByUsernameNotAndSearchQuery(username,
-                    PageRequest.of(request.getPage(),
-                            request.getSize()),
-                    request.getSearchQuery());
+    public Slice<UserEntity> getPeople(String username, Pageable pageable, String searchQuery) {
+        if (searchQuery.isEmpty()) {
+            return userdataRepository.findByUsernameNot(username, pageable);
         }
-
-        List<User> usersWithStatus = new ArrayList<>();
-
-        for (UserEntity user : users) {
-            if (currentUserFriends.contains(user)) {
-                usersWithStatus.add(UserEntity.toGrpcMessage(user, FriendStatus.FRIEND));
-            } else if (currentUserInvitationSent.contains(user)) {
-                usersWithStatus.add(UserEntity.toGrpcMessage(user, FriendStatus.INVITATION_SENT));
-            } else if (currentUserInvitationReceived.contains(user)) {
-                usersWithStatus.add(UserEntity.toGrpcMessage(user, FriendStatus.INVITATION_RECEIVED));
-            } else {
-                usersWithStatus.add(UserEntity.toGrpcMessage(user, FriendStatus.NOT_FRIEND));
-            }
-        }
-
-        UsersResponse response = UsersResponse.newBuilder()
-                .addAllUsers(usersWithStatus)
-                .setHasNext(users.hasNext())
-                .build();
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        return userdataRepository.findByUsernameNotAndSearchQuery(username, pageable, searchQuery);
     }
 
-    @Override
-    public void getFriends(UsersRequest request, StreamObserver<UsersResponse> responseObserver) {
-        UserEntity requester = userdataRepository.getByUsername(request.getUsername());
-        boolean isPageable = request.getSize() != 0;
-        String searchQuery = request.getSearchQuery();
-
-        Slice<UserEntity> users;
-        if (isPageable) {
-            if (searchQuery.isEmpty()) {
-                users = userdataRepository.findFriends(
-                        requester,
-                        PageRequest.of(request.getPage(), request.getSize())
-                );
-            } else {
-                users = userdataRepository.findFriends(
-                        requester,
-                        PageRequest.of(request.getPage(), request.getSize()),
-                        searchQuery
-                );
-            }
-        } else {
-            if (searchQuery.isEmpty()) {
-                users = userdataRepository.findFriends(
-                        requester
-                );
-            } else {
-                users = userdataRepository.findFriends(
-                        requester,
-                        searchQuery
-                );
-            }
+    public List<UserEntity> getPeople(String username, String searchQuery) {
+        if (searchQuery.isEmpty()) {
+            return userdataRepository.findByUsernameNot(username);
         }
-
-        UsersResponse.Builder responseBuilder = UsersResponse.newBuilder();
-        users.forEach(userEntity -> {
-            User user = UserEntity.toGrpcMessage(userEntity, FriendStatus.FRIEND);
-            responseBuilder.addUsers(user);
-        });
-        responseBuilder.setHasNext(users.hasNext());
-
-        responseObserver.onNext(responseBuilder.build());
-        responseObserver.onCompleted();
+        return userdataRepository.findByUsernameNotAndSearchQuery(username, searchQuery);
     }
 
-    @Override
-    public void getIncomeInvitations(UsersRequest request, StreamObserver<UsersResponse> responseObserver) {
-        UserEntity requester = userdataRepository.getByUsername(request.getUsername());
-        boolean isPageable = request.getSize() != 0;
-        String searchQuery = request.getSearchQuery();
-
-        Slice<UserEntity> users;
-        if (isPageable) {
-            if (searchQuery.isEmpty()) {
-                users = userdataRepository.findIncomeInvitations(
-                        requester,
-                        PageRequest.of(request.getPage(), request.getSize())
-                );
-            } else {
-                users = userdataRepository.findIncomeInvitations(
-                        requester,
-                        PageRequest.of(request.getPage(), request.getSize()),
-                        searchQuery
-                );
-            }
-        } else {
-            if (searchQuery.isEmpty()) {
-                users = userdataRepository.findIncomeInvitations(
-                        requester
-                );
-            } else {
-                users = userdataRepository.findIncomeInvitations(
-                        requester,
-                        searchQuery
-                );
-            }
+    public Slice<UserEntity> getFriends(String username, Pageable pageable, String searchQuery) {
+        UserEntity user = getUser(username);
+        if (searchQuery.isEmpty()) {
+            return userdataRepository.findFriends(user, pageable);
         }
-
-        UsersResponse.Builder responseBuilder = UsersResponse.newBuilder();
-        users.forEach(userEntity -> {
-            User user = UserEntity.toGrpcMessage(userEntity, FriendStatus.INVITATION_RECEIVED);
-            responseBuilder.addUsers(user);
-        });
-        responseBuilder.setHasNext(users.hasNext());
-
-        responseObserver.onNext(responseBuilder.build());
-        responseObserver.onCompleted();
+        return userdataRepository.findFriends(user, pageable, searchQuery);
     }
 
-    @Override
-    public void getOutcomeInvitations(UsersRequest request, StreamObserver<UsersResponse> responseObserver) {
-        UserEntity requester = userdataRepository.getByUsername(request.getUsername());
-        boolean isPageable = request.getSize() != 0;
-        String searchQuery = request.getSearchQuery();
-
-        Slice<UserEntity> users;
-        if (isPageable) {
-            if (searchQuery.isEmpty()) {
-                users = userdataRepository.findOutcomeInvitations(
-                        requester,
-                        PageRequest.of(request.getPage(), request.getSize())
-                );
-            } else {
-                users = userdataRepository.findOutcomeInvitations(
-                        requester,
-                        PageRequest.of(request.getPage(), request.getSize()),
-                        searchQuery
-                );
-            }
-        } else {
-            if (searchQuery.isEmpty()) {
-                users = userdataRepository.findOutcomeInvitations(
-                        requester
-                );
-            } else {
-                users = userdataRepository.findOutcomeInvitations(
-                        requester,
-                        searchQuery
-                );
-            }
+    public List<UserEntity> getFriends(String username, String searchQuery) {
+        UserEntity user = getUser(username);
+        if (searchQuery.isEmpty()) {
+            return userdataRepository.findFriends(user);
         }
-
-        UsersResponse.Builder responseBuilder = UsersResponse.newBuilder();
-        users.forEach(userEntity -> {
-            User user = UserEntity.toGrpcMessage(userEntity, FriendStatus.INVITATION_SENT);
-            responseBuilder.addUsers(user);
-        });
-        responseBuilder.setHasNext(users.hasNext());
-
-        responseObserver.onNext(responseBuilder.build());
-        responseObserver.onCompleted();
+        return userdataRepository.findFriends(user, searchQuery);
     }
 
-    @Override
-    public void updateCurrentUser(User request, StreamObserver<User> responseObserver) {
-        UserEntity currentUser = userdataRepository.getByUsername(request.getUsername());
-        currentUser.setFirstname(request.getFirstname());
-        currentUser.setLastname(request.getLastname());
-        currentUser.setAvatar(request.getAvatar().getBytes());
-        currentUser.setCountryCode(request.getCountryCode());
-        responseObserver.onNext(UserEntity.toGrpcMessage(userdataRepository.save(currentUser), FriendStatus.NOT_FRIEND));
-        responseObserver.onCompleted();
+    public Slice<UserEntity> getIncomeInvitations(String username, Pageable pageable, String searchQuery) {
+        UserEntity user = getUser(username);
+        if (searchQuery.isEmpty()) {
+            return userdataRepository.findIncomeInvitations(user, pageable);
+        }
+        return userdataRepository.findIncomeInvitations(user, pageable, searchQuery);
     }
 
-    @Override
-    public void addFriend(FriendshipRequest request, StreamObserver<User> responseObserver) {
-        UserEntity currentUser = userdataRepository.getByUsername(request.getUsername());
-
-        if (currentUser.getId().equals(UUID.fromString(request.getTargetUserId()))) {
-            throw new RuntimeException("Target user should not be same");
+    public List<UserEntity> getIncomeInvitations(String username, String searchQuery) {
+        UserEntity user = getUser(username);
+        if (searchQuery.isEmpty()) {
+            return userdataRepository.findIncomeInvitations(user);
         }
+        return userdataRepository.findIncomeInvitations(user, searchQuery);
+    }
 
-        Optional<UserEntity> targetUserOptional = userdataRepository.findById(UUID.fromString(request.getTargetUserId()));
-
-        UserEntity targetUser;
-        if (targetUserOptional.isPresent()) {
-            targetUser = targetUserOptional.get();
-        } else {
-            throw new RuntimeException("Target user not found");
+    public Slice<UserEntity> getOutcomeInvitations(String username, Pageable pageable, String searchQuery) {
+        UserEntity user = getUser(username);
+        if (searchQuery.isEmpty()) {
+            return userdataRepository.findOutcomeInvitations(user, pageable);
         }
+        return userdataRepository.findOutcomeInvitations(user, pageable, searchQuery);
+    }
 
+    public List<UserEntity> getOutcomeInvitations(String username, String searchQuery) {
+        UserEntity user = getUser(username);
+        if (searchQuery.isEmpty()) {
+            return userdataRepository.findOutcomeInvitations(user);
+        }
+        return userdataRepository.findOutcomeInvitations(user, searchQuery);
+    }
+
+    public UserEntity updateUser(String username, String firstname, String lastname,
+                                 String avatar, String countryCode) {
+        UserEntity user = getUser(username);
+        user.setFirstname(firstname);
+        user.setLastname(lastname);
+        user.setAvatar(avatar.getBytes());
+        user.setCountryCode(countryCode);
+        return userdataRepository.save(user);
+    }
+
+    public UserEntity inviteFriend(String username, UUID targetId) {
+        UserEntity currentUser = getUser(username);
+        UserEntity targetUser = getCorrectTargetUser(currentUser.getId(), targetId);
+        checkCanSendInvitation(currentUser, targetUser);
+        FriendshipEntity friendship = new FriendshipEntity();
+        friendship.setRequester(currentUser);
+        friendship.setAddressee(targetUser);
+        friendship.setStatus(FriendshipStatus.PENDING);
+        targetUser.addIncomeInvitation(friendship);
+        return userdataRepository.save(targetUser);
+    }
+
+    public UserEntity acceptFriend(String username, UUID targetId) {
+        UserEntity currentUser = getUser(username);
+        UserEntity targetUser = getCorrectTargetUser(currentUser.getId(), targetId);
+
+        FriendshipEntity initialInvitation = getPendingIncomeInvitation(currentUser, targetUser);
+        initialInvitation.setStatus(FriendshipStatus.ACCEPTED);
+
+        FriendshipEntity newInvitation = new FriendshipEntity();
+        newInvitation.setRequester(currentUser);
+        newInvitation.setAddressee(targetUser);
+        newInvitation.setStatus(FriendshipStatus.ACCEPTED);
+        currentUser.addOutcomeInvitation(newInvitation);
+        userdataRepository.save(currentUser);
+        return targetUser;
+    }
+
+    public UserEntity rejectFriend(String username, UUID targetId) {
+        UserEntity currentUser = getUser(username);
+        UserEntity targetUser = getCorrectTargetUser(currentUser.getId(), targetId);
+        FriendshipEntity invitation = getPendingIncomeInvitation(currentUser, targetUser);
+        targetUser.removeOutcomeInvitation(invitation);
+        return userdataRepository.save(targetUser);
+    }
+
+    public UserEntity deleteFriend(String username, UUID targetId) {
+        UserEntity currentUser = getUser(username);
+        UserEntity targetUser = getCorrectTargetUser(currentUser.getId(), targetId);
+        FriendshipEntity incomeInvitation = currentUser.findIncomeInvitation(targetUser)
+                .orElseThrow(() -> Status.NOT_FOUND.withDescription("Accepted invitation not exist").asRuntimeException());
+        FriendshipEntity outcomeInvitation = currentUser.findOutcomeInvitation(targetUser)
+                .orElseThrow(() -> Status.NOT_FOUND.withDescription("Accepted invitation not exist").asRuntimeException());
+        targetUser.removeOutcomeInvitation(incomeInvitation);
+        targetUser.removeIncomeInvitation(outcomeInvitation);
+        return userdataRepository.save(targetUser);
+    }
+
+    @Transactional
+    public void deleteUser(String username) {
+        userdataRepository.deleteByUsername(username);
+    }
+
+    private void checkCanSendInvitation(UserEntity currentUser, UserEntity targetUser) {
         if (targetUser.findIncomeInvitation(currentUser).isPresent()) {
-            throw new RuntimeException("Invitation already exist");
+            throw Status.ALREADY_EXISTS.withDescription("Invitation already exist").asRuntimeException();
         }
-
-        FriendshipEntity targetUserFriendship = new FriendshipEntity();
-        targetUserFriendship.setRequester(currentUser);
-        targetUserFriendship.setAddressee(targetUser);
-        targetUserFriendship.setStatus(FriendshipStatus.PENDING);
-
-        targetUser.addIncomeInvitation(targetUserFriendship);
-
-        responseObserver.onNext(UserEntity.toGrpcMessage(userdataRepository.save(targetUser), FriendStatus.INVITATION_SENT));
-        responseObserver.onCompleted();
+        if (currentUser.findIncomeInvitation(targetUser).isPresent()) {
+            throw Status.ALREADY_EXISTS.withDescription("Invitation already exist").asRuntimeException();
+        }
     }
 
-    @Override
-    public void acceptFriend(FriendshipRequest request, StreamObserver<User> responseObserver) {
-        UserEntity currentUser = userdataRepository.getByUsername(request.getUsername());
-
-        if (currentUser.getId().equals(UUID.fromString(request.getTargetUserId()))) {
-            throw new RuntimeException("Target user should not be same");
+    private UserEntity getCorrectTargetUser(UUID currentUserId, UUID targetUserId) {
+        if (currentUserId.equals(targetUserId)) {
+            throw Status.INVALID_ARGUMENT.withDescription("Target user should not be same").asRuntimeException();
         }
-
-        Optional<UserEntity> targetUserOptional = userdataRepository.findById(UUID.fromString(request.getTargetUserId()));
-
-        UserEntity targetUser;
-        if (targetUserOptional.isPresent()) {
-            targetUser = targetUserOptional.get();
-        } else {
-            throw new RuntimeException("Target user not found");
-        }
-
-        Optional<FriendshipEntity> incomeInvitationOptional = currentUser.findIncomeInvitation(targetUser);
-
-        if (incomeInvitationOptional.isEmpty()) {
-            throw new RuntimeException("Invitation not exist");
-        }
-
-        if (incomeInvitationOptional.get().getStatus().equals(FriendshipStatus.ACCEPTED)) {
-            throw new RuntimeException("Invitation already accepted");
-        }
-
-        incomeInvitationOptional.get().setStatus(FriendshipStatus.ACCEPTED);
-
-        FriendshipEntity outcomeInvitation = new FriendshipEntity();
-        outcomeInvitation.setRequester(currentUser);
-        outcomeInvitation.setAddressee(targetUser);
-        outcomeInvitation.setStatus(FriendshipStatus.ACCEPTED);
-
-        currentUser.addOutcomeInvitation(outcomeInvitation);
-
-        userdataRepository.save(currentUser);
-        responseObserver.onNext(UserEntity.toGrpcMessage(targetUser, FriendStatus.FRIEND));
-        responseObserver.onCompleted();
+        return userdataRepository.findById(targetUserId)
+                .orElseThrow(() -> Status.NOT_FOUND.withDescription("Target user not found").asRuntimeException());
     }
 
-    @Override
-    public void rejectFriend(FriendshipRequest request, StreamObserver<User> responseObserver) {
-        UserEntity currentUser = userdataRepository.getByUsername(request.getUsername());
+    private FriendshipEntity getPendingIncomeInvitation(UserEntity currentUser, UserEntity targetUser) {
+        FriendshipEntity incomeInvitation = currentUser.findIncomeInvitation(targetUser)
+                .orElseThrow(() -> Status.NOT_FOUND.withDescription("Invitation not exist").asRuntimeException());
 
-        if (currentUser.getId().equals(UUID.fromString(request.getTargetUserId()))) {
-            throw new RuntimeException("Target user should not be same");
+        if (incomeInvitation.getStatus().equals(FriendshipStatus.ACCEPTED)) {
+            throw Status.ALREADY_EXISTS.withDescription("Invitation already accepted").asRuntimeException();
         }
-
-        Optional<UserEntity> targetUserOptional = userdataRepository.findById(UUID.fromString(request.getTargetUserId()));
-
-        UserEntity targetUser;
-        if (targetUserOptional.isPresent()) {
-            targetUser = targetUserOptional.get();
-        } else {
-            throw new RuntimeException("Target user not found");
-        }
-
-        Optional<FriendshipEntity> incomeInvitationOptional = currentUser.findIncomeInvitation(targetUser);
-
-        if (incomeInvitationOptional.isEmpty()) {
-            throw new RuntimeException("Invitation not exist");
-        }
-
-        if (incomeInvitationOptional.get().getStatus().equals(FriendshipStatus.ACCEPTED)) {
-            throw new RuntimeException("Invitation already accepted");
-        }
-
-        currentUser.removeIncomeInvitation(incomeInvitationOptional.get());
-
-        userdataRepository.save(currentUser);
-        responseObserver.onNext(UserEntity.toGrpcMessage(targetUser, FriendStatus.NOT_FRIEND));
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    public void deleteFriend(FriendshipRequest request, StreamObserver<User> responseObserver) {
-        UserEntity currentUser = userdataRepository.getByUsername(request.getUsername());
-
-        if (currentUser.getId().equals(UUID.fromString(request.getTargetUserId()))) {
-            throw new RuntimeException("Target user should not be same");
-        }
-
-        Optional<UserEntity> targetUserOptional = userdataRepository.findById(UUID.fromString(request.getTargetUserId()));
-
-        UserEntity targetUser;
-        if (targetUserOptional.isPresent()) {
-            targetUser = targetUserOptional.get();
-        } else {
-            throw new RuntimeException("Target user not found");
-        }
-
-        Optional<FriendshipEntity> incomeInvitationOptional = currentUser.findIncomeInvitation(targetUser);
-        Optional<FriendshipEntity> outcomeInvitationOptional = currentUser.findOutcomeInvitation(targetUser);
-
-        if (incomeInvitationOptional.isEmpty() || outcomeInvitationOptional.isEmpty()) {
-            throw new RuntimeException("Invitation not exist");
-        }
-
-        if (!incomeInvitationOptional.get().getStatus().equals(FriendshipStatus.ACCEPTED) ||
-                !outcomeInvitationOptional.get().getStatus().equals(FriendshipStatus.ACCEPTED)) {
-            throw new RuntimeException("Invitation not accepted");
-        }
-
-        currentUser.removeIncomeInvitation(incomeInvitationOptional.get());
-        currentUser.removeOutcomeInvitation(outcomeInvitationOptional.get());
-
-        userdataRepository.save(currentUser);
-        responseObserver.onNext(UserEntity.toGrpcMessage(targetUser, FriendStatus.NOT_FRIEND));
-        responseObserver.onCompleted();
+        return incomeInvitation;
     }
 }

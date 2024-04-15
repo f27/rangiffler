@@ -6,15 +6,15 @@ services:
     image: mysql:8.3.0
     environment:
       - MYSQL_ROOT_PASSWORD=secret
-    volumes:
-      - rangiffler-all-db:/var/lib/mysql
+#    volumes:
+#      - rangiffler-all-db:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       interval: 3s
       timeout: 3s
       retries: 5
-    ports:
-      - "3306:3306"
+    expose:
+      - "3306"
     networks:
       - rangiffler-network
     dns_search: .
@@ -55,8 +55,8 @@ services:
       - "9000:9000"
     healthcheck:
       test: "wget --spider http://localhost:9000/actuator/health || exit 1"
-      interval: 5s
-      timeout: 5s
+      interval: 15s
+      timeout: 15s
       retries: 10
     restart: always
     depends_on:
@@ -137,9 +137,9 @@ services:
     networks:
       - rangiffler-network
     dns_search: .
-volumes:
-  rangiffler-all-db:
-    external: true
+#volumes:
+#  rangiffler-all-db:
+#    external: true
 
 networks:
   rangiffler-network:

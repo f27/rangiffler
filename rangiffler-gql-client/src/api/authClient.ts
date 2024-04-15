@@ -2,6 +2,21 @@ const BASE_URL = `${import.meta.env.VITE_AUTH_URL}`;
 import {Buffer} from "buffer";
 
 export const authClient = {
+    refreshToken: async(url: string, data: URLSearchParams)=> {
+        const response = await fetch(`${BASE_URL}/${url}`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-type": "application/x-www-form-urlencoded",
+                "Authorization": `Basic ${Buffer.from("client:secret").toString("base64")}`,
+            },
+            body: data.toString()
+        });
+        if (!response.ok) {
+            throw new Error("Failed loading data");
+        }
+        return response.json();
+    },
     getToken: async(url: string, data: URLSearchParams) => {
         const response = await fetch(`${BASE_URL}/${url}`, {
             method: "POST",
@@ -23,7 +38,7 @@ export const authClient = {
             credentials: "include",
             headers: {
                 "Content-type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("id_token")}`,
+                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
             }
         });
         if (!response.ok) {

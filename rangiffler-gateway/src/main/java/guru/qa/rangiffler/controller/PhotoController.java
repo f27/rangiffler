@@ -1,10 +1,11 @@
 package guru.qa.rangiffler.controller;
 
-import guru.qa.rangiffler.api.PhotoClient;
 import guru.qa.rangiffler.model.photo.FeedModel;
 import guru.qa.rangiffler.model.photo.PhotoInput;
 import guru.qa.rangiffler.model.photo.PhotoModel;
 import guru.qa.rangiffler.model.photo.StatModel;
+import guru.qa.rangiffler.service.PhotoService;
+import guru.qa.rangiffler.service.UserdataService;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,27 +18,30 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Controller
 public class PhotoController {
 
-    private final PhotoClient photoClient;
+    private final UserdataService userdataService;
+    private final PhotoService photoService;
 
     @Autowired
-    public PhotoController(PhotoClient photoClient) {
-        this.photoClient = photoClient;
+    public PhotoController(UserdataService userdataService, PhotoService photoService) {
+        this.userdataService = userdataService;
+        this.photoService = photoService;
     }
 
     @SchemaMapping(typeName = "Feed", field = "photos")
     public Slice<PhotoModel> photos(FeedModel feed, @Argument int page, @Argument int size) {
-        return photoClient.getPhotos(feed.username(), feed.withFriends(), page, size);
+        return photoService.getPhotos(feed.username(), feed.id(), feed.friendsIds(), page, size);
     }
 
     @SchemaMapping(typeName = "Feed", field = "stat")
     public List<StatModel> stat(FeedModel feed) {
-        return photoClient.getStat(feed.username(), feed.withFriends());
+        return photoService.getStat(feed.id(), feed.friendsIds());
     }
 
     @QueryMapping
@@ -45,10 +49,12 @@ public class PhotoController {
                           @Argument @Nonnull Boolean withFriends) {
         String username = principal.getClaim("sub");
         return new FeedModel(
+                userdataService.getUser(username).id(),
                 username,
                 withFriends,
                 null,
-                null
+                null,
+                withFriends ? userdataService.getFriendsIds(username) : new ArrayList<>()
         );
     }
 
@@ -56,13 +62,13 @@ public class PhotoController {
     public PhotoModel photo(@AuthenticationPrincipal Jwt principal,
                             @Argument @Valid PhotoInput input) {
         String username = principal.getClaim("sub");
-        return photoClient.mutatePhoto(username, input);
+        return photoService.mutatePhoto(username, input);
     }
 
     @MutationMapping
     public Boolean deletePhoto(@AuthenticationPrincipal Jwt principal,
                                @Argument UUID id) {
         String username = principal.getClaim("sub");
-        return photoClient.deletePhoto(username, id);
+        return photoService.deletePhoto(username, id);
     }
 }

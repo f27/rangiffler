@@ -1,9 +1,9 @@
 package guru.qa.rangiffler.entity;
 
-import guru.qa.grpc.rangiffler.grpc.GetPhotosResponse;
 import guru.qa.grpc.rangiffler.grpc.Like;
 import guru.qa.grpc.rangiffler.grpc.Likes;
 import guru.qa.grpc.rangiffler.grpc.PhotoResponse;
+import guru.qa.grpc.rangiffler.grpc.PhotoSliceResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -65,6 +65,7 @@ public class PhotoEntity {
                 .addAllLikes(likes)
                 .build();
         return PhotoResponse.newBuilder()
+                .setUserId(photo.getUserId().toString())
                 .setPhotoId(photo.getId().toString())
                 .setSrc(new String(photo.getPhoto(), StandardCharsets.UTF_8))
                 .setCountryCode(photo.getCountryCode())
@@ -74,8 +75,8 @@ public class PhotoEntity {
                 .build();
     }
 
-    public static GetPhotosResponse toGrpcMessage(Slice<PhotoEntity> photos) {
-        return GetPhotosResponse.newBuilder()
+    public static PhotoSliceResponse toGrpcMessage(Slice<PhotoEntity> photos) {
+        return PhotoSliceResponse.newBuilder()
                 .addAllPhotos(photos.map(PhotoEntity::toGrpcMessage).toList())
                 .setHasNext(photos.hasNext())
                 .build();

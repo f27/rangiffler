@@ -1,9 +1,10 @@
 package guru.qa.rangiffler.controller;
 
 import graphql.schema.DataFetchingEnvironment;
-import guru.qa.rangiffler.api.UserDataClient;
 import guru.qa.rangiffler.model.user.UpdateUserInput;
 import guru.qa.rangiffler.model.user.UserModel;
+import guru.qa.rangiffler.service.GqlValidationService;
+import guru.qa.rangiffler.service.UserdataService;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
@@ -19,33 +20,41 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class UserController {
 
-    private final UserDataClient userDataClient;
+    private final UserdataService userdataService;
+    private final GqlValidationService gqlValidationService;
 
     @Autowired
-    public UserController(UserDataClient userDataClient) {
-        this.userDataClient = userDataClient;
+    public UserController(UserdataService userdataService, GqlValidationService gqlValidationService) {
+        this.userdataService = userdataService;
+        this.gqlValidationService = gqlValidationService;
     }
 
     @QueryMapping
     public UserModel user(@AuthenticationPrincipal Jwt principal,
                           @Nonnull DataFetchingEnvironment env) {
         String username = principal.getClaim("sub");
-        return userDataClient.currentUser(username);
+        gqlValidationService.checkSubQueries(env, 1, "friends", "incomeInvitations", "outcomeInvitations");
+        return userdataService.getUser(username);
     }
 
     @QueryMapping
     public Slice<UserModel> users(@AuthenticationPrincipal Jwt principal,
                                   @Argument int page,
                                   @Argument int size,
-                                  @Argument @Nullable String searchQuery) {
+                                  @Argument @Nullable String searchQuery,
+                                  @Nonnull DataFetchingEnvironment env) {
         String username = principal.getClaim("sub");
-        return userDataClient.getUsers(username, searchQuery, page, size);
+        gqlValidationService.checkSubQueries(env, 1, "friends", "incomeInvitations", "outcomeInvitations");
+        return userdataService.getPeople(username, searchQuery, page, size);
     }
 
     @MutationMapping
     public UserModel user(@AuthenticationPrincipal Jwt principal,
-                          @Argument @Valid UpdateUserInput input) {
+                          @Argument @Valid UpdateUserInput input,
+                          @Nonnull DataFetchingEnvironment env) {
         String username = principal.getClaim("sub");
-        return userDataClient.updateCurrentUser(username, input);
+        gqlValidationService.checkSubQueries(env, 1, "friends", "incomeInvitations", "outcomeInvitations");
+        return userdataService.updateUser(username,
+                input.firstname(), input.surname(), input.avatar(), input.location().code());
     }
 }

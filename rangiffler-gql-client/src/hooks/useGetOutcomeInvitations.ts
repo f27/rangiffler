@@ -2,29 +2,30 @@ import { gql, useQuery } from "@apollo/client";
 
 const GET_OUTCOME_INVITATIONS = gql(`
     query GetOutcomeInvitations($page: Int, $size: Int, $searchQuery: String) {
-        user {
-            outcomeInvitations(page: $page, size: $size, searchQuery: $searchQuery) {
-                edges {
-                    node {
-                        id
-                        username
-                        firstname
-                        surname
-                        avatar
-                        location {
-                            code
-                            name
-                            flag
-                        }
-                        friendStatus
-                    }
-                }
-                pageInfo {
-                    hasPreviousPage
-                    hasNextPage
-                }        
+      user {
+        id
+        outcomeInvitations(page: $page, size: $size, searchQuery: $searchQuery) {
+          edges {
+            node {
+              id
+              username
+              firstname
+              surname
+              avatar
+              location {
+                code
+                name
+                flag
+              }
+              friendStatus
             }
+          }
+          pageInfo {
+            hasPreviousPage
+            hasNextPage
+          }
         }
+      }
     }
 `);
 

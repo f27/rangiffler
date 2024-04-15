@@ -170,27 +170,31 @@ export const ProfileForm = () => {
                     <Grid item xs={12}>
                         <FormControl sx={{width: "100%"}}>
                             <InputLabel id="select-location-label">Location</InputLabel>
-                            <Select
-                                id="location"
-                                name="location"
-                                labelId="select-location-label"
-                                value={formValues.location.value}
-                                onChange={handleSelectValueChange}
-                                fullWidth
-                                input={
-                                    <OutlinedInput
-                                        id="select-location"
-                                        label="Location"
-                                        multiline={false}
-                                    />}
-                                MenuProps={MenuProps}
-                            >
-                                {countries.map((option) => (
-                                    <MenuItem key={option.code} value={option.code}>
-                                        <img width={20} src={option.flag} alt={option.name}/>&nbsp;{option.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
+                            {
+                                countries !== undefined && countries.length > 0 &&
+                                <Select
+                                    id="location"
+                                    name="location"
+                                    labelId="select-location-label"
+                                    defaultValue="ru"
+                                    value={formValues.location.value}
+                                    onChange={handleSelectValueChange}
+                                    fullWidth
+                                    input={
+                                        <OutlinedInput
+                                            id="select-location"
+                                            label="Location"
+                                            multiline={false}
+                                        />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {countries.map((option) => (
+                                        <MenuItem key={option.code} value={option.code}>
+                                            <img width={20} src={option.flag} alt={option.name}/>&nbsp;{option.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            }
                         </FormControl>
                     </Grid>
                     <Grid item xs={8} sx={{

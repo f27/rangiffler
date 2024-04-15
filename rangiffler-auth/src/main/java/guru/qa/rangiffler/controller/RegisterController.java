@@ -63,7 +63,7 @@ public class RegisterController {
                 addErrorToRegistrationModel(
                         registrationModel,
                         model,
-                        "username", "Username `" + registrationModel.username() + "` already exists"
+                        "username", e.getMessage()
                 );
             }
         } else {

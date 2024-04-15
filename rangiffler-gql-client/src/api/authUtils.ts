@@ -1,6 +1,7 @@
 import * as crypto from "crypto-js";
 import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
+import {authClient} from "./authClient.ts";
 
 const base64Url = (str: string | crypto.lib.WordArray) => {
     return str.toString(Base64).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
@@ -29,6 +30,31 @@ const getTokenFromUrlEncodedParams = (code: string, verifier: string) => {
     });
 }
 
+const getRefreshTokenFromUrlEncodedParams = (refreshToken: string) => {
+    return new URLSearchParams({
+        "grant_type": "refresh_token",
+        "refresh_token": refreshToken,
+    });
+}
+
+const refreshToken = async () => {
+    const refreshToken = localStorage.getItem("refresh_token");
+    if (refreshToken === null) {
+        return;
+    }
+    const data = getRefreshTokenFromUrlEncodedParams(refreshToken);
+    try {
+        const res = await authClient.refreshToken("oauth2/token", data);
+        if (res?.access_token) {
+            localStorage.setItem("id_token", res.id_token);
+            localStorage.setItem("access_token", res.access_token);
+            localStorage.setItem("refresh_token", res.refresh_token);
+        }
+    } catch (err) {
+        clearSession();
+    }
+}
+
 const initLocalStorageAndRedirectToAuth = () => {
     const codeVerifier = generateCodeVerifier();
     localStorage.setItem('codeVerifier', codeVerifier);
@@ -42,7 +68,9 @@ const initLocalStorageAndRedirectToAuth = () => {
 const clearSession = () => {
     localStorage.removeItem('codeVerifier');
     localStorage.removeItem('codeChallenge');
+    localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
+    localStorage.removeItem('refresh_token')
 }
 
-export {generateCodeChallenge, generateCodeVerifier, getAuthLink, getTokenFromUrlEncodedParams, clearSession, initLocalStorageAndRedirectToAuth};
+export {generateCodeChallenge, generateCodeVerifier, getAuthLink, getTokenFromUrlEncodedParams, clearSession, initLocalStorageAndRedirectToAuth, refreshToken};

@@ -10,8 +10,10 @@ export const AuthorizedPage = () => {
 
     const getToken = async (data: URLSearchParams) => {
         const res = await authClient.getToken("oauth2/token", data);
-        if (res?.id_token) {
+        if (res?.access_token) {
             localStorage.setItem("id_token", res.id_token);
+            localStorage.setItem("access_token", res.access_token);
+            localStorage.setItem("refresh_token", res.refresh_token);
             setTimeout(async () => {
                 navigate("/", {replace: true});
             }, 500);

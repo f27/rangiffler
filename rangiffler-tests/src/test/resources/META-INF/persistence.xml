@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="rangiffler" transaction-type="RESOURCE_LOCAL">
+        <class>guru.qa.rangiffler.db.entity.user.UserAuthEntity</class>
+        <class>guru.qa.rangiffler.db.entity.user.AuthorityEntity</class>
+        <class>guru.qa.rangiffler.db.entity.user.UserEntity</class>
+        <class>guru.qa.rangiffler.db.entity.user.FriendshipEntity</class>
+        <class>guru.qa.rangiffler.db.entity.photo.LikeEntity</class>
+        <class>guru.qa.rangiffler.db.entity.photo.PhotoEntity</class>
+    </persistence-unit>
+</persistence>

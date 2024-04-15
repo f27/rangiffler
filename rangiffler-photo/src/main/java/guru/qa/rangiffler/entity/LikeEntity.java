@@ -32,6 +32,7 @@ public class LikeEntity {
     public static Like toGrpcMessage(LikeEntity entity) {
         return Like.newBuilder()
                 .setUserId(entity.getUserId().toString())
+                .setCreationDate(String.valueOf(entity.createdDate))
                 .build();
     }
 

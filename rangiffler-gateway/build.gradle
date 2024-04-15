@@ -43,3 +43,13 @@ jib {
         tags = ['latest', "${project.version}"]
     }
 }
+
+tasks.register('printVersion') {
+    doLast {
+        println project.version
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
