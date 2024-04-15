@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
+import static guru.qa.rangiffler.db.entity.user.FriendshipStatus.PENDING;
 import static guru.qa.rangiffler.jupiter.annotation.User.GenerationType.FOR_GENERATE_USER;
 import static io.qameta.allure.Allure.step;
 
@@ -54,6 +55,8 @@ public class InviteFriendTest extends BaseGrpcTest {
                             () -> Assertions.assertEquals(user.id(), invitation.getRequester().getId()));
                     step("Проверить, что получатель приглашения второй пользователь",
                             () -> Assertions.assertEquals(user.friends().get(0).id(), invitation.getAddressee().getId()));
+                    step("Проверить, что статус приглашения PENDING",
+                            () -> Assertions.assertEquals(PENDING, invitation.getStatus()));
                 });
     }
 
@@ -76,6 +79,12 @@ public class InviteFriendTest extends BaseGrpcTest {
                                     .asRuntimeException().getMessage(),
                             e.getMessage());
                 });
+        step("Проверить в БД, что у текущего пользователя не появилось исходящее приглашение",
+                () -> {
+                    UserEntity userEntity = userdataRepository.findByUsername(user.username()).orElseThrow();
+                    step("Проверить, что у текущего пользователя 0 исходящих приглашений",
+                            () -> Assertions.assertEquals(0, userEntity.getOutcomeInvitations().size()));
+                });
     }
 
     @Test
@@ -96,6 +105,12 @@ public class InviteFriendTest extends BaseGrpcTest {
                             Status.ALREADY_EXISTS.withDescription("Invitation already exist")
                                     .asRuntimeException().getMessage(),
                             e.getMessage());
+                });
+        step("Проверить в БД, что у текущего пользователя не появилось исходящее приглашение",
+                () -> {
+                    UserEntity userEntity = userdataRepository.findByUsername(user.username()).orElseThrow();
+                    step("Проверить, что у текущего пользователя 0 исходящих приглашений",
+                            () -> Assertions.assertEquals(0, userEntity.getOutcomeInvitations().size()));
                 });
     }
 
@@ -118,6 +133,12 @@ public class InviteFriendTest extends BaseGrpcTest {
                                     .asRuntimeException().getMessage(),
                             e.getMessage());
                 });
+        step("Проверить в БД, что у текущего пользователя не появилось новое исходящее приглашение",
+                () -> {
+                    UserEntity userEntity = userdataRepository.findByUsername(user.username()).orElseThrow();
+                    step("Проверить, что у текущего пользователя все также 1 исходящее приглашение",
+                            () -> Assertions.assertEquals(1, userEntity.getOutcomeInvitations().size()));
+                });
     }
 
     @Test
@@ -138,6 +159,12 @@ public class InviteFriendTest extends BaseGrpcTest {
                             Status.ALREADY_EXISTS.withDescription("Invitation already exist")
                                     .asRuntimeException().getMessage(),
                             e.getMessage());
+                });
+        step("Проверить в БД, что у текущего пользователя не появилось новое исходящее приглашение",
+                () -> {
+                    UserEntity userEntity = userdataRepository.findByUsername(user.username()).orElseThrow();
+                    step("Проверить, что у текущего пользователя все также 1 исходящее приглашение",
+                            () -> Assertions.assertEquals(1, userEntity.getOutcomeInvitations().size()));
                 });
     }
 
@@ -202,6 +229,12 @@ public class InviteFriendTest extends BaseGrpcTest {
                                     .asRuntimeException().getMessage(),
                             e.getMessage());
                 });
+        step("Проверить в БД, что у текущего пользователя не появилось исходящее приглашение",
+                () -> {
+                    UserEntity userEntity = userdataRepository.findByUsername(user.username()).orElseThrow();
+                    step("Проверить, что у текущего пользователя 0 исходящих приглашений",
+                            () -> Assertions.assertEquals(0, userEntity.getOutcomeInvitations().size()));
+                });
     }
 
     @Test
@@ -222,6 +255,12 @@ public class InviteFriendTest extends BaseGrpcTest {
                             Status.NOT_FOUND.withDescription("Target user not found")
                                     .asRuntimeException().getMessage(),
                             e.getMessage());
+                });
+        step("Проверить в БД, что у текущего пользователя не появилось исходящее приглашение",
+                () -> {
+                    UserEntity userEntity = userdataRepository.findByUsername(user.username()).orElseThrow();
+                    step("Проверить, что у текущего пользователя 0 исходящих приглашений",
+                            () -> Assertions.assertEquals(0, userEntity.getOutcomeInvitations().size()));
                 });
     }
 }
