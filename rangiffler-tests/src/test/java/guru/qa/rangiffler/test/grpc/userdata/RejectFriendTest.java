@@ -3,7 +3,6 @@ package guru.qa.rangiffler.test.grpc.userdata;
 import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.grpc.rangiffler.grpc.FriendshipRequest;
 import guru.qa.grpc.rangiffler.grpc.GrpcUser;
-import guru.qa.rangiffler.db.entity.user.FriendshipEntity;
 import guru.qa.rangiffler.db.entity.user.UserEntity;
 import guru.qa.rangiffler.db.repository.UserdataRepository;
 import guru.qa.rangiffler.db.repository.hibernate.UserdataRepositoryHibernate;
@@ -28,56 +27,40 @@ import static guru.qa.rangiffler.jupiter.annotation.User.GenerationType.FOR_GENE
 import static io.qameta.allure.Allure.step;
 
 @Feature("USERDATA")
-@Story("AcceptFriend")
-@DisplayName("AcceptFriend")
-public class AcceptFriendTest extends BaseGrpcTest {
+@Story("RejectFriend")
+@DisplayName("RejectFriend")
+public class RejectFriendTest extends BaseGrpcTest {
     private final UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
 
     @Test
     @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_RECEIVED))
-    @DisplayName("AcceptFriend: можно подтвердить от пользователя отправившего приглашение")
-    void acceptFriendTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @DisplayName("RejectFriend: можно отклонить от пользователя отправившего приглашение")
+    void rejectFriendTest(@User(FOR_GENERATE_USER) UserModel user) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(user.username())
                 .setTargetUserId(user.friends().get(0).id().toString())
                 .build();
 
-        GrpcUser response = userdataGrpcClient.acceptFriend(request);
+        GrpcUser response = userdataGrpcClient.rejectFriend(request);
 
         step("Проверить статус друга в ответе",
-                () -> Assertions.assertEquals(FriendStatus.FRIEND, response.getFriendStatus()));
+                () -> Assertions.assertEquals(FriendStatus.NOT_FRIEND, response.getFriendStatus()));
         step("Проверить в БД у текущего пользователя приглашения",
                 () -> {
                     UserEntity userEntity = userdataRepository.findByUsername(user.username()).orElseThrow();
-                    step("Проверить исходящее приглашение", () -> {
-                        step("Проверить, что у текущего пользователя 1 исходящее приглашение",
-                                () -> Assertions.assertEquals(1, userEntity.getOutcomeInvitations().size()));
-                        FriendshipEntity outcomeInvitation = userEntity.getOutcomeInvitations().get(0);
-                        step("Проверить, что отправитель приглашения текущий пользователь",
-                                () -> Assertions.assertEquals(user.id(), outcomeInvitation.getRequester().getId()));
-                        step("Проверить, что получатель приглашения второй пользователь",
-                                () -> Assertions.assertEquals(user.friends().get(0).id(), outcomeInvitation.getAddressee().getId()));
-                        step("Проверить, что статус приглашения ACCEPTED",
-                                () -> Assertions.assertEquals(ACCEPTED, outcomeInvitation.getStatus()));
-                    });
-                    step("Проверить входящее приглашение", () -> {
-                        step("Проверить, что у текущего пользователя 1 входящее приглашение",
-                                () -> Assertions.assertEquals(1, userEntity.getOutcomeInvitations().size()));
-                        FriendshipEntity incomeInvitation = userEntity.getIncomeInvitations().get(0);
-                        step("Проверить, что отправитель приглашения второй пользователь",
-                                () -> Assertions.assertEquals(user.friends().get(0).id(), incomeInvitation.getRequester().getId()));
-                        step("Проверить, что получатель приглашения текущий пользователь",
-                                () -> Assertions.assertEquals(user.id(), incomeInvitation.getAddressee().getId()));
-                        step("Проверить, что статус приглашения ACCEPTED",
-                                () -> Assertions.assertEquals(ACCEPTED, incomeInvitation.getStatus()));
-                    });
+                    step("Проверить исходящее приглашение",
+                            () -> step("Проверить, что у текущего пользователя 0 исходящих приглашений",
+                                    () -> Assertions.assertEquals(0, userEntity.getOutcomeInvitations().size())));
+                    step("Проверить входящее приглашение",
+                            () -> step("Проверить, что у текущего пользователя 0 входящих приглашений",
+                                    () -> Assertions.assertEquals(0, userEntity.getOutcomeInvitations().size())));
                 });
     }
 
     @Test
     @GenerateUser
-    @DisplayName("InviteFriend: нельзя подтвердить приглашение от себя")
-    void acceptFriendMyselfTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @DisplayName("RejectFriend: нельзя отклонить приглашение от себя")
+    void rejectFriendMyselfTest(@User(FOR_GENERATE_USER) UserModel user) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(user.username())
                 .setTargetUserId(user.id().toString())
@@ -86,7 +69,7 @@ public class AcceptFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.acceptFriend(request)
+                            () -> userdataGrpcClient.rejectFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Target user should not be same")
@@ -105,8 +88,8 @@ public class AcceptFriendTest extends BaseGrpcTest {
 
     @Test
     @GenerateUser(friends = @Friend(status = FriendStatus.FRIEND))
-    @DisplayName("InviteFriend: нельзя подтвердить уже подтвержденное приглашение")
-    void acceptFriendAlreadyAcceptedTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @DisplayName("RejectFriend: нельзя отклонить уже подтвержденное приглашение")
+    void rejectFriendAlreadyAcceptedTest(@User(FOR_GENERATE_USER) UserModel user) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(user.username())
                 .setTargetUserId(user.friends().get(0).id().toString())
@@ -115,7 +98,7 @@ public class AcceptFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.acceptFriend(request)
+                            () -> userdataGrpcClient.rejectFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.ALREADY_EXISTS.withDescription("Invitation already accepted")
@@ -143,8 +126,8 @@ public class AcceptFriendTest extends BaseGrpcTest {
 
     @Test
     @GenerateUser(friends = @Friend(status = FriendStatus.NOT_FRIEND))
-    @DisplayName("InviteFriend: нельзя подтвердить от пользователя не отправлявшего приглашение")
-    void acceptFriendNotReceivedNotSentTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @DisplayName("RejectFriend: нельзя отклонить от пользователя не отправлявшего приглашение")
+    void rejectFriendNotReceivedNotSentTest(@User(FOR_GENERATE_USER) UserModel user) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(user.username())
                 .setTargetUserId(user.friends().get(0).id().toString())
@@ -153,7 +136,7 @@ public class AcceptFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.acceptFriend(request)
+                            () -> userdataGrpcClient.rejectFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("Invitation not exist")
@@ -176,8 +159,8 @@ public class AcceptFriendTest extends BaseGrpcTest {
 
     @Test
     @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_SENT))
-    @DisplayName("InviteFriend: нельзя подтвердить от пользователя которому мы отправили приглашение")
-    void acceptFriendWeSentTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @DisplayName("RejectFriend: нельзя отклонить от пользователя которому мы отправили приглашение")
+    void rejectFriendWeSentTest(@User(FOR_GENERATE_USER) UserModel user) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(user.username())
                 .setTargetUserId(user.friends().get(0).id().toString())
@@ -186,7 +169,7 @@ public class AcceptFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.acceptFriend(request)
+                            () -> userdataGrpcClient.rejectFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("Invitation not exist")
@@ -211,8 +194,8 @@ public class AcceptFriendTest extends BaseGrpcTest {
 
     @Test
     @GenerateUser(friends = @Friend(status = FriendStatus.NOT_FRIEND))
-    @DisplayName("InviteFriend: если username неправильный должно вернуть NOT_FOUND")
-    void acceptFriendIncorrectUsernameTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @DisplayName("RejectFriend: если username неправильный должно вернуть NOT_FOUND")
+    void rejectFriendIncorrectUsernameTest(@User(FOR_GENERATE_USER) UserModel user) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(".")
                 .setTargetUserId(user.friends().get(0).id().toString())
@@ -221,7 +204,7 @@ public class AcceptFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.acceptFriend(request)
+                            () -> userdataGrpcClient.rejectFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("User not found")
@@ -232,8 +215,8 @@ public class AcceptFriendTest extends BaseGrpcTest {
 
     @Test
     @GenerateUser(friends = @Friend(status = FriendStatus.NOT_FRIEND))
-    @DisplayName("InviteFriend: если username пустой должно вернуть INVALID_ARGUMENT")
-    void acceptFriendEmptyUsernameTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @DisplayName("RejectFriend: если username пустой должно вернуть INVALID_ARGUMENT")
+    void rejectFriendEmptyUsernameTest(@User(FOR_GENERATE_USER) UserModel user) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername("")
                 .setTargetUserId(user.friends().get(0).id().toString())
@@ -242,7 +225,7 @@ public class AcceptFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.acceptFriend(request)
+                            () -> userdataGrpcClient.rejectFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Username can't be empty")
@@ -253,8 +236,8 @@ public class AcceptFriendTest extends BaseGrpcTest {
 
     @Test
     @GenerateUser
-    @DisplayName("InviteFriend: если targetUserId неправильный должно вернуть INVALID_ARGUMENT")
-    void acceptFriendIncorrectTargetIdTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @DisplayName("RejectFriend: если targetUserId неправильный должно вернуть INVALID_ARGUMENT")
+    void rejectFriendIncorrectTargetIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(user.id().toString())
                 .setTargetUserId(".")
@@ -263,7 +246,7 @@ public class AcceptFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.acceptFriend(request)
+                            () -> userdataGrpcClient.rejectFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Bad UUID")
@@ -274,8 +257,8 @@ public class AcceptFriendTest extends BaseGrpcTest {
 
     @Test
     @GenerateUser
-    @DisplayName("InviteFriend: если targetUserId несуществующий должно вернуть NOT_FOUND")
-    void acceptFriendNotExistingTargetIdTest(@User(FOR_GENERATE_USER) UserModel user) {
+    @DisplayName("RejectFriend: если targetUserId несуществующий должно вернуть NOT_FOUND")
+    void rejectFriendNotExistingTargetIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         FriendshipRequest request = FriendshipRequest.newBuilder()
                 .setUsername(user.id().toString())
                 .setTargetUserId(UUID.randomUUID().toString())
@@ -284,7 +267,7 @@ public class AcceptFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.acceptFriend(request)
+                            () -> userdataGrpcClient.rejectFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("User not found")
