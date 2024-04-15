@@ -21,7 +21,7 @@ public class GatewayApiClient extends RestClient {
         return gatewayApi.getUser(bearerToken, request).execute().body();
     }
 
-    @Step("Получить информацию о пользователе")
+    @Step("Получить информацию список людей")
     public GqlUsers getPeople(String bearerToken, GqlRequest request) throws IOException {
         return gatewayApi.getPeople(bearerToken, request).execute().body();
     }
