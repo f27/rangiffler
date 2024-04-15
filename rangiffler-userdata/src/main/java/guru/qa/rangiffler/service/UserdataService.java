@@ -144,9 +144,9 @@ public class UserdataService {
         UserEntity currentUser = getUser(username);
         UserEntity targetUser = getCorrectTargetUser(currentUser.getId(), targetId);
         FriendshipEntity incomeInvitation = currentUser.findIncomeInvitation(targetUser)
-                .orElseThrow(() -> Status.NOT_FOUND.withDescription("Invitation not exist").asRuntimeException());
+                .orElseThrow(() -> Status.NOT_FOUND.withDescription("Accepted invitation not exist").asRuntimeException());
         FriendshipEntity outcomeInvitation = currentUser.findOutcomeInvitation(targetUser)
-                .orElseThrow(() -> Status.NOT_FOUND.withDescription("Invitation not exist").asRuntimeException());
+                .orElseThrow(() -> Status.NOT_FOUND.withDescription("Accepted invitation not exist").asRuntimeException());
         targetUser.removeOutcomeInvitation(incomeInvitation);
         targetUser.removeIncomeInvitation(outcomeInvitation);
         return userdataRepository.save(targetUser);

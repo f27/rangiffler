@@ -53,7 +53,7 @@ public class UserdataGrpcClient extends GrpcClient {
     }
 
     public GrpcUser deleteFriend(FriendshipRequest request) {
-        return blockingStub.rejectFriend(request);
+        return blockingStub.deleteFriend(request);
     }
 
     public void deleteUser(Username request) {
