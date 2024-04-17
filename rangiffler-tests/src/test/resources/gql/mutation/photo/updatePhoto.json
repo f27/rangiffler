@@ -1,0 +1,13 @@
+{
+  "operationName": "UpdatePhoto",
+  "variables": {
+    "input": {
+      "id": "77eaf2d6-3302-46a8-89ab-67d823da8f62",
+      "description": "Хорошее животное",
+      "country": {
+        "code": "il"
+      }
+    }
+  },
+  "query": "mutation UpdatePhoto($input: PhotoInput!) {\n  photo(input: $input) {\n    id\n    src\n    country {\n      code\n      name\n      flag\n      __typename\n    }\n    description\n    likes {\n      total\n      __typename\n    }\n    __typename\n  }\n}"
+}

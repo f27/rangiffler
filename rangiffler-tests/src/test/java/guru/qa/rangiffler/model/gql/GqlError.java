@@ -7,6 +7,6 @@ public record GqlError(
         String message,
         List<Map<String, Integer>> locations,
         List<String> path,
-        List<Map<String, String>> extensions
+        Map<String, String> extensions
 ) {
 }

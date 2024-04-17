@@ -1,0 +1,5 @@
+{
+  "operationName":"GetPeople",
+  "variables":{"page":0,"size":10,"searchQuery":""},
+  "query":"query GetPeople($page: Int, $size: Int, $searchQuery: String) {\n  users(page: $page, size: $size, searchQuery: $searchQuery) {\n    edges {\n      node {\n        id\n        outcomeInvitations {\n          edges {\n            node {\n              id\n            }\n          }\n        }\n        __typename\n      }\n      __typename\n    }\n    pageInfo {\n      hasPreviousPage\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}"
+}

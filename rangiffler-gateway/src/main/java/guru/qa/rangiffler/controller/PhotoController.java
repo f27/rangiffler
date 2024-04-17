@@ -8,6 +8,7 @@ import guru.qa.rangiffler.service.PhotoService;
 import guru.qa.rangiffler.service.UserdataService;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -35,7 +36,9 @@ public class PhotoController {
     }
 
     @SchemaMapping(typeName = "Feed", field = "photos")
-    public Slice<PhotoModel> photos(FeedModel feed, @Argument int page, @Argument int size) {
+    public Slice<PhotoModel> photos(FeedModel feed,
+                                    @Argument @NotNull int page,
+                                    @Argument @NotNull int size) {
         return photoService.getPhotos(feed.username(), feed.id(), feed.friendsIds(), page, size);
     }
 

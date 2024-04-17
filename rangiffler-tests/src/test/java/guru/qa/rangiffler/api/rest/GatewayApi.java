@@ -1,8 +1,7 @@
 package guru.qa.rangiffler.api.rest;
 
 import guru.qa.rangiffler.model.gql.GqlRequest;
-import guru.qa.rangiffler.model.gql.response.GqlUser;
-import guru.qa.rangiffler.model.gql.response.GqlUsers;
+import guru.qa.rangiffler.model.gql.response.*;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
@@ -11,54 +10,26 @@ import retrofit2.http.POST;
 public interface GatewayApi {
 
     @POST("/graphql")
-    Call<Void> createPhoto(@Header("Authorization") String bearerToken,
-                           @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> deletePhoto(@Header("Authorization") String bearerToken,
-                           @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> getCountries(@Header("Authorization") String bearerToken,
+    Call<GqlUser> userQuery(@Header("Authorization") String bearerToken,
                             @Body GqlRequest gqlRequest);
 
     @POST("/graphql")
-    Call<Void> getFeed(@Header("Authorization") String bearerToken,
-                       @Body GqlRequest gqlRequest);
+    Call<GqlUsers> usersQuery(@Header("Authorization") String bearerToken,
+                              @Body GqlRequest gqlRequest);
 
     @POST("/graphql")
-    Call<Void> getFriends(@Header("Authorization") String bearerToken,
-                          @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> getIncomeInvitations(@Header("Authorization") String bearerToken,
-                                    @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> getOutcomeInvitations(@Header("Authorization") String bearerToken,
-                                     @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<GqlUser> getUser(@Header("Authorization") String bearerToken,
-                          @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> likePhoto(@Header("Authorization") String bearerToken,
-                         @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<GqlUsers> getPeople(@Header("Authorization") String bearerToken,
-                             @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> updateFriendshipStatus(@Header("Authorization") String bearerToken,
+    Call<GqlCountries> countriesQuery(@Header("Authorization") String bearerToken,
                                       @Body GqlRequest gqlRequest);
 
     @POST("/graphql")
-    Call<Void> updatePhoto(@Header("Authorization") String bearerToken,
-                           @Body GqlRequest gqlRequest);
+    Call<GqlFeed> feedQuery(@Header("Authorization") String bearerToken,
+                            @Body GqlRequest gqlRequest);
 
     @POST("/graphql")
-    Call<Void> updateUser(@Header("Authorization") String bearerToken,
-                          @Body GqlRequest gqlRequest);
+    Call<GqlUser> userMutation(@Header("Authorization") String bearerToken,
+                               @Body GqlRequest gqlRequest);
+
+    @POST("/graphql")
+    Call<GqlPhoto> photoMutation(@Header("Authorization") String bearerToken,
+                                 @Body GqlRequest gqlRequest);
 }

@@ -1,0 +1,5 @@
+{
+  "operationName":"GetFeed",
+  "variables":{"withFriends":true,"page":0,"size":10},
+  "query":"query GetFeed($page: Int, $size: Int, $withFriends: Boolean!) {\n  feed(withFriends: $withFriends) {\n    photos(page: $page, size: $size) {\n      edges {\n        node {\n          canEdit\n          id\n          src\n          country {\n            code\n            name\n            flag\n            __typename\n          }\n          description\n          likes {\n            total\n            likes {\n              user\n              __typename\n            }\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      pageInfo {\n        hasPreviousPage\n        hasNextPage\n        __typename\n      }\n      __typename\n    }\n    stat {\n      count\n      country {\n        code\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+}

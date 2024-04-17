@@ -8,6 +8,7 @@ import guru.qa.rangiffler.service.UserdataService;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -31,24 +32,24 @@ public class FriendsController {
 
     @SchemaMapping(typeName = "User", field = "friends")
     public Slice<UserModel> friends(UserModel user,
-                                    @Argument int page,
-                                    @Argument int size,
+                                    @Argument @NotNull int page,
+                                    @Argument @NotNull int size,
                                     @Argument @Nullable String searchQuery) {
         return userdataService.getFriends(user.username(), searchQuery, page, size);
     }
 
     @SchemaMapping(typeName = "User", field = "outcomeInvitations")
     public Slice<UserModel> incomeInvitations(UserModel user,
-                                              @Argument int page,
-                                              @Argument int size,
+                                              @Argument @NotNull int page,
+                                              @Argument @NotNull int size,
                                               @Argument @Nullable String searchQuery) {
         return userdataService.getOutcomeInvitations(user.username(), searchQuery, page, size);
     }
 
     @SchemaMapping(typeName = "User", field = "incomeInvitations")
     public Slice<UserModel> outcomeInvitations(UserModel user,
-                                               @Argument int page,
-                                               @Argument int size,
+                                               @Argument @NotNull int page,
+                                               @Argument @NotNull int size,
                                                @Argument @Nullable String searchQuery) {
         return userdataService.getIncomeInvitations(user.username(), searchQuery, page, size);
     }

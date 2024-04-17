@@ -2,7 +2,6 @@ package guru.qa.rangiffler.model.gql.type;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.grpc.rangiffler.grpc.FriendStatus;
-import guru.qa.rangiffler.model.gql.response.GqlUser;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -11,11 +10,11 @@ import java.util.UUID;
 public class GqlUserType extends BaseType {
 
     @JsonProperty("friends")
-    private GqlSliceType<GqlUser> friends;
+    private GqlSliceType<GqlUserType> friends;
     @JsonProperty("incomeInvitations")
-    private GqlSliceType<GqlUser> incomeInvitations;
+    private GqlSliceType<GqlUserType> incomeInvitations;
     @JsonProperty("outcomeInvitations")
-    private GqlSliceType<GqlUser> outcomeInvitations;
+    private GqlSliceType<GqlUserType> outcomeInvitations;
     @JsonProperty("location")
     private GqlCountryType location;
     @JsonProperty("id")
