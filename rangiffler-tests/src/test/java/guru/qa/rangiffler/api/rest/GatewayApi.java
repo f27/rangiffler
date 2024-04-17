@@ -2,6 +2,7 @@ package guru.qa.rangiffler.api.rest;
 
 import guru.qa.rangiffler.model.gql.GqlRequest;
 import guru.qa.rangiffler.model.gql.response.GqlCountries;
+import guru.qa.rangiffler.model.gql.response.GqlFeed;
 import guru.qa.rangiffler.model.gql.response.GqlUser;
 import guru.qa.rangiffler.model.gql.response.GqlUsers;
 import retrofit2.Call;
@@ -24,6 +25,6 @@ public interface GatewayApi {
                                       @Body GqlRequest gqlRequest);
 
     @POST("/graphql")
-    Call<Void> feedQuery(@Header("Authorization") String bearerToken,
-                       @Body GqlRequest gqlRequest);
+    Call<GqlFeed> feedQuery(@Header("Authorization") String bearerToken,
+                            @Body GqlRequest gqlRequest);
 }

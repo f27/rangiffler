@@ -2,6 +2,7 @@ package guru.qa.rangiffler.api.rest;
 
 import guru.qa.rangiffler.model.gql.GqlRequest;
 import guru.qa.rangiffler.model.gql.response.GqlCountries;
+import guru.qa.rangiffler.model.gql.response.GqlFeed;
 import guru.qa.rangiffler.model.gql.response.GqlUser;
 import guru.qa.rangiffler.model.gql.response.GqlUsers;
 import io.qameta.allure.Step;
@@ -30,5 +31,10 @@ public class GatewayApiClient extends RestClient {
     @Step("Получить список стран")
     public GqlCountries countriesQuery(String bearerToken, GqlRequest request) throws IOException {
         return gatewayApi.countriesQuery(bearerToken, request).execute().body();
+    }
+
+    @Step("Получить ленту")
+    public GqlFeed feedQuery(String bearerToken, GqlRequest request) throws IOException {
+        return gatewayApi.feedQuery(bearerToken, request).execute().body();
     }
 }
