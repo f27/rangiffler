@@ -46,6 +46,10 @@ public class GetFriendsTest extends BaseGqlTest {
 
         step("Проверить, что data равна null", () ->
                 Assertions.assertNull(gqlUser.getData()));
+        step("Проверить, что вернулась ошибка", () ->
+                Assertions.assertNotNull(gqlUser.getErrors()));
+        step("Проверить, что количество ошибок 1", () ->
+                Assertions.assertEquals(1, gqlUser.getErrors().size()));
         step("Проверить сообщение об ошибке", () ->
                 Assertions.assertEquals(
                         "Can`t fetch over 1 friends sub-queries",
