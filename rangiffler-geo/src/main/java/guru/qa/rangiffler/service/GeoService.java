@@ -42,7 +42,7 @@ public class GeoService extends RangifflerGeoServiceGrpc.RangifflerGeoServiceImp
     @Override
     @Transactional(readOnly = true)
     public void getAllCountries(Empty request, StreamObserver<AllCountriesResponse> responseObserver) {
-        responseObserver.onNext(CountryEntity.toGrpcMessage(countryRepository.findAll()));
+        responseObserver.onNext(CountryEntity.toGrpcMessage(countryRepository.findAllByOrderByNameAsc()));
         responseObserver.onCompleted();
     }
 }
