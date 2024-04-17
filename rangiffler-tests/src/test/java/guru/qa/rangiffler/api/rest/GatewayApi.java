@@ -27,4 +27,8 @@ public interface GatewayApi {
     @POST("/graphql")
     Call<GqlFeed> feedQuery(@Header("Authorization") String bearerToken,
                             @Body GqlRequest gqlRequest);
+
+    @POST("/graphql")
+    Call<GqlUser> userMutation(@Header("Authorization") String bearerToken,
+                            @Body GqlRequest gqlRequest);
 }

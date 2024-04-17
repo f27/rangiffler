@@ -37,4 +37,9 @@ public class GatewayApiClient extends RestClient {
     public GqlFeed feedQuery(String bearerToken, GqlRequest request) throws IOException {
         return gatewayApi.feedQuery(bearerToken, request).execute().body();
     }
+
+    @Step("Обновить информацию о пользователе")
+    public GqlUser userMutation(String bearerToken, GqlRequest request) throws IOException {
+        return gatewayApi.userMutation(bearerToken, request).execute().body();
+    }
 }
