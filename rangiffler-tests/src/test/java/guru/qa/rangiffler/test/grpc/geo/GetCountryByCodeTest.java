@@ -24,7 +24,7 @@ public class GetCountryByCodeTest extends BaseGrpcTest {
     void getCountryByCodeTest() {
         for (CountryEnum country : CountryEnum.values()) {
             step(country.toString(), () -> {
-                CountryResponse response = geoGrpcClient.getCountryByCode(
+                CountryResponse response = geoGrpcBlockingStub.getCountryByCode(
                         CountryCode.newBuilder().setCode(country.getCode()).build());
                 step("Проверить, что название страны совпадает с ожидаемой", () ->
                         Assertions.assertEquals(country.toString(), response.getName()));
@@ -42,7 +42,7 @@ public class GetCountryByCodeTest extends BaseGrpcTest {
     @DisplayName("Получение страны с несуществующим кодом должно возвращать NOT_FOUND")
     void getCountryByNotExistingCodeTest() {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> geoGrpcClient.getCountryByCode(CountryCode.newBuilder().setCode("NOT_EXISTING_CODE").build()));
+                () -> geoGrpcBlockingStub.getCountryByCode(CountryCode.newBuilder().setCode("NOT_EXISTING_CODE").build()));
         Assertions.assertEquals(
                 Status.NOT_FOUND.withDescription("Country not found").asRuntimeException().getMessage(),
                 e.getMessage());

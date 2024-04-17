@@ -36,7 +36,7 @@ public class DeleteUserTest extends BaseGrpcTest {
                 .build();
         step("Отправить запрос и проверить, что нет исключений",
                 () -> Assertions.assertDoesNotThrow(
-                        () -> userdataGrpcClient.deleteUser(request))
+                        () -> userdataGrpcBlockingStub.deleteUser(request))
         );
         step("Пользователя не должно быть в БД", () -> {
             Optional<UserEntity> userEntity = userdataRepository.findByUsername(user.username());
@@ -54,7 +54,7 @@ public class DeleteUserTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.deleteUser(request)
+                            () -> userdataGrpcBlockingStub.deleteUser(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Username can't be empty")

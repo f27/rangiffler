@@ -1,6 +1,6 @@
 package guru.qa.rangiffler.test.kafka.auth;
 
-import guru.qa.rangiffler.api.rest.AuthApiClient;
+import guru.qa.rangiffler.api.AuthApiClient;
 import guru.qa.rangiffler.jupiter.annotation.UserForRegistration;
 import guru.qa.rangiffler.kafka.KafkaService;
 import guru.qa.rangiffler.model.UserModel;

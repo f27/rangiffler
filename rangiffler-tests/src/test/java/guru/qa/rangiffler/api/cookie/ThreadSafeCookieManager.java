@@ -1,4 +1,4 @@
-package guru.qa.rangiffler.api.rest.cookie;
+package guru.qa.rangiffler.api.cookie;
 
 import java.net.*;
 import java.util.List;

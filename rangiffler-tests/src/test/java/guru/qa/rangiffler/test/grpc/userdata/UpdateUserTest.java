@@ -47,7 +47,7 @@ public class UpdateUserTest extends BaseGrpcTest {
                 .setCountryCode(newCountryCode)
                 .build();
 
-        GrpcUser response = userdataGrpcClient.updateUser(request);
+        GrpcUser response = userdataGrpcBlockingStub.updateUser(request);
 
         step("Проверить ответ",
                 () -> {
@@ -85,7 +85,7 @@ public class UpdateUserTest extends BaseGrpcTest {
                 .setCountryCode(user.country().getCode())
                 .build();
 
-        GrpcUser response = userdataGrpcClient.updateUser(request);
+        GrpcUser response = userdataGrpcBlockingStub.updateUser(request);
 
         step("Проверить ответ",
                 () -> {
@@ -125,7 +125,7 @@ public class UpdateUserTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.updateUser(request)
+                            () -> userdataGrpcBlockingStub.updateUser(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Too long firstname").asRuntimeException().getMessage(),
@@ -160,7 +160,7 @@ public class UpdateUserTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.updateUser(request)
+                            () -> userdataGrpcBlockingStub.updateUser(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Too long lastname").asRuntimeException().getMessage(),
@@ -195,7 +195,7 @@ public class UpdateUserTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.updateUser(request)
+                            () -> userdataGrpcBlockingStub.updateUser(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException().getMessage(),
@@ -230,7 +230,7 @@ public class UpdateUserTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.updateUser(request)
+                            () -> userdataGrpcBlockingStub.updateUser(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Too long country code").asRuntimeException().getMessage(),
@@ -264,7 +264,7 @@ public class UpdateUserTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.updateUser(request)
+                            () -> userdataGrpcBlockingStub.updateUser(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Country code can't be empty").asRuntimeException().getMessage(),
@@ -291,7 +291,7 @@ public class UpdateUserTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.updateUser(GrpcUser.newBuilder().setUsername("").build())
+                            () -> userdataGrpcBlockingStub.updateUser(GrpcUser.newBuilder().setUsername("").build())
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Username can't be empty").asRuntimeException().getMessage(),
@@ -306,7 +306,7 @@ public class UpdateUserTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.updateUser(GrpcUser.newBuilder()
+                            () -> userdataGrpcBlockingStub.updateUser(GrpcUser.newBuilder()
                                     .setCountryCode(CountryEnum.getRandom().getCode())
                                     .setUsername(".").build())
                     );

@@ -38,7 +38,7 @@ public class GetStatTest extends BaseGrpcTest {
         GetStatRequest request = GetStatRequest.newBuilder()
                 .addUserId(user.id().toString())
                 .build();
-        StatMapResponse response = photoGrpcClient.getStat(request);
+        StatMapResponse response = photoGrpcBlockingStub.getStat(request);
         step("Проверить, что в ответе ожидаемое количество стран",
                 () -> Assertions.assertEquals(3, response.getStatMap().keySet().size()));
         step("Проверить, что в что значения ожидаемые",
@@ -56,7 +56,7 @@ public class GetStatTest extends BaseGrpcTest {
         GetStatRequest request = GetStatRequest.newBuilder()
                 .addUserId(user.id().toString())
                 .build();
-        StatMapResponse response = photoGrpcClient.getStat(request);
+        StatMapResponse response = photoGrpcBlockingStub.getStat(request);
         step("Проверить, что в ответе нет стран",
                 () -> Assertions.assertEquals(0, response.getStatMap().keySet().size()));
     }
@@ -85,7 +85,7 @@ public class GetStatTest extends BaseGrpcTest {
                 .addUserId(secondUser.id().toString())
                 .addUserId(thirdUser.id().toString())
                 .build();
-        StatMapResponse response = photoGrpcClient.getStat(request);
+        StatMapResponse response = photoGrpcBlockingStub.getStat(request);
         step("Проверить, что в ответе ожидаемое количество стран",
                 () -> Assertions.assertEquals(3, response.getStatMap().keySet().size()));
         step("Проверить, что в что значения ожидаемые",
@@ -105,7 +105,7 @@ public class GetStatTest extends BaseGrpcTest {
                 .addUserId(user[0].id().toString())
                 .addUserId(user[1].id().toString())
                 .build();
-        StatMapResponse response = photoGrpcClient.getStat(request);
+        StatMapResponse response = photoGrpcBlockingStub.getStat(request);
         step("Проверить, что в ответе нет стран",
                 () -> Assertions.assertEquals(0, response.getStatMap().keySet().size()));
     }
@@ -118,7 +118,7 @@ public class GetStatTest extends BaseGrpcTest {
                 .addUserId("")
                 .build();
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.getStat(request));
+                () -> photoGrpcBlockingStub.getStat(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
                 e.getMessage());
@@ -133,7 +133,7 @@ public class GetStatTest extends BaseGrpcTest {
                 .addUserId("")
                 .build();
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.getStat(request));
+                () -> photoGrpcBlockingStub.getStat(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
                 e.getMessage());

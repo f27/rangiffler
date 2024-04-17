@@ -40,7 +40,7 @@ public class DeleteAllPhotosTest extends BaseGrpcTest {
                 .build();
         step("Отправить запрос и проверить, что нет исключений",
                 () -> Assertions.assertDoesNotThrow(
-                        () -> photoGrpcClient.deleteAllPhotos(request))
+                        () -> photoGrpcBlockingStub.deleteAllPhotos(request))
         );
         step("Фотографий не должно быть в БД", () -> {
             List<PhotoEntity> allUsersPhotos = photoRepository.findByUserId(user.id());
@@ -59,7 +59,7 @@ public class DeleteAllPhotosTest extends BaseGrpcTest {
                 .setUserId("")
                 .build();
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.deleteAllPhotos(request)
+                () -> photoGrpcBlockingStub.deleteAllPhotos(request)
         );
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
