@@ -1,6 +1,6 @@
 package guru.qa.rangiffler.repository;
 
-import guru.qa.rangiffler.entity.country.CountryEntity;
+import guru.qa.rangiffler.entity.CountryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
