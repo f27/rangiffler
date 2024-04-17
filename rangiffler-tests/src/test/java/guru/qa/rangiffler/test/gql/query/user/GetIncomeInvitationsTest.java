@@ -25,9 +25,9 @@ public class GetIncomeInvitationsTest extends BaseGqlTest {
     @Test
     @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_RECEIVED)))
     @DisplayName("Должен пользователь от которого получено приглашение в друзья")
-    void friendsShouldContainOurFriendTest(@User(FOR_API_LOGIN) UserModel user,
-                                           @Token String bearerToken,
-                                           @GqlRequestFile("gql/query/user/getIncomeInvitations.json") GqlRequest request) throws IOException {
+    void incomeInvitationsShouldContainOurFriendTest(@User(FOR_API_LOGIN) UserModel user,
+                                                     @Token String bearerToken,
+                                                     @GqlRequestFile("gql/query/user/getIncomeInvitations.json") GqlRequest request) throws IOException {
         final GqlUser gqlUser = gatewayApiClient.userQuery(bearerToken, request);
 
         step("Проверить, что количество пользователей в ответе равно 1", () ->
@@ -36,5 +36,20 @@ public class GetIncomeInvitationsTest extends BaseGqlTest {
                 Assertions.assertEquals(
                         user.friends().get(0).id(),
                         gqlUser.getData().getUser().getIncomeInvitations().getEdges().get(0).getNode().getId()));
+    }
+
+    @Test
+    @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_RECEIVED)))
+    @DisplayName("Нельзя рекурсивно запросить пользователей от которых получено приглашение в друзья")
+    void getIncomeInvitationsShouldReturnErrorIfRecursiveFriendsQueryTest(@Token String bearerToken,
+                                                                          @GqlRequestFile("gql/query/user/getIncomeInvitationsRecursive.json") GqlRequest request) throws IOException {
+        final GqlUser gqlUser = gatewayApiClient.userQuery(bearerToken, request);
+
+        step("Проверить, что data равна null", () ->
+                Assertions.assertNull(gqlUser.getData()));
+        step("Проверить сообщение об ошибке", () ->
+                Assertions.assertEquals(
+                        "Can`t fetch over 1 incomeInvitations sub-queries",
+                        gqlUser.getErrors().get(0).message()));
     }
 }

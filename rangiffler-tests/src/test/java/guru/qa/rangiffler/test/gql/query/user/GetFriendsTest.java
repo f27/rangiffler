@@ -40,7 +40,7 @@ public class GetFriendsTest extends BaseGqlTest {
     @Test
     @ApiLogin(user = @GenerateUser(friends = @Friend))
     @DisplayName("Нельзя рекурсивно запросить друзей")
-    void friendsShouldReturnErrorIfRecursiveFriendsQueryTest(@Token String bearerToken,
+    void getFriendsShouldReturnErrorIfRecursiveFriendsQueryTest(@Token String bearerToken,
                                                              @GqlRequestFile("gql/query/user/getFriendsRecursive.json") GqlRequest request) throws IOException {
         final GqlUser gqlUser = gatewayApiClient.userQuery(bearerToken, request);
 
