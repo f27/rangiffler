@@ -24,10 +24,66 @@ public class GetPeopleTest extends BaseGqlTest {
     @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.NOT_FRIEND)))
     @DisplayName("Должен вернуться хотя бы один пользователь")
     void peopleShouldContainAtLeastOneUserTest(@Token String bearerToken,
-                                               @GqlRequestFile("gql/query/users/getPeopleQuery.json") GqlRequest request) throws IOException {
+                                               @GqlRequestFile("gql/query/users/getPeople.json") GqlRequest request) throws IOException {
         final GqlUsers gqlUsers = gatewayApiClient.usersQuery(bearerToken, request);
         step("Проверить, что количество пользователей в ответе не равно 0", () ->
                 Assertions.assertNotEquals(0, gqlUsers.getData().getUsers().getEdges().size()));
     }
 
+    @Test
+    @ApiLogin(user = @GenerateUser(friends = @Friend))
+    @DisplayName("Должна вернуться ошибка если запрашиваем у пользователей друзей")
+    void getPeopleShouldReturnErrorIfRequestingFriendsTest(@Token String bearerToken,
+                                               @GqlRequestFile("gql/query/users/getPeopleWithFriends.json") GqlRequest request) throws IOException {
+        final GqlUsers gqlUsers = gatewayApiClient.usersQuery(bearerToken, request);
+
+        step("Проверить, что data равна null", () ->
+                Assertions.assertNull(gqlUsers.getData().getUsers()));
+        step("Проверить, что вернулась ошибка", () ->
+                Assertions.assertNotNull(gqlUsers.getErrors()));
+        step("Проверить, что количество ошибок 1", () ->
+                Assertions.assertEquals(1, gqlUsers.getErrors().size()));
+        step("Проверить сообщение об ошибке", () ->
+                Assertions.assertEquals(
+                        "Can`t fetch over 0 friends sub-queries",
+                        gqlUsers.getErrors().get(0).message()));
+    }
+
+    @Test
+    @ApiLogin
+    @DisplayName("Должна вернуться ошибка если запрашиваем у пользователей полученные приглашения")
+    void getPeopleShouldReturnErrorIfRequestingIncomeInvitationsTest(@Token String bearerToken,
+                                                           @GqlRequestFile("gql/query/users/getPeopleWithIncomeInvitations.json") GqlRequest request) throws IOException {
+        final GqlUsers gqlUsers = gatewayApiClient.usersQuery(bearerToken, request);
+
+        step("Проверить, что data равна null", () ->
+                Assertions.assertNull(gqlUsers.getData().getUsers()));
+        step("Проверить, что вернулась ошибка", () ->
+                Assertions.assertNotNull(gqlUsers.getErrors()));
+        step("Проверить, что количество ошибок 1", () ->
+                Assertions.assertEquals(1, gqlUsers.getErrors().size()));
+        step("Проверить сообщение об ошибке", () ->
+                Assertions.assertEquals(
+                        "Can`t fetch over 0 incomeInvitations sub-queries",
+                        gqlUsers.getErrors().get(0).message()));
+    }
+
+    @Test
+    @ApiLogin
+    @DisplayName("Должна вернуться ошибка если запрашиваем у пользователей отправленные приглашения")
+    void getPeopleShouldReturnErrorIfRequestingOutcomeInvitationsTest(@Token String bearerToken,
+                                                                     @GqlRequestFile("gql/query/users/getPeopleWithOutcomeInvitations.json") GqlRequest request) throws IOException {
+        final GqlUsers gqlUsers = gatewayApiClient.usersQuery(bearerToken, request);
+
+        step("Проверить, что data равна null", () ->
+                Assertions.assertNull(gqlUsers.getData().getUsers()));
+        step("Проверить, что вернулась ошибка", () ->
+                Assertions.assertNotNull(gqlUsers.getErrors()));
+        step("Проверить, что количество ошибок 1", () ->
+                Assertions.assertEquals(1, gqlUsers.getErrors().size()));
+        step("Проверить сообщение об ошибке", () ->
+                Assertions.assertEquals(
+                        "Can`t fetch over 0 outcomeInvitations sub-queries",
+                        gqlUsers.getErrors().get(0).message()));
+    }
 }

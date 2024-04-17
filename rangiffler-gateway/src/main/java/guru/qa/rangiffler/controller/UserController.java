@@ -45,7 +45,7 @@ public class UserController {
                                   @Argument @Nullable String searchQuery,
                                   @Nonnull DataFetchingEnvironment env) {
         String username = principal.getClaim("sub");
-        gqlValidationService.checkSubQueries(env, 1, "friends", "incomeInvitations", "outcomeInvitations");
+        gqlValidationService.checkSubQueries(env, 0, "friends", "incomeInvitations", "outcomeInvitations");
         return userdataService.getPeople(username, searchQuery, page, size);
     }
 
