@@ -11,54 +11,18 @@ import retrofit2.http.POST;
 public interface GatewayApi {
 
     @POST("/graphql")
-    Call<Void> createPhoto(@Header("Authorization") String bearerToken,
+    Call<GqlUser> userQuery(@Header("Authorization") String bearerToken,
                            @Body GqlRequest gqlRequest);
 
     @POST("/graphql")
-    Call<Void> deletePhoto(@Header("Authorization") String bearerToken,
+    Call<GqlUsers> usersQuery(@Header("Authorization") String bearerToken,
                            @Body GqlRequest gqlRequest);
 
     @POST("/graphql")
-    Call<Void> getCountries(@Header("Authorization") String bearerToken,
+    Call<Void> countriesQuery(@Header("Authorization") String bearerToken,
                             @Body GqlRequest gqlRequest);
 
     @POST("/graphql")
-    Call<Void> getFeed(@Header("Authorization") String bearerToken,
+    Call<Void> feedQuery(@Header("Authorization") String bearerToken,
                        @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<GqlUser> getFriends(@Header("Authorization") String bearerToken,
-                          @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> getIncomeInvitations(@Header("Authorization") String bearerToken,
-                                    @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> getOutcomeInvitations(@Header("Authorization") String bearerToken,
-                                     @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<GqlUser> getUser(@Header("Authorization") String bearerToken,
-                          @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> likePhoto(@Header("Authorization") String bearerToken,
-                         @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<GqlUsers> getPeople(@Header("Authorization") String bearerToken,
-                             @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> updateFriendshipStatus(@Header("Authorization") String bearerToken,
-                                      @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> updatePhoto(@Header("Authorization") String bearerToken,
-                           @Body GqlRequest gqlRequest);
-
-    @POST("/graphql")
-    Call<Void> updateUser(@Header("Authorization") String bearerToken,
-                          @Body GqlRequest gqlRequest);
 }

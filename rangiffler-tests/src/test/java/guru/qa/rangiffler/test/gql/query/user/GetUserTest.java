@@ -28,8 +28,8 @@ public class GetUserTest extends BaseGqlTest {
     @DisplayName("Должен вернуться текущий пользователь")
     void userShouldBeReturnedTest(@User UserModel user,
                                   @Token String bearerToken,
-                                  @GqlRequestFile("gql/query/user/getUserQuery.json") GqlRequest request) throws IOException {
-        final GqlUser gqlUser = gatewayApiClient.getUser(bearerToken, request);
+                                  @GqlRequestFile("gql/query/user/getUser.json") GqlRequest request) throws IOException {
+        final GqlUser gqlUser = gatewayApiClient.userQuery(bearerToken, request);
         step("Проверить username", () ->
                 Assertions.assertEquals(user.username(), gqlUser.getData().getUser().getUsername()));
     }

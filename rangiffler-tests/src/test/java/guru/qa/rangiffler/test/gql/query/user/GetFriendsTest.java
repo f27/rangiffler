@@ -26,8 +26,8 @@ public class GetFriendsTest extends BaseGqlTest {
     @DisplayName("Должен вернуться друг")
     void friendsShouldContainOurFriendTest(@User(FOR_API_LOGIN) UserModel user,
                                            @Token String bearerToken,
-                                           @GqlRequestFile("gql/query/user/getFriendsQuery.json") GqlRequest request) throws IOException {
-        final GqlUser gqlUser = gatewayApiClient.getFriends(bearerToken, request);
+                                           @GqlRequestFile("gql/query/user/getFriends.json") GqlRequest request) throws IOException {
+        final GqlUser gqlUser = gatewayApiClient.userQuery(bearerToken, request);
 
         step("Проверить, что количество друзей в ответе равно 1", () ->
                 Assertions.assertEquals(1, gqlUser.getData().getUser().getFriends().getEdges().size()));
@@ -41,8 +41,8 @@ public class GetFriendsTest extends BaseGqlTest {
     @ApiLogin(user = @GenerateUser(friends = @Friend))
     @DisplayName("Нельзя рекурсивно запросить друзей")
     void friendsShouldReturnErrorIfRecursiveFriendsQueryTest(@Token String bearerToken,
-                                                             @GqlRequestFile("gql/query/user/getFriendsQueryRecursive.json") GqlRequest request) throws IOException {
-        final GqlUser gqlUser = gatewayApiClient.getFriends(bearerToken, request);
+                                                             @GqlRequestFile("gql/query/user/getFriendsRecursive.json") GqlRequest request) throws IOException {
+        final GqlUser gqlUser = gatewayApiClient.userQuery(bearerToken, request);
 
         step("Проверить, что data равна null", () ->
                 Assertions.assertNull(gqlUser.getData()));

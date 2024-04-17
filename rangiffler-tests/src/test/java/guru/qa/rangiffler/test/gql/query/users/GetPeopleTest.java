@@ -24,8 +24,8 @@ public class GetPeopleTest extends BaseGqlTest {
     @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.NOT_FRIEND)))
     @DisplayName("Должен вернуться хотя бы один пользователь")
     void peopleShouldContainAtLeastOneUserTest(@Token String bearerToken,
-                                                  @GqlRequestFile("gql/query/users/getPeopleQuery.json") GqlRequest request) throws IOException {
-        final GqlUsers gqlUsers = gatewayApiClient.getPeople(bearerToken, request);
+                                               @GqlRequestFile("gql/query/users/getPeopleQuery.json") GqlRequest request) throws IOException {
+        final GqlUsers gqlUsers = gatewayApiClient.usersQuery(bearerToken, request);
         step("Проверить, что количество пользователей в ответе не равно 0", () ->
                 Assertions.assertNotEquals(0, gqlUsers.getData().getUsers().getEdges().size()));
     }

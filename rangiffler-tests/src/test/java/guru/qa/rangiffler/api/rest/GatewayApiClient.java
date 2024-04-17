@@ -17,17 +17,12 @@ public class GatewayApiClient extends RestClient {
     }
 
     @Step("Получить информацию о пользователе")
-    public GqlUser getUser(String bearerToken, GqlRequest request) throws IOException {
-        return gatewayApi.getUser(bearerToken, request).execute().body();
+    public GqlUser userQuery(String bearerToken, GqlRequest request) throws IOException {
+        return gatewayApi.userQuery(bearerToken, request).execute().body();
     }
 
-    @Step("Получить список людей")
-    public GqlUsers getPeople(String bearerToken, GqlRequest request) throws IOException {
-        return gatewayApi.getPeople(bearerToken, request).execute().body();
-    }
-
-    @Step("Получить список друзей")
-    public GqlUser getFriends(String bearerToken, GqlRequest request) throws IOException {
-        return gatewayApi.getFriends(bearerToken, request).execute().body();
+    @Step("Получить список пользователей")
+    public GqlUsers usersQuery(String bearerToken, GqlRequest request) throws IOException {
+        return gatewayApi.usersQuery(bearerToken, request).execute().body();
     }
 }
