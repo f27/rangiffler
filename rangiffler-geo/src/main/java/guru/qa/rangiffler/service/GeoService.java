@@ -11,6 +11,7 @@ import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 @GrpcService
 public class GeoService extends RangifflerGeoServiceGrpc.RangifflerGeoServiceImplBase {
@@ -23,6 +24,7 @@ public class GeoService extends RangifflerGeoServiceGrpc.RangifflerGeoServiceImp
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void getCountryByCode(CountryCode request, StreamObserver<CountryResponse> responseObserver) {
         countryRepository.findByCode(request.getCode())
                 .ifPresentOrElse(
@@ -38,6 +40,7 @@ public class GeoService extends RangifflerGeoServiceGrpc.RangifflerGeoServiceImp
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void getAllCountries(Empty request, StreamObserver<AllCountriesResponse> responseObserver) {
         responseObserver.onNext(CountryEntity.toGrpcMessage(countryRepository.findAll()));
         responseObserver.onCompleted();

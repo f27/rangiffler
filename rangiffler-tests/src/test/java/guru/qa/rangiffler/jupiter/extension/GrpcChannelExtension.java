@@ -1,6 +1,6 @@
 package guru.qa.rangiffler.jupiter.extension;
 
-import guru.qa.rangiffler.api.grpc.GrpcChannelProvider;
+import guru.qa.rangiffler.grpc.GrpcChannelProvider;
 import io.grpc.ManagedChannel;
 
 public class GrpcChannelExtension implements SuiteExtension {

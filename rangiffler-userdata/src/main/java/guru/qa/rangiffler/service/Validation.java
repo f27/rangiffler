@@ -11,17 +11,17 @@ import java.util.Base64;
 import java.util.UUID;
 
 @Service
-public class ValidationService {
+public class Validation {
 
-    public void validate(Username request) {
+    public static void validate(Username request) {
         validateUsername(request.getUsername());
     }
 
-    public void validate(UsersRequest request) {
+    public static void validate(UsersRequest request) {
         validateUsername(request.getUsername());
     }
 
-    public void validate(GrpcUser request) {
+    public static void validate(GrpcUser request) {
         validateUsername(request.getUsername());
         validateFirstname(request.getFirstname());
         validateLastname(request.getLastname());
@@ -29,30 +29,30 @@ public class ValidationService {
         validateCountryCode(request.getCountryCode());
     }
 
-    public void validate(FriendshipRequest request) {
+    public static void validate(FriendshipRequest request) {
         validateUsername(request.getUsername());
         validateUUID(request.getTargetUserId());
     }
 
-    private void validateUsername(String username) {
+    private static void validateUsername(String username) {
         if (username.isEmpty()) {
             throw Status.INVALID_ARGUMENT.withDescription("Username can't be empty").asRuntimeException();
         }
     }
 
-    private void validateFirstname(String firstname) {
+    private static void validateFirstname(String firstname) {
         if (firstname.length() > 50) {
             throw Status.INVALID_ARGUMENT.withDescription("Too long firstname").asRuntimeException();
         }
     }
 
-    private void validateLastname(String lastname) {
+    private static void validateLastname(String lastname) {
         if (lastname.length() > 50) {
             throw Status.INVALID_ARGUMENT.withDescription("Too long lastname").asRuntimeException();
         }
     }
 
-    private void validateCountryCode(String countryCode) {
+    private static void validateCountryCode(String countryCode) {
         if (countryCode.length() > 50) {
             throw Status.INVALID_ARGUMENT.withDescription("Too long country code").asRuntimeException();
         }
@@ -61,7 +61,7 @@ public class ValidationService {
         }
     }
 
-    private void validateImageDataBase64(String src) {
+    private static void validateImageDataBase64(String src) {
         if (src.isEmpty()) {
             return;
         }
@@ -82,7 +82,7 @@ public class ValidationService {
         throw Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException();
     }
 
-    private void validateUUID(String uuid) {
+    private static void validateUUID(String uuid) {
         try {
             UUID.fromString(uuid);
         } catch (IllegalArgumentException e) {

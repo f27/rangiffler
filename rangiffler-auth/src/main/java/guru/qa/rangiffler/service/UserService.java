@@ -6,12 +6,12 @@ import guru.qa.rangiffler.entity.user.UserEntity;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.repository.UserRepository;
 import jakarta.annotation.Nonnull;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {

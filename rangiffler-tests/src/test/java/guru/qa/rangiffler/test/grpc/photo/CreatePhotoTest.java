@@ -39,7 +39,7 @@ public class CreatePhotoTest extends BaseGrpcTest {
     void createPhotoResponseShouldHavePhotoInfoTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = PhotoModel.create("img/photo/1.jpg");
 
-        PhotoResponse response = photoGrpcClient.createPhoto(
+        PhotoResponse response = photoGrpcBlockingStub.createPhoto(
                 CreatePhotoRequest.newBuilder()
                         .setUserId(user.id().toString())
                         .setSrc(photo.getPhotoAsBase64())
@@ -85,7 +85,7 @@ public class CreatePhotoTest extends BaseGrpcTest {
     @DisplayName("Создание фотографии с некорректной картинкой должно возвращать INVALID_ARGUMENT")
     void shouldNotCreatePhotoWithBadImageTest(@User(FOR_GENERATE_USER) UserModel user) {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.createPhoto(
+                () -> photoGrpcBlockingStub.createPhoto(
                         CreatePhotoRequest.newBuilder()
                                 .setUserId(user.id().toString())
                                 .setSrc("https://evil/saveIp")
@@ -107,7 +107,7 @@ public class CreatePhotoTest extends BaseGrpcTest {
     @DisplayName("Создание фотографии со слишком длинным описанием должно возвращать INVALID_ARGUMENT")
     void shouldNotCreatePhotoWithTooLongDescriptionTest(@User(FOR_GENERATE_USER) UserModel user) {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.createPhoto(
+                () -> photoGrpcBlockingStub.createPhoto(
                         CreatePhotoRequest.newBuilder()
                                 .setUserId(user.id().toString())
                                 .setSrc(ImageUtil.getImageAsBase64("img/photo/1.jpg"))
@@ -129,7 +129,7 @@ public class CreatePhotoTest extends BaseGrpcTest {
     @DisplayName("Создание фотографии со слишком длинным кодом страны должно возвращать INVALID_ARGUMENT")
     void shouldNotCreatePhotoWithTooCountryCodeTest(@User(FOR_GENERATE_USER) UserModel user) {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.createPhoto(
+                () -> photoGrpcBlockingStub.createPhoto(
                         CreatePhotoRequest.newBuilder()
                                 .setUserId(user.id().toString())
                                 .setSrc(ImageUtil.getImageAsBase64("img/photo/1.jpg"))
@@ -151,7 +151,7 @@ public class CreatePhotoTest extends BaseGrpcTest {
     @DisplayName("Создание фотографии с некорректным id пользователя должно возвращать INVALID_ARGUMENT")
     void shouldNotCreatePhotoWithIncorrectUserIdTest() {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.createPhoto(
+                () -> photoGrpcBlockingStub.createPhoto(
                         CreatePhotoRequest.newBuilder()
                                 .setUserId("")
                                 .setSrc(ImageUtil.getImageAsBase64("img/photo/1.jpg"))

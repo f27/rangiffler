@@ -40,7 +40,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
                 .setTargetUserId(user.friends().get(0).id().toString())
                 .build();
 
-        GrpcUser response = userdataGrpcClient.deleteFriend(request);
+        GrpcUser response = userdataGrpcBlockingStub.deleteFriend(request);
 
         step("Проверить статус друга в ответе",
                 () -> Assertions.assertEquals(FriendStatus.NOT_FRIEND, response.getFriendStatus()));
@@ -68,7 +68,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.deleteFriend(request)
+                            () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Target user should not be same")
@@ -97,7 +97,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.deleteFriend(request)
+                            () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("Accepted invitation not exist")
@@ -132,7 +132,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.deleteFriend(request)
+                            () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("Accepted invitation not exist")
@@ -165,7 +165,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.deleteFriend(request)
+                            () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("Accepted invitation not exist")
@@ -200,7 +200,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.deleteFriend(request)
+                            () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("User not found")
@@ -221,7 +221,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.deleteFriend(request)
+                            () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Username can't be empty")
@@ -242,7 +242,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.deleteFriend(request)
+                            () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Bad UUID")
@@ -263,7 +263,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.deleteFriend(request)
+                            () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("User not found")

@@ -1,9 +1,9 @@
 package guru.qa.rangiffler.jupiter.extension;
 
 import guru.qa.grpc.rangiffler.grpc.*;
-import guru.qa.rangiffler.api.grpc.PhotoGrpcClient;
-import guru.qa.rangiffler.api.grpc.UserdataGrpcClient;
-import guru.qa.rangiffler.api.rest.AuthApiClient;
+import guru.qa.rangiffler.grpc.GrpcChannelProvider;
+import guru.qa.rangiffler.api.AuthApiClient;
+import guru.qa.rangiffler.config.Config;
 import guru.qa.rangiffler.db.entity.user.UserAuthEntity;
 import guru.qa.rangiffler.db.repository.AuthRepository;
 import guru.qa.rangiffler.db.repository.hibernate.AuthRepositoryHibernate;
@@ -14,6 +14,7 @@ import guru.qa.rangiffler.model.PhotoModel;
 import guru.qa.rangiffler.model.UserModel;
 import guru.qa.rangiffler.util.DataUtil;
 import guru.qa.rangiffler.util.ImageUtil;
+import io.qameta.allure.grpc.AllureGrpc;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,11 +24,15 @@ import static com.codeborne.selenide.Selenide.sleep;
 
 public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
 
+    protected static final Config CFG = Config.getInstance();
     private static final String DEFAULT_COUNTRY_CODE = "ru";
-
     private final AuthApiClient authClient = new AuthApiClient();
-    private final UserdataGrpcClient userdataGrpcClient = new UserdataGrpcClient();
-    private final PhotoGrpcClient photoGrpcClient = new PhotoGrpcClient();
+    private final RangifflerUserdataServiceGrpc.RangifflerUserdataServiceBlockingStub userdataGrpcBlockingStub =
+            RangifflerUserdataServiceGrpc.newBlockingStub(GrpcChannelProvider.INSTANCE.channel(CFG.userdataGrpcAddress()))
+                    .withInterceptors(new AllureGrpc());
+    private final RangifflerPhotoServiceGrpc.RangifflerPhotoServiceBlockingStub photoGrpcBlockingStub =
+            RangifflerPhotoServiceGrpc.newBlockingStub(GrpcChannelProvider.INSTANCE.channel(CFG.photoGrpcAddress()))
+                    .withInterceptors(new AllureGrpc());
     private final AuthRepository authRepository = new AuthRepositoryHibernate();
 
     @Override
@@ -54,7 +59,7 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
         GrpcUser updateUserResponse = null;
         for (int i = 1; i <= 30; i++) {
             try {
-                updateUserResponse = userdataGrpcClient.updateUser(updateUserRequest);
+                updateUserResponse = userdataGrpcBlockingStub.updateUser(updateUserRequest);
                 break;
             } catch (Throwable t) {
                 sleep(200);
@@ -83,7 +88,7 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
     public void addPhotos(UserModel user, Photo[] photos) {
         for (Photo photo : photos) {
             PhotoModel photoModel = new PhotoModel(
-                    UUID.fromString(photoGrpcClient.createPhoto(CreatePhotoRequest.newBuilder()
+                    UUID.fromString(photoGrpcBlockingStub.createPhoto(CreatePhotoRequest.newBuilder()
                             .setUserId(user.id().toString())
                             .setSrc(ImageUtil.getImageAsBase64(photo.image()))
                             .setCountryCode(photo.country().getCode())
@@ -121,15 +126,15 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
                             .setUsername(createdFriend.username())
                             .setTargetUserId(user.id().toString())
                             .build();
-                    userdataGrpcClient.inviteFriend(inviteRequest);
-                    userdataGrpcClient.acceptFriend(acceptInviteRequest);
+                    userdataGrpcBlockingStub.inviteFriend(inviteRequest);
+                    userdataGrpcBlockingStub.acceptFriend(acceptInviteRequest);
                 }
                 case INVITATION_RECEIVED -> {
                     FriendshipRequest request = FriendshipRequest.newBuilder()
                             .setUsername(createdFriend.username())
                             .setTargetUserId(user.id().toString())
                             .build();
-                    userdataGrpcClient.inviteFriend(request);
+                    userdataGrpcBlockingStub.inviteFriend(request);
                 }
 
                 case INVITATION_SENT -> {
@@ -137,7 +142,7 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
                             .setUsername(user.username())
                             .setTargetUserId(createdFriend.id().toString())
                             .build();
-                    userdataGrpcClient.inviteFriend(request);
+                    userdataGrpcBlockingStub.inviteFriend(request);
                 }
 
             }
@@ -147,8 +152,8 @@ public class ApiGenerateUserExtension extends AbstractGenerateUserExtension {
 
     @Override
     public void deleteUser(UserModel user) {
-        photoGrpcClient.deleteAllPhotos(DeleteAllPhotosRequest.newBuilder().setUserId(user.id().toString()).build());
-        userdataGrpcClient.deleteUser(Username.newBuilder().setUsername(user.username()).build());
+        photoGrpcBlockingStub.deleteAllPhotos(DeleteAllPhotosRequest.newBuilder().setUserId(user.id().toString()).build());
+        userdataGrpcBlockingStub.deleteUser(Username.newBuilder().setUsername(user.username()).build());
         UUID userAuthId;
         if (user.authId() == null) {
             final UserAuthEntity authEntity = authRepository.findByUsername(user.username()).orElseThrow();

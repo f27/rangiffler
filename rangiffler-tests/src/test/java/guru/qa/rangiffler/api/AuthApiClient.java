@@ -1,7 +1,7 @@
-package guru.qa.rangiffler.api.rest;
+package guru.qa.rangiffler.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import guru.qa.rangiffler.api.rest.interceptor.CodeInterceptor;
+import guru.qa.rangiffler.api.interceptor.CodeInterceptor;
 import guru.qa.rangiffler.jupiter.extension.ApiLoginExtension;
 import io.qameta.allure.Step;
 import retrofit2.converter.jackson.JacksonConverterFactory;

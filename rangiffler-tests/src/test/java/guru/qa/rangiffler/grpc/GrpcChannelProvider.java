@@ -1,4 +1,4 @@
-package guru.qa.rangiffler.api.grpc;
+package guru.qa.rangiffler.grpc;
 
 import guru.qa.rangiffler.model.grpc.GrpcAddress;
 import io.grpc.Channel;

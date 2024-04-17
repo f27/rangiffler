@@ -41,7 +41,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setPage(0)
                 .setSize(2)
                 .build();
-        PhotoSliceResponse response = photoGrpcClient.getPhotos(request);
+        PhotoSliceResponse response = photoGrpcBlockingStub.getPhotos(request);
         List<PhotoResponse> photosFromResponse = response.getPhotosList();
 
         step("Проверить, что количество фотографий в ответе ожидаемое", () ->
@@ -87,7 +87,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setPage(0)
                 .setSize(1)
                 .build();
-        PhotoSliceResponse response = photoGrpcClient.getPhotos(request);
+        PhotoSliceResponse response = photoGrpcBlockingStub.getPhotos(request);
 
         step("Проверить, что hasNext в ответе ожидаемый", () ->
                 Assertions.assertFalse(response.getHasNext()));
@@ -105,7 +105,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setPage(0)
                 .setSize(1)
                 .build();
-        PhotoSliceResponse response = photoGrpcClient.getPhotos(request);
+        PhotoSliceResponse response = photoGrpcBlockingStub.getPhotos(request);
 
         step("Проверить, что hasNext в ответе ожидаемый", () ->
                 Assertions.assertTrue(response.getHasNext()));
@@ -127,7 +127,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setPage(0)
                 .setSize(2)
                 .build();
-        PhotoSliceResponse response = photoGrpcClient.getPhotos(request);
+        PhotoSliceResponse response = photoGrpcBlockingStub.getPhotos(request);
         List<PhotoResponse> photosFromResponse = response.getPhotosList();
 
         step("Проверить, что количество фотографий в ответе ожидаемое", () ->
@@ -172,7 +172,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setSize(1)
                 .build();
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.getPhotos(request));
+                () -> photoGrpcBlockingStub.getPhotos(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
                 e.getMessage());
@@ -189,7 +189,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setSize(1)
                 .build();
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.getPhotos(request));
+                () -> photoGrpcBlockingStub.getPhotos(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
                 e.getMessage());
@@ -205,7 +205,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setSize(0)
                 .build();
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.getPhotos(request));
+                () -> photoGrpcBlockingStub.getPhotos(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad size").asRuntimeException().getMessage(),
                 e.getMessage());
@@ -221,7 +221,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setSize(1)
                 .build();
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.getPhotos(request));
+                () -> photoGrpcBlockingStub.getPhotos(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad page").asRuntimeException().getMessage(),
                 e.getMessage());

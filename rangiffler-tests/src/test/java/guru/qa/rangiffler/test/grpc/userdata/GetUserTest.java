@@ -28,7 +28,7 @@ public class GetUserTest extends BaseGrpcTest {
     @GenerateUser
     @DisplayName("GetUser должен возвращать пользователя при корректном запросе")
     void getUserTest(@User(FOR_GENERATE_USER) UserModel user) {
-        GrpcUser response = userdataGrpcClient.getUser(Username.newBuilder().setUsername(user.username()).build());
+        GrpcUser response = userdataGrpcBlockingStub.getUser(Username.newBuilder().setUsername(user.username()).build());
         step("Проверить ответ", () -> {
             step("Проверить, что в ответе ожидаемый user id",
                     () -> Assertions.assertEquals(user.id(), UUID.fromString(response.getId())));
@@ -49,7 +49,7 @@ public class GetUserTest extends BaseGrpcTest {
     @GenerateUser(generateLastname = true, generateFirstname = true, avatar = "img/avatar/1.jpg")
     @DisplayName("GetUser должен возвращать пользователя с заполненными полями при корректном запросе")
     void getUserWithFullInfoTest(@User(FOR_GENERATE_USER) UserModel user) {
-        GrpcUser response = userdataGrpcClient.getUser(Username.newBuilder().setUsername(user.username()).build());
+        GrpcUser response = userdataGrpcBlockingStub.getUser(Username.newBuilder().setUsername(user.username()).build());
         step("Проверить ответ", () -> {
             step("Проверить, что в ответе ожидаемый user id",
                     () -> Assertions.assertEquals(user.id(), UUID.fromString(response.getId())));
@@ -71,7 +71,7 @@ public class GetUserTest extends BaseGrpcTest {
     @DisplayName("GetUser по некорректному пользователю должно возвращать NOT_FOUND")
     void getUserWithIncorrectUsernameTest() {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> userdataGrpcClient.getUser(Username.newBuilder().setUsername(".").build()));
+                () -> userdataGrpcBlockingStub.getUser(Username.newBuilder().setUsername(".").build()));
         Assertions.assertEquals(
                 Status.NOT_FOUND.withDescription("User not found").asRuntimeException().getMessage(),
                 e.getMessage());
@@ -82,7 +82,7 @@ public class GetUserTest extends BaseGrpcTest {
     @DisplayName("GetUser по пустому пользователю должно возвращать INVALID_ARGUMENT")
     void getUserWithEmptyUsernameTest() {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> userdataGrpcClient.getUser(Username.newBuilder().setUsername("").build()));
+                () -> userdataGrpcBlockingStub.getUser(Username.newBuilder().setUsername("").build()));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Username can't be empty").asRuntimeException().getMessage(),
                 e.getMessage());

@@ -1,5 +1,6 @@
 package guru.qa.rangiffler.test.grpc.geo;
 
+import com.google.protobuf.Empty;
 import guru.qa.grpc.rangiffler.grpc.AllCountriesResponse;
 import guru.qa.rangiffler.test.grpc.BaseGrpcTest;
 import io.qameta.allure.Feature;
@@ -18,7 +19,7 @@ public class GetAllCountriesTest extends BaseGrpcTest {
     @Test
     @DisplayName("Когда получаем список всех стран он не должен быть пустым")
     void getAllCountriesTest() {
-        AllCountriesResponse response = geoGrpcClient.getAllCountries();
+        AllCountriesResponse response = geoGrpcBlockingStub.getAllCountries(Empty.getDefaultInstance());
         step("Проверить, что список не пуст",
                 () -> Assertions.assertNotEquals(0, response.getAllCountriesCount()));
     }

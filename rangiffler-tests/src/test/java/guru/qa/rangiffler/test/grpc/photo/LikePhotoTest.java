@@ -38,7 +38,7 @@ public class LikePhotoTest extends BaseGrpcTest {
     void likePhotoResponseShouldHavePhotoInfoWithLikesTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
 
-        PhotoResponse response = photoGrpcClient.likePhoto(LikePhotoRequest.newBuilder()
+        PhotoResponse response = photoGrpcBlockingStub.likePhoto(LikePhotoRequest.newBuilder()
                 .setUserId(user.id().toString())
                 .setPhotoId(photo.id().toString())
                 .build());
@@ -80,12 +80,12 @@ public class LikePhotoTest extends BaseGrpcTest {
     @DisplayName("Ответ на повторный лайк фотографии должен содержать информацию о фотографии и должен убрать лайк")
     void unlikePhotoResponseShouldHavePhotoInfoWithLikesTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
-        photoGrpcClient.likePhoto(LikePhotoRequest.newBuilder()
+        photoGrpcBlockingStub.likePhoto(LikePhotoRequest.newBuilder()
                 .setUserId(user.id().toString())
                 .setPhotoId(photo.id().toString())
                 .build());
 
-        PhotoResponse unlikeResponse = photoGrpcClient.likePhoto(LikePhotoRequest.newBuilder()
+        PhotoResponse unlikeResponse = photoGrpcBlockingStub.likePhoto(LikePhotoRequest.newBuilder()
                 .setUserId(user.id().toString())
                 .setPhotoId(photo.id().toString())
                 .build());
@@ -129,7 +129,7 @@ public class LikePhotoTest extends BaseGrpcTest {
         PhotoModel photo = user.photos().get(0);
 
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.likePhoto(LikePhotoRequest.newBuilder()
+                () -> photoGrpcBlockingStub.likePhoto(LikePhotoRequest.newBuilder()
                         .setUserId("")
                         .setPhotoId(photo.id().toString())
                         .build())
@@ -163,7 +163,7 @@ public class LikePhotoTest extends BaseGrpcTest {
     void shouldNotLikePhotoWithIncorrectPhotoIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.likePhoto(LikePhotoRequest.newBuilder()
+                () -> photoGrpcBlockingStub.likePhoto(LikePhotoRequest.newBuilder()
                         .setUserId(user.id().toString())
                         .setPhotoId("")
                         .build())
@@ -197,7 +197,7 @@ public class LikePhotoTest extends BaseGrpcTest {
     void shouldNotLikePhotoWithNotExistingPhotoIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.likePhoto(LikePhotoRequest.newBuilder()
+                () -> photoGrpcBlockingStub.likePhoto(LikePhotoRequest.newBuilder()
                         .setUserId(user.id().toString())
                         .setPhotoId(UUID.randomUUID().toString())
                         .build())

@@ -41,7 +41,7 @@ public class InviteFriendTest extends BaseGrpcTest {
                 .setTargetUserId(user.friends().get(0).id().toString())
                 .build();
 
-        GrpcUser response = userdataGrpcClient.inviteFriend(request);
+        GrpcUser response = userdataGrpcBlockingStub.inviteFriend(request);
 
         step("Проверить статус друга в ответе",
                 () -> Assertions.assertEquals(FriendStatus.INVITATION_SENT, response.getFriendStatus()));
@@ -72,7 +72,7 @@ public class InviteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.inviteFriend(request)
+                            () -> userdataGrpcBlockingStub.inviteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Target user should not be same")
@@ -99,7 +99,7 @@ public class InviteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.inviteFriend(request)
+                            () -> userdataGrpcBlockingStub.inviteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.ALREADY_EXISTS.withDescription("Invitation already exist")
@@ -126,7 +126,7 @@ public class InviteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.inviteFriend(request)
+                            () -> userdataGrpcBlockingStub.inviteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.ALREADY_EXISTS.withDescription("Invitation already exist")
@@ -153,7 +153,7 @@ public class InviteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.inviteFriend(request)
+                            () -> userdataGrpcBlockingStub.inviteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.ALREADY_EXISTS.withDescription("Invitation already exist")
@@ -180,7 +180,7 @@ public class InviteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.inviteFriend(request)
+                            () -> userdataGrpcBlockingStub.inviteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("User not found")
@@ -201,7 +201,7 @@ public class InviteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.inviteFriend(request)
+                            () -> userdataGrpcBlockingStub.inviteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Username can't be empty")
@@ -222,7 +222,7 @@ public class InviteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.inviteFriend(request)
+                            () -> userdataGrpcBlockingStub.inviteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.INVALID_ARGUMENT.withDescription("Bad UUID")
@@ -249,7 +249,7 @@ public class InviteFriendTest extends BaseGrpcTest {
         step("Проверить исключение",
                 () -> {
                     Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                            () -> userdataGrpcClient.inviteFriend(request)
+                            () -> userdataGrpcBlockingStub.inviteFriend(request)
                     );
                     Assertions.assertEquals(
                             Status.NOT_FOUND.withDescription("Target user not found")

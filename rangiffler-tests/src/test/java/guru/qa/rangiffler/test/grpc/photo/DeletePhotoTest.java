@@ -37,7 +37,7 @@ public class DeletePhotoTest extends BaseGrpcTest {
         PhotoModel photo = user.photos().get(0);
         step("Отправить запрос и проверить, что нет исключений",
                 () -> Assertions.assertDoesNotThrow(
-                        () -> photoGrpcClient.deletePhoto(
+                        () -> photoGrpcBlockingStub.deletePhoto(
                                 DeletePhotoRequest.newBuilder()
                                         .setUserId(user.id().toString())
                                         .setPhotoId(photo.id().toString())
@@ -55,7 +55,7 @@ public class DeletePhotoTest extends BaseGrpcTest {
     void deletePhotoWithIncorrectUserIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.deletePhoto(DeletePhotoRequest.newBuilder()
+                () -> photoGrpcBlockingStub.deletePhoto(DeletePhotoRequest.newBuilder()
                         .setUserId("")
                         .setPhotoId(photo.id().toString())
                         .build())
@@ -89,7 +89,7 @@ public class DeletePhotoTest extends BaseGrpcTest {
     void deletePhotoWithIncorrectPhotoIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.deletePhoto(DeletePhotoRequest.newBuilder()
+                () -> photoGrpcBlockingStub.deletePhoto(DeletePhotoRequest.newBuilder()
                         .setUserId(user.id().toString())
                         .setPhotoId("")
                         .build())
@@ -127,7 +127,7 @@ public class DeletePhotoTest extends BaseGrpcTest {
         UserModel secondUser = users[1];
         PhotoModel secondUserPhoto = secondUser.photos().get(0);
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> photoGrpcClient.deletePhoto(DeletePhotoRequest.newBuilder()
+                () -> photoGrpcBlockingStub.deletePhoto(DeletePhotoRequest.newBuilder()
                         .setUserId(firstUser.id().toString())
                         .setPhotoId(secondUserPhoto.id().toString())
                         .build())

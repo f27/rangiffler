@@ -1,4 +1,4 @@
-package guru.qa.rangiffler.api.rest.interceptor;
+package guru.qa.rangiffler.api.interceptor;
 
 import guru.qa.rangiffler.jupiter.extension.ApiLoginExtension;
 import okhttp3.Interceptor;

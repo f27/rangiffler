@@ -32,7 +32,7 @@ public class GetPeopleTest extends BaseGrpcTest {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername(firstUser.username())
                 .build();
-        UsersResponse response = userdataGrpcClient.getPeople(request);
+        UsersResponse response = userdataGrpcBlockingStub.getPeople(request);
         step("Проверить ответ", () -> {
             step("Проверить, что в ответе список пользователей не 0",
                     () -> Assertions.assertNotEquals(0, response.getUsersCount()));
@@ -63,7 +63,7 @@ public class GetPeopleTest extends BaseGrpcTest {
                 .setUsername(firstUser.username())
                 .setSearchQuery(secondUser.username())
                 .build();
-        UsersResponse response = userdataGrpcClient.getPeople(request);
+        UsersResponse response = userdataGrpcBlockingStub.getPeople(request);
         step("Проверить ответ", () -> {
             step("Проверить, что в ответе список пользователей не 0",
                     () -> Assertions.assertNotEquals(0, response.getUsersCount()));
@@ -94,7 +94,7 @@ public class GetPeopleTest extends BaseGrpcTest {
                 .setPage(0)
                 .setSize(1)
                 .build();
-        UsersResponse response = userdataGrpcClient.getPeople(request);
+        UsersResponse response = userdataGrpcBlockingStub.getPeople(request);
         step("Проверить ответ", () -> {
             step("Проверить, что в ответе список пользователей не 0",
                     () -> Assertions.assertNotEquals(0, response.getUsersCount()));
@@ -116,7 +116,7 @@ public class GetPeopleTest extends BaseGrpcTest {
                 .setUsername(".")
                 .build();
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> userdataGrpcClient.getPeople(request)
+                () -> userdataGrpcBlockingStub.getPeople(request)
         );
         Assertions.assertEquals(
                 Status.NOT_FOUND.withDescription("User not found").asRuntimeException().getMessage(),
@@ -131,7 +131,7 @@ public class GetPeopleTest extends BaseGrpcTest {
                 .setUsername("")
                 .build();
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> userdataGrpcClient.getPeople(request)
+                () -> userdataGrpcBlockingStub.getPeople(request)
         );
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Username can't be empty").asRuntimeException().getMessage(),

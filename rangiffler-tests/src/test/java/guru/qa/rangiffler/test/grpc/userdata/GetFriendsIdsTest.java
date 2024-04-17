@@ -30,7 +30,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     @GenerateUser
     @DisplayName("GetFriendsIds: правильный username, нет друзей, входящих и исходящих приглашений")
     void getFriendsIdsTest(@User(FOR_GENERATE_USER) UserModel user) {
-        FriendsIdsResponse response = userdataGrpcClient.getFriendsIds(
+        FriendsIdsResponse response = userdataGrpcBlockingStub.getFriendsIds(
                 Username.newBuilder().setUsername(user.username()).build());
 
         step("Список id должен быть пуст",
@@ -43,7 +43,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     void getFriendsIdsWithFriendsTest(@User(FOR_GENERATE_USER) UserModel user) {
         UUID friendsId = user.friends().get(0).id();
 
-        FriendsIdsResponse response = userdataGrpcClient.getFriendsIds(
+        FriendsIdsResponse response = userdataGrpcBlockingStub.getFriendsIds(
                 Username.newBuilder().setUsername(user.username()).build());
 
         step("Список должен содержать 1 id",
@@ -61,7 +61,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     void getFriendsIdsWithFriendsAndIncomingInvitationsTest(@User(FOR_GENERATE_USER) UserModel user) {
         UUID friendsId = user.friends().get(0).id();
 
-        FriendsIdsResponse response = userdataGrpcClient.getFriendsIds(
+        FriendsIdsResponse response = userdataGrpcBlockingStub.getFriendsIds(
                 Username.newBuilder().setUsername(user.username()).build());
 
         step("Список должен содержать 1 id",
@@ -79,7 +79,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     void getFriendsIdsWithFriendsAndOutcomingInvitationsTest(@User(FOR_GENERATE_USER) UserModel user) {
         UUID friendsId = user.friends().get(0).id();
 
-        FriendsIdsResponse response = userdataGrpcClient.getFriendsIds(
+        FriendsIdsResponse response = userdataGrpcBlockingStub.getFriendsIds(
                 Username.newBuilder().setUsername(user.username()).build());
 
         step("Список должен содержать 1 id",
@@ -98,7 +98,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     void getFriendsIdsWithFriendsAndIncomingAndOutcomingInvitationsTest(@User(FOR_GENERATE_USER) UserModel user) {
         UUID friendsId = user.friends().get(0).id();
 
-        FriendsIdsResponse response = userdataGrpcClient.getFriendsIds(
+        FriendsIdsResponse response = userdataGrpcBlockingStub.getFriendsIds(
                 Username.newBuilder().setUsername(user.username()).build());
 
         step("Список должен содержать 1 id",
@@ -113,7 +113,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     })
     @DisplayName("GetFriendsIds: правильный username, есть входящие приглашения, нет исходящих приглашений и друзей")
     void getFriendsIdsWithAndIncomingInvitationsTest(@User(FOR_GENERATE_USER) UserModel user) {
-        FriendsIdsResponse response = userdataGrpcClient.getFriendsIds(
+        FriendsIdsResponse response = userdataGrpcBlockingStub.getFriendsIds(
                 Username.newBuilder().setUsername(user.username()).build());
 
         step("Список id должен быть пуст",
@@ -126,7 +126,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     })
     @DisplayName("GetFriendsIds: правильный username, есть исходящие приглашения, нет входящих приглашений и друзей")
     void getFriendsIdsWithOutcomingInvitationsTest(@User(FOR_GENERATE_USER) UserModel user) {
-        FriendsIdsResponse response = userdataGrpcClient.getFriendsIds(
+        FriendsIdsResponse response = userdataGrpcBlockingStub.getFriendsIds(
                 Username.newBuilder().setUsername(user.username()).build());
 
         step("Список id должен быть пуст",
@@ -140,7 +140,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     })
     @DisplayName("GetFriendsIds: правильный username, есть входящие и исходящие приглашения, нет друзей")
     void getFriendsIdsWithIncomingAndOutcomingInvitationsTest(@User(FOR_GENERATE_USER) UserModel user) {
-        FriendsIdsResponse response = userdataGrpcClient.getFriendsIds(
+        FriendsIdsResponse response = userdataGrpcBlockingStub.getFriendsIds(
                 Username.newBuilder().setUsername(user.username()).build());
 
         step("Список id должен быть пуст",
@@ -152,7 +152,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     @DisplayName("GetFriendsIds: неправильный username. Должен вернуть NOT_FOUND")
     void getFriendsIdsIncorrectUsernameTest() {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> userdataGrpcClient.getFriendsIds(Username.newBuilder().setUsername(".").build())
+                () -> userdataGrpcBlockingStub.getFriendsIds(Username.newBuilder().setUsername(".").build())
         );
         Assertions.assertEquals(
                 Status.NOT_FOUND.withDescription("User not found").asRuntimeException().getMessage(),
@@ -164,7 +164,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     @DisplayName("GetFriendsIds: пустой username. Должен вернуть INVALID_ARGUMENT")
     void getFriendsIdsEmptyUsernameTest() {
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> userdataGrpcClient.getFriendsIds(Username.newBuilder().setUsername("").build())
+                () -> userdataGrpcBlockingStub.getFriendsIds(Username.newBuilder().setUsername("").build())
         );
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Username can't be empty").asRuntimeException().getMessage(),

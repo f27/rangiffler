@@ -34,7 +34,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .setUsername(user.username())
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcBlockingStub.getFriends(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
@@ -57,7 +57,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .setSearchQuery(user.friends().get(0).username())
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcBlockingStub.getFriends(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
@@ -80,7 +80,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .setSearchQuery(user.friends().get(0).firstname())
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcBlockingStub.getFriends(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
@@ -103,7 +103,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .setSearchQuery(user.friends().get(0).lastname())
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcBlockingStub.getFriends(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
@@ -126,7 +126,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .setSearchQuery(DataUtil.generateStringWithLength(255))
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcBlockingStub.getFriends(request);
 
         step("Список пользователей должен быть пустым",
                 () -> Assertions.assertEquals(0, response.getUsersCount()));
@@ -146,7 +146,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .setSize(1)
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcBlockingStub.getFriends(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
@@ -171,7 +171,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .setSize(1)
                 .build();
 
-        UsersResponse response = userdataGrpcClient.getFriends(request);
+        UsersResponse response = userdataGrpcBlockingStub.getFriends(request);
 
         step("В списке пользователей не должно быть запрашивающего",
                 () -> Assertions.assertNull(response.getUsersList().stream()
@@ -193,7 +193,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .build();
 
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> userdataGrpcClient.getFriends(request)
+                () -> userdataGrpcBlockingStub.getFriends(request)
         );
         Assertions.assertEquals(
                 Status.NOT_FOUND.withDescription("User not found").asRuntimeException().getMessage(),
@@ -209,7 +209,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .build();
 
         Exception e = Assertions.assertThrows(StatusRuntimeException.class,
-                () -> userdataGrpcClient.getFriends(request)
+                () -> userdataGrpcBlockingStub.getFriends(request)
         );
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Username can't be empty").asRuntimeException().getMessage(),
