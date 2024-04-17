@@ -5,7 +5,7 @@ import guru.qa.grpc.rangiffler.grpc.AllCountriesResponse;
 import guru.qa.grpc.rangiffler.grpc.CountryCode;
 import guru.qa.grpc.rangiffler.grpc.CountryResponse;
 import guru.qa.grpc.rangiffler.grpc.RangifflerGeoServiceGrpc;
-import guru.qa.rangiffler.entity.country.CountryEntity;
+import guru.qa.rangiffler.entity.CountryEntity;
 import guru.qa.rangiffler.repository.CountryRepository;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;

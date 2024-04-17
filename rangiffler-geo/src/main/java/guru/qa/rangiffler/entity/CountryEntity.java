@@ -1,4 +1,4 @@
-package guru.qa.rangiffler.entity.country;
+package guru.qa.rangiffler.entity;
 
 import guru.qa.grpc.rangiffler.grpc.AllCountriesResponse;
 import guru.qa.grpc.rangiffler.grpc.CountryResponse;
