@@ -16,12 +16,12 @@ import java.util.UUID;
 import static guru.qa.rangiffler.service.Validation.validate;
 
 @GrpcService
-public class PhotoGrpcService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServiceImplBase {
+public class PhotoGrpcFacade extends RangifflerPhotoServiceGrpc.RangifflerPhotoServiceImplBase {
 
     private final PhotoService photoService;
 
     @Autowired
-    public PhotoGrpcService(PhotoService photoService) {
+    public PhotoGrpcFacade(PhotoService photoService) {
         this.photoService = photoService;
     }
 

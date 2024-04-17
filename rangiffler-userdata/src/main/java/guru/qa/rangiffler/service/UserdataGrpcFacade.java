@@ -17,12 +17,12 @@ import java.util.UUID;
 import static guru.qa.rangiffler.service.Validation.validate;
 
 @GrpcService
-public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.RangifflerUserdataServiceImplBase {
+public class UserdataGrpcFacade extends RangifflerUserdataServiceGrpc.RangifflerUserdataServiceImplBase {
 
     private final UserdataService userdataService;
 
     @Autowired
-    public UserdataGrpcService(UserdataService userdataService) {
+    public UserdataGrpcFacade(UserdataService userdataService) {
         this.userdataService = userdataService;
     }
 
