@@ -1,10 +1,7 @@
 package guru.qa.rangiffler.api.rest;
 
 import guru.qa.rangiffler.model.gql.GqlRequest;
-import guru.qa.rangiffler.model.gql.response.GqlCountries;
-import guru.qa.rangiffler.model.gql.response.GqlFeed;
-import guru.qa.rangiffler.model.gql.response.GqlUser;
-import guru.qa.rangiffler.model.gql.response.GqlUsers;
+import guru.qa.rangiffler.model.gql.response.*;
 import io.qameta.allure.Step;
 
 import java.io.IOException;
@@ -41,5 +38,10 @@ public class GatewayApiClient extends RestClient {
     @Step("Обновить информацию о пользователе")
     public GqlUser userMutation(String bearerToken, GqlRequest request) throws IOException {
         return gatewayApi.userMutation(bearerToken, request).execute().body();
+    }
+
+    @Step("Создать/изменить фотографию")
+    public GqlPhoto photoMutation(String bearerToken, GqlRequest request) throws IOException {
+        return gatewayApi.photoMutation(bearerToken, request).execute().body();
     }
 }
