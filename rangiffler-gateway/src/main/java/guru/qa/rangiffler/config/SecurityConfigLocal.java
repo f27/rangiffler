@@ -33,8 +33,7 @@ public class SecurityConfigLocal {
                 .authorizeHttpRequests(customizer ->
                         customizer.requestMatchers(
                                         antMatcher("/actuator/health"),
-                                        antMatcher("/graphiql/**"),
-                                        antMatcher("/favicon.ico")
+                                        antMatcher("/graphiql/**")
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()
