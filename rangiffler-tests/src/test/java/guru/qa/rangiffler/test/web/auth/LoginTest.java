@@ -1,7 +1,6 @@
 package guru.qa.rangiffler.test.web.auth;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.rangiffler.jupiter.annotation.ApiLogin;
 import guru.qa.rangiffler.jupiter.annotation.GenerateUser;
 import guru.qa.rangiffler.jupiter.annotation.User;
 import guru.qa.rangiffler.model.UserModel;
@@ -76,10 +75,19 @@ public class LoginTest extends BaseWebTest {
     }
 
     @Test
-    @ApiLogin
+    @GenerateUser
     @DisplayName("Если истек access_token, то он обновится с помощью refresh_token")
-    void accessTokenCanBeRefreshedTest() {
+    void accessTokenCanBeRefreshedTest(@User(FOR_GENERATE_USER) UserModel user) {
+        Selenide.open("/");
+        welcomePage.clickLoginButton();
+        loginPage
+                .setUsername(user.username())
+                .setPassword(user.password())
+                .clickSignIn();
+        myTravelsPage
+                .checkSuccessfullyAuthorized();
         Selenide.localStorage().removeItem("access_token");
+        Selenide.localStorage().removeItem("id_token");
         Selenide.refresh();
         myTravelsPage
                 .checkSuccessfullyAuthorized();
