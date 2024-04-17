@@ -30,7 +30,6 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(customizer ->
                 customizer.requestMatchers(
-                                antMatcher("/session"),
                                 antMatcher("/actuator/health"))
                         .permitAll()
                         .anyRequest()
