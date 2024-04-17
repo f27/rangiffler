@@ -8,6 +8,7 @@ import guru.qa.rangiffler.service.UserdataService;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -39,8 +40,8 @@ public class UserController {
 
     @QueryMapping
     public Slice<UserModel> users(@AuthenticationPrincipal Jwt principal,
-                                  @Argument int page,
-                                  @Argument int size,
+                                  @Argument @NotNull int page,
+                                  @Argument @NotNull int size,
                                   @Argument @Nullable String searchQuery,
                                   @Nonnull DataFetchingEnvironment env) {
         String username = principal.getClaim("sub");
