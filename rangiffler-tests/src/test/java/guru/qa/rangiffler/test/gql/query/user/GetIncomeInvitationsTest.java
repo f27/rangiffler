@@ -24,7 +24,7 @@ public class GetIncomeInvitationsTest extends BaseGqlTest {
 
     @Test
     @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_RECEIVED)))
-    @DisplayName("Должен пользователь от которого получено приглашение в друзья")
+    @DisplayName("Должен вернуться пользователь от которого получено приглашение в друзья")
     void incomeInvitationsShouldContainOurFriendTest(@User(FOR_API_LOGIN) UserModel user,
                                                      @Token String bearerToken,
                                                      @GqlRequestFile("gql/query/user/getIncomeInvitations.json") GqlRequest request) throws IOException {
