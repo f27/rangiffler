@@ -8,47 +8,47 @@ import java.util.Base64;
 import java.util.UUID;
 
 @Service
-public class ValidationService {
+public class Validation {
 
-    public void validate(CreatePhotoRequest request) {
+    public static void validate(CreatePhotoRequest request) {
         validateUUID(request.getUserId());
         validateImageDataBase64(request.getSrc());
         validateCountryCode(request.getCountryCode());
         validateDescription(request.getDescription());
     }
 
-    public void validate(UpdatePhotoRequest request) {
+    public static void validate(UpdatePhotoRequest request) {
         validateUUID(request.getUserId());
         validateUUID(request.getPhotoId());
         validateCountryCode(request.getCountryCode());
         validateDescription(request.getDescription());
     }
 
-    public void validate(LikePhotoRequest request) {
+    public static void validate(LikePhotoRequest request) {
         validateUUID(request.getUserId());
         validateUUID(request.getPhotoId());
     }
 
-    public void validate(DeletePhotoRequest request) {
+    public static void validate(DeletePhotoRequest request) {
         validateUUID(request.getUserId());
         validateUUID(request.getPhotoId());
     }
 
-    public void validate(GetPhotosRequest request) {
-        request.getUserIdList().forEach(this::validateUUID);
+    public static void validate(GetPhotosRequest request) {
+        request.getUserIdList().forEach(Validation::validateUUID);
         validatePage(request.getPage());
         validateSize(request.getSize());
     }
 
-    public void validate(GetStatRequest request) {
-        request.getUserIdList().forEach(this::validateUUID);
+    public static void validate(GetStatRequest request) {
+        request.getUserIdList().forEach(Validation::validateUUID);
     }
 
-    public void validate(DeleteAllPhotosRequest request) {
+    public static void validate(DeleteAllPhotosRequest request) {
         validateUUID(request.getUserId());
     }
 
-    private void validateImageDataBase64(String src) {
+    private static void validateImageDataBase64(String src) {
         if (!src.contains("data:image")) {
             throw Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException();
         }
@@ -66,7 +66,7 @@ public class ValidationService {
         throw Status.INVALID_ARGUMENT.withDescription("Bad image").asRuntimeException();
     }
 
-    private void validateUUID(String uuid) {
+    private static void validateUUID(String uuid) {
         try {
             UUID.fromString(uuid);
         } catch (IllegalArgumentException e) {
@@ -74,19 +74,19 @@ public class ValidationService {
         }
     }
 
-    private void validatePage(int page) {
+    private static void validatePage(int page) {
         if (page < 0) {
             throw Status.INVALID_ARGUMENT.withDescription("Bad page").asRuntimeException();
         }
     }
 
-    private void validateSize(int size) {
+    private static void validateSize(int size) {
         if (size < 1) {
             throw Status.INVALID_ARGUMENT.withDescription("Bad size").asRuntimeException();
         }
     }
 
-    private void validateCountryCode(String countryCode) {
+    private static void validateCountryCode(String countryCode) {
         if (countryCode.length() > 50) {
             throw Status.INVALID_ARGUMENT.withDescription("Too long country code").asRuntimeException();
         }
@@ -95,7 +95,7 @@ public class ValidationService {
         }
     }
 
-    private void validateDescription(String description) {
+    private static void validateDescription(String description) {
         if (description.length() > 255) {
             throw Status.INVALID_ARGUMENT.withDescription("Too long description").asRuntimeException();
         }

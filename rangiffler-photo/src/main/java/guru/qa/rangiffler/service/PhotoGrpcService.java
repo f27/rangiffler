@@ -13,23 +13,22 @@ import org.springframework.data.domain.Slice;
 import java.util.Map;
 import java.util.UUID;
 
+import static guru.qa.rangiffler.service.Validation.validate;
+
 @GrpcService
 public class PhotoGrpcService extends RangifflerPhotoServiceGrpc.RangifflerPhotoServiceImplBase {
 
     private final PhotoService photoService;
-    private final ValidationService validationService;
 
     @Autowired
-    public PhotoGrpcService(PhotoService photoService,
-                            ValidationService validationService) {
+    public PhotoGrpcService(PhotoService photoService) {
         this.photoService = photoService;
-        this.validationService = validationService;
     }
 
     @Override
     public void createPhoto(CreatePhotoRequest request, StreamObserver<PhotoResponse> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             PhotoEntity photoEntity = photoService.createPhoto(
                     UUID.fromString(request.getUserId()),
                     request.getSrc().getBytes(),
@@ -46,7 +45,7 @@ public class PhotoGrpcService extends RangifflerPhotoServiceGrpc.RangifflerPhoto
     @Override
     public void updatePhoto(UpdatePhotoRequest request, StreamObserver<PhotoResponse> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             PhotoEntity photoEntity = photoService.updatePhoto(
                     UUID.fromString(request.getUserId()),
                     UUID.fromString(request.getPhotoId()),
@@ -63,7 +62,7 @@ public class PhotoGrpcService extends RangifflerPhotoServiceGrpc.RangifflerPhoto
     @Override
     public void likePhoto(LikePhotoRequest request, StreamObserver<PhotoResponse> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             PhotoEntity photoEntity = photoService.likePhoto(
                     UUID.fromString(request.getUserId()),
                     UUID.fromString(request.getPhotoId())
@@ -78,7 +77,7 @@ public class PhotoGrpcService extends RangifflerPhotoServiceGrpc.RangifflerPhoto
     @Override
     public void deletePhoto(DeletePhotoRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             photoService.deletePhoto(
                     UUID.fromString(request.getUserId()),
                     UUID.fromString(request.getPhotoId())
@@ -93,7 +92,7 @@ public class PhotoGrpcService extends RangifflerPhotoServiceGrpc.RangifflerPhoto
     @Override
     public void getPhotos(GetPhotosRequest request, StreamObserver<PhotoSliceResponse> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             Slice<PhotoEntity> photoEntitySlice = photoService.getPhotos(
                     request.getUserIdList().stream().map(UUID::fromString).toList(),
                     PageRequest.of(request.getPage(), request.getSize())
@@ -108,7 +107,7 @@ public class PhotoGrpcService extends RangifflerPhotoServiceGrpc.RangifflerPhoto
     @Override
     public void getStat(GetStatRequest request, StreamObserver<StatMapResponse> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             Map<String, Integer> stat = photoService.getStat(
                     request.getUserIdList().stream().map(UUID::fromString).toList()
             );
@@ -122,7 +121,7 @@ public class PhotoGrpcService extends RangifflerPhotoServiceGrpc.RangifflerPhoto
     @Override
     public void deleteAllPhotos(DeleteAllPhotosRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             photoService.deleteAllPhotos(UUID.fromString(request.getUserId()));
             responseObserver.onNext(Empty.getDefaultInstance());
             responseObserver.onCompleted();

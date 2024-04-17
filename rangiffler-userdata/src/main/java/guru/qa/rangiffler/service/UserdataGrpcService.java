@@ -14,22 +14,22 @@ import org.springframework.data.domain.Slice;
 import java.util.List;
 import java.util.UUID;
 
+import static guru.qa.rangiffler.service.Validation.validate;
+
 @GrpcService
 public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.RangifflerUserdataServiceImplBase {
 
     private final UserdataService userdataService;
-    private final ValidationService validationService;
 
     @Autowired
-    public UserdataGrpcService(UserdataService userdataService, ValidationService validationService) {
+    public UserdataGrpcService(UserdataService userdataService) {
         this.userdataService = userdataService;
-        this.validationService = validationService;
     }
 
     @Override
     public void getUser(Username request, StreamObserver<GrpcUser> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             responseObserver.onNext(UserEntity.toGrpcMessage(
                     userdataService.getUser(request.getUsername()),
                     FriendStatus.NOT_FRIEND));
@@ -42,7 +42,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void getPeople(UsersRequest request, StreamObserver<UsersResponse> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             String username = request.getUsername();
             UserEntity currentUser = userdataService.getUser(username);
             boolean isPageable = request.getSize() != 0;
@@ -78,7 +78,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void getFriends(UsersRequest request, StreamObserver<UsersResponse> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             String username = request.getUsername();
             boolean isPageable = request.getSize() != 0;
             String searchQuery = request.getSearchQuery();
@@ -112,7 +112,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void getIncomeInvitations(UsersRequest request, StreamObserver<UsersResponse> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             String username = request.getUsername();
             boolean isPageable = request.getSize() != 0;
             String searchQuery = request.getSearchQuery();
@@ -146,7 +146,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void getOutcomeInvitations(UsersRequest request, StreamObserver<UsersResponse> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             String username = request.getUsername();
             boolean isPageable = request.getSize() != 0;
             String searchQuery = request.getSearchQuery();
@@ -180,7 +180,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void getFriendsIds(Username request, StreamObserver<FriendsIdsResponse> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             FriendsIdsResponse.Builder responseBuilder = FriendsIdsResponse.newBuilder();
             responseBuilder.addAllFriendsIds(
                     userdataService.getUser(request.getUsername()).getFriends().stream()
@@ -197,7 +197,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void updateUser(GrpcUser request, StreamObserver<GrpcUser> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             UserEntity user = userdataService.updateUser(
                     request.getUsername(),
                     request.getFirstname(),
@@ -215,7 +215,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void inviteFriend(FriendshipRequest request, StreamObserver<GrpcUser> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             responseObserver.onNext(UserEntity.toGrpcMessage(
                     userdataService.inviteFriend(request.getUsername(), UUID.fromString(request.getTargetUserId())),
                     FriendStatus.INVITATION_SENT));
@@ -228,7 +228,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void acceptFriend(FriendshipRequest request, StreamObserver<GrpcUser> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             responseObserver.onNext(UserEntity.toGrpcMessage(userdataService.acceptFriend(
                             request.getUsername(), UUID.fromString(request.getTargetUserId())),
                     FriendStatus.FRIEND));
@@ -241,7 +241,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void rejectFriend(FriendshipRequest request, StreamObserver<GrpcUser> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             responseObserver.onNext(UserEntity.toGrpcMessage(userdataService.rejectFriend(
                             request.getUsername(), UUID.fromString(request.getTargetUserId())),
                     FriendStatus.NOT_FRIEND));
@@ -254,7 +254,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void deleteFriend(FriendshipRequest request, StreamObserver<GrpcUser> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             responseObserver.onNext(UserEntity.toGrpcMessage(userdataService.deleteFriend(
                             request.getUsername(), UUID.fromString(request.getTargetUserId())),
                     FriendStatus.NOT_FRIEND));
@@ -267,7 +267,7 @@ public class UserdataGrpcService extends RangifflerUserdataServiceGrpc.Rangiffle
     @Override
     public void deleteUser(Username request, StreamObserver<Empty> responseObserver) {
         try {
-            validationService.validate(request);
+            validate(request);
             userdataService.deleteUser(request.getUsername());
             responseObserver.onNext(Empty.getDefaultInstance());
             responseObserver.onCompleted();

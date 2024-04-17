@@ -3,7 +3,6 @@ package guru.qa.rangiffler.controller;
 import graphql.schema.DataFetchingEnvironment;
 import guru.qa.rangiffler.model.friendship.FriendshipInput;
 import guru.qa.rangiffler.model.user.UserModel;
-import guru.qa.rangiffler.service.GqlValidationService;
 import guru.qa.rangiffler.service.UserdataService;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -18,16 +17,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 
+import static guru.qa.rangiffler.service.GqlValidation.checkSubQueries;
+
 @Controller
 public class FriendsController {
 
     private final UserdataService userdataService;
-    private final GqlValidationService gqlValidationService;
 
     @Autowired
-    public FriendsController(UserdataService userdataService, GqlValidationService gqlValidationService) {
+    public FriendsController(UserdataService userdataService) {
         this.userdataService = userdataService;
-        this.gqlValidationService = gqlValidationService;
     }
 
     @SchemaMapping(typeName = "User", field = "friends")
@@ -59,7 +58,7 @@ public class FriendsController {
                                 @Argument @Valid FriendshipInput input,
                                 @Nonnull DataFetchingEnvironment env) {
         String username = principal.getClaim("sub");
-        gqlValidationService.checkSubQueries(env, 1, "friends", "incomeInvitations", "outcomeInvitations");
+        checkSubQueries(env, 1, "friends", "incomeInvitations", "outcomeInvitations");
         return userdataService.friendshipMutation(username, input);
     }
 }
