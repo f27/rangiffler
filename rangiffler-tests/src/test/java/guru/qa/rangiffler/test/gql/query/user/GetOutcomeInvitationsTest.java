@@ -25,7 +25,7 @@ public class GetOutcomeInvitationsTest extends BaseGqlTest {
     @Test
     @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_SENT)))
     @DisplayName("Должен вернуться пользователь от которого получено приглашение в друзья")
-    void incomeInvitationsShouldContainOurFriendTest(@User(FOR_API_LOGIN) UserModel user,
+    void outcomeInvitationsShouldContainUserTest(@User(FOR_API_LOGIN) UserModel user,
                                                      @Token String bearerToken,
                                                      @GqlRequestFile("gql/query/user/getOutcomeInvitations.json") GqlRequest request) throws IOException {
         final GqlUser gqlUser = gatewayApiClient.userQuery(bearerToken, request);
@@ -41,7 +41,7 @@ public class GetOutcomeInvitationsTest extends BaseGqlTest {
     @Test
     @ApiLogin(user = @GenerateUser(friends = @Friend(status = FriendStatus.INVITATION_SENT)))
     @DisplayName("Нельзя рекурсивно запросить пользователей от которых получено приглашение в друзья")
-    void getIncomeInvitationsShouldReturnErrorIfRecursiveFriendsQueryTest(@Token String bearerToken,
+    void getOutcomeInvitationsShouldReturnErrorIfRecursiveUserQueryTest(@Token String bearerToken,
                                                                           @GqlRequestFile("gql/query/user/getOutcomeInvitationsRecursive.json") GqlRequest request) throws IOException {
         final GqlUser gqlUser = gatewayApiClient.userQuery(bearerToken, request);
 
