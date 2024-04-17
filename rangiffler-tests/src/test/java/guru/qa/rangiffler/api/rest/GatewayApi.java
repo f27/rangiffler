@@ -27,7 +27,7 @@ public interface GatewayApi {
                        @Body GqlRequest gqlRequest);
 
     @POST("/graphql")
-    Call<Void> getFriends(@Header("Authorization") String bearerToken,
+    Call<GqlUser> getFriends(@Header("Authorization") String bearerToken,
                           @Body GqlRequest gqlRequest);
 
     @POST("/graphql")

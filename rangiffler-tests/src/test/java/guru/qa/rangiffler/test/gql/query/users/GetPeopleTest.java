@@ -1,9 +1,10 @@
-package guru.qa.rangiffler.test.gql;
+package guru.qa.rangiffler.test.gql.query.users;
 
 import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.rangiffler.jupiter.annotation.*;
 import guru.qa.rangiffler.model.gql.GqlRequest;
 import guru.qa.rangiffler.model.gql.response.GqlUsers;
+import guru.qa.rangiffler.test.gql.BaseGqlTest;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.Assertions;
