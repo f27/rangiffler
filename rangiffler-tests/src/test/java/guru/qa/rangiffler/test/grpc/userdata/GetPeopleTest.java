@@ -115,7 +115,7 @@ public class GetPeopleTest extends BaseGrpcTest {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername(".")
                 .build();
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> userdataGrpcBlockingStub.getPeople(request)
         );
         Assertions.assertEquals(
@@ -130,7 +130,7 @@ public class GetPeopleTest extends BaseGrpcTest {
         UsersRequest request = UsersRequest.newBuilder()
                 .setUsername("")
                 .build();
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> userdataGrpcBlockingStub.getPeople(request)
         );
         Assertions.assertEquals(

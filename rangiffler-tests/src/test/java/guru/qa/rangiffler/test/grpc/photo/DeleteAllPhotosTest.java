@@ -58,7 +58,7 @@ public class DeleteAllPhotosTest extends BaseGrpcTest {
         DeleteAllPhotosRequest request = DeleteAllPhotosRequest.newBuilder()
                 .setUserId("")
                 .build();
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.deleteAllPhotos(request)
         );
         Assertions.assertEquals(

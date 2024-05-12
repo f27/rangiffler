@@ -54,7 +54,7 @@ public class DeletePhotoTest extends BaseGrpcTest {
     @DisplayName("Удаление фотографии с некорректным user id должно возвращать INVALID_ARGUMENT")
     void deletePhotoWithIncorrectUserIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.deletePhoto(DeletePhotoRequest.newBuilder()
                         .setUserId("")
                         .setPhotoId(photo.id().toString())
@@ -88,7 +88,7 @@ public class DeletePhotoTest extends BaseGrpcTest {
     @DisplayName("Удаление фотографии с некорректным photo id должно возвращать INVALID_ARGUMENT")
     void deletePhotoWithIncorrectPhotoIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.deletePhoto(DeletePhotoRequest.newBuilder()
                         .setUserId(user.id().toString())
                         .setPhotoId("")
@@ -126,7 +126,7 @@ public class DeletePhotoTest extends BaseGrpcTest {
         PhotoModel firstUserPhoto = firstUser.photos().get(0);
         UserModel secondUser = users[1];
         PhotoModel secondUserPhoto = secondUser.photos().get(0);
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.deletePhoto(DeletePhotoRequest.newBuilder()
                         .setUserId(firstUser.id().toString())
                         .setPhotoId(secondUserPhoto.id().toString())

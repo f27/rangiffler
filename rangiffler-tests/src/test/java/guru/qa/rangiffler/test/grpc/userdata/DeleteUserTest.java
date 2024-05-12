@@ -53,7 +53,7 @@ public class DeleteUserTest extends BaseGrpcTest {
                 .build();
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.deleteUser(request)
                     );
                     Assertions.assertEquals(

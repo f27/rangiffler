@@ -151,7 +151,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     @GenerateUser
     @DisplayName("GetFriendsIds: неправильный username. Должен вернуть NOT_FOUND")
     void getFriendsIdsIncorrectUsernameTest() {
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> userdataGrpcBlockingStub.getFriendsIds(Username.newBuilder().setUsername(".").build())
         );
         Assertions.assertEquals(
@@ -163,7 +163,7 @@ public class GetFriendsIdsTest extends BaseGrpcTest {
     @GenerateUser
     @DisplayName("GetFriendsIds: пустой username. Должен вернуть INVALID_ARGUMENT")
     void getFriendsIdsEmptyUsernameTest() {
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> userdataGrpcBlockingStub.getFriendsIds(Username.newBuilder().setUsername("").build())
         );
         Assertions.assertEquals(

@@ -193,7 +193,7 @@ public class GetIncomeInvitationsTest extends BaseGrpcTest {
                 .setUsername(".")
                 .build();
 
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> userdataGrpcBlockingStub.getIncomeInvitations(request)
         );
         Assertions.assertEquals(
@@ -209,7 +209,7 @@ public class GetIncomeInvitationsTest extends BaseGrpcTest {
                 .setUsername("")
                 .build();
 
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> userdataGrpcBlockingStub.getIncomeInvitations(request)
         );
         Assertions.assertEquals(

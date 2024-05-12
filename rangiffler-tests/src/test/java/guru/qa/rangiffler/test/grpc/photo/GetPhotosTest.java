@@ -171,7 +171,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setPage(0)
                 .setSize(1)
                 .build();
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.getPhotos(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
@@ -188,7 +188,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setPage(0)
                 .setSize(1)
                 .build();
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.getPhotos(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
@@ -204,7 +204,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setPage(0)
                 .setSize(0)
                 .build();
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.getPhotos(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad size").asRuntimeException().getMessage(),
@@ -220,7 +220,7 @@ public class GetPhotosTest extends BaseGrpcTest {
                 .setPage(-1)
                 .setSize(1)
                 .build();
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.getPhotos(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad page").asRuntimeException().getMessage(),

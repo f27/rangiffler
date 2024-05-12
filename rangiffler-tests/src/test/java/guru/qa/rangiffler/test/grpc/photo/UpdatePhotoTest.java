@@ -89,7 +89,7 @@ public class UpdatePhotoTest extends BaseGrpcTest {
         String newDescription = DataUtil.generateStringWithLength(50);
         String newCountryCode = DataUtil.generateRandomCountry().getCode();
 
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.updatePhoto(
                         UpdatePhotoRequest.newBuilder()
                                 .setUserId(user.id().toString())
@@ -129,7 +129,7 @@ public class UpdatePhotoTest extends BaseGrpcTest {
         String newDescription = DataUtil.generateStringWithLength(50);
         String newCountryCode = DataUtil.generateRandomCountry().getCode();
 
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.updatePhoto(
                         UpdatePhotoRequest.newBuilder()
                                 .setUserId("")
@@ -174,7 +174,7 @@ public class UpdatePhotoTest extends BaseGrpcTest {
         String newDescription = DataUtil.generateStringWithLength(50);
         String newCountryCode = DataUtil.generateRandomCountry().getCode();
 
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.updatePhoto(
                         UpdatePhotoRequest.newBuilder()
                                 .setUserId(firstUser.id().toString())
@@ -233,7 +233,7 @@ public class UpdatePhotoTest extends BaseGrpcTest {
         String newDescription = DataUtil.generateStringWithLength(256);
         String newCountryCode = DataUtil.generateRandomCountry().getCode();
 
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.updatePhoto(
                         UpdatePhotoRequest.newBuilder()
                                 .setUserId(user.id().toString())
@@ -273,7 +273,7 @@ public class UpdatePhotoTest extends BaseGrpcTest {
         String newDescription = DataUtil.generateStringWithLength(50);
         String newCountryCode = DataUtil.generateStringWithLength(51);
 
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.updatePhoto(
                         UpdatePhotoRequest.newBuilder()
                                 .setUserId(user.id().toString())

@@ -128,7 +128,7 @@ public class LikePhotoTest extends BaseGrpcTest {
     void shouldNotLikePhotoWithIncorrectUserIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
 
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.likePhoto(LikePhotoRequest.newBuilder()
                         .setUserId("")
                         .setPhotoId(photo.id().toString())
@@ -162,7 +162,7 @@ public class LikePhotoTest extends BaseGrpcTest {
     @DisplayName("Лайк фотографии с некорректным photo id должно возвращать INVALID_ARGUMENT")
     void shouldNotLikePhotoWithIncorrectPhotoIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.likePhoto(LikePhotoRequest.newBuilder()
                         .setUserId(user.id().toString())
                         .setPhotoId("")
@@ -196,7 +196,7 @@ public class LikePhotoTest extends BaseGrpcTest {
     @DisplayName("Лайк фотографии с несуществующим photo id должно возвращать NOT_FOUND")
     void shouldNotLikePhotoWithNotExistingPhotoIdTest(@User(FOR_GENERATE_USER) UserModel user) {
         PhotoModel photo = user.photos().get(0);
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.likePhoto(LikePhotoRequest.newBuilder()
                         .setUserId(user.id().toString())
                         .setPhotoId(UUID.randomUUID().toString())

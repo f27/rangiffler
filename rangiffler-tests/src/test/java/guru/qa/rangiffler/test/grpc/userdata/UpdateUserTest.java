@@ -124,7 +124,7 @@ public class UpdateUserTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.updateUser(request)
                     );
                     Assertions.assertEquals(
@@ -159,7 +159,7 @@ public class UpdateUserTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.updateUser(request)
                     );
                     Assertions.assertEquals(
@@ -194,7 +194,7 @@ public class UpdateUserTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.updateUser(request)
                     );
                     Assertions.assertEquals(
@@ -229,7 +229,7 @@ public class UpdateUserTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.updateUser(request)
                     );
                     Assertions.assertEquals(
@@ -263,7 +263,7 @@ public class UpdateUserTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.updateUser(request)
                     );
                     Assertions.assertEquals(
@@ -290,7 +290,7 @@ public class UpdateUserTest extends BaseGrpcTest {
     void updateUserWithEmptyUsernameTest() {
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.updateUser(GrpcUser.newBuilder().setUsername("").build())
                     );
                     Assertions.assertEquals(
@@ -305,7 +305,7 @@ public class UpdateUserTest extends BaseGrpcTest {
     void updateUserWithIncorrectUsernameTest() {
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.updateUser(GrpcUser.newBuilder()
                                     .setCountryCode(CountryEnum.getRandom().getCode())
                                     .setUsername(".").build())

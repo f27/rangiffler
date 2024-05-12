@@ -192,7 +192,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .setUsername(".")
                 .build();
 
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> userdataGrpcBlockingStub.getFriends(request)
         );
         Assertions.assertEquals(
@@ -208,7 +208,7 @@ public class GetFriendsTest extends BaseGrpcTest {
                 .setUsername("")
                 .build();
 
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> userdataGrpcBlockingStub.getFriends(request)
         );
         Assertions.assertEquals(

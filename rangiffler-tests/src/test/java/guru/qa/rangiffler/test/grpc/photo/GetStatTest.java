@@ -117,7 +117,7 @@ public class GetStatTest extends BaseGrpcTest {
         GetStatRequest request = GetStatRequest.newBuilder()
                 .addUserId("")
                 .build();
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.getStat(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
@@ -132,7 +132,7 @@ public class GetStatTest extends BaseGrpcTest {
                 .addUserId(user.id().toString())
                 .addUserId("")
                 .build();
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.getStat(request));
         Assertions.assertEquals(
                 Status.INVALID_ARGUMENT.withDescription("Bad UUID").asRuntimeException().getMessage(),
