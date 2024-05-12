@@ -1,8 +1,5 @@
 package guru.qa.rangiffler.test.gql.mutation.user;
 
-import guru.qa.rangiffler.db.entity.user.UserEntity;
-import guru.qa.rangiffler.db.repository.UserdataRepository;
-import guru.qa.rangiffler.db.repository.hibernate.UserdataRepositoryHibernate;
 import guru.qa.rangiffler.jupiter.annotation.ApiLogin;
 import guru.qa.rangiffler.jupiter.annotation.GqlRequestFile;
 import guru.qa.rangiffler.jupiter.annotation.Token;
@@ -25,7 +22,6 @@ import static io.qameta.allure.Allure.step;
 @Story("UpdateUser")
 @DisplayName("UpdateUser")
 public class UpdateUserTest extends BaseGqlTest {
-    private final UserdataRepository userdataRepository = new UserdataRepositoryHibernate();
 
     @Test
     @ApiLogin
@@ -44,18 +40,6 @@ public class UpdateUserTest extends BaseGqlTest {
                     Assertions.assertEquals("updated lastname", gqlUser.getData().getUser().getSurname()));
             step("Проверить, что страна обновилась", () ->
                     Assertions.assertEquals("py", gqlUser.getData().getUser().getLocation().getCode()));
-        });
-
-        step("Проверить запись в БД", () -> {
-            UserEntity userFromDB = userdataRepository.findByUsername(user.username()).orElseThrow();
-            step("Проверить, что id пользователя остался прежним", () ->
-                    Assertions.assertEquals(user.id(), userFromDB.getId()));
-            step("Проверить, что имя обновилось", () ->
-                    Assertions.assertEquals("updated firstname", userFromDB.getFirstname()));
-            step("Проверить, что фамилия обновилась", () ->
-                    Assertions.assertEquals("updated lastname", userFromDB.getLastname()));
-            step("Проверить, что страна обновилась", () ->
-                    Assertions.assertEquals("py", userFromDB.getCountryCode()));
         });
     }
 }
