@@ -44,4 +44,9 @@ public class GatewayApiClient extends RestClient {
     public GqlPhoto photoMutation(String bearerToken, GqlRequest request) throws IOException {
         return gatewayApi.photoMutation(bearerToken, request).execute().body();
     }
+
+    @Step("Удалить фотографию")
+    public GqlDeletePhoto deletePhotoMutation(String bearerToken, GqlRequest request) throws IOException {
+        return gatewayApi.deletePhotoMutation(bearerToken, request).execute().body();
+    }
 }
