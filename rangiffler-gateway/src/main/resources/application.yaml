@@ -8,6 +8,11 @@ spring:
   application:
     name: rangiffler-gateway
 
+grpc:
+  client:
+    GLOBAL:
+      max-inbound-message-size: 104857600
+
 logging:
   level:
     root: INFO
