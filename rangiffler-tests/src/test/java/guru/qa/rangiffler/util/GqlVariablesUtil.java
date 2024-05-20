@@ -1,6 +1,7 @@
 package guru.qa.rangiffler.util;
 
 import guru.qa.rangiffler.model.CountryEnum;
+import guru.qa.rangiffler.model.FriendshipAction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,15 @@ public class GqlVariablesUtil {
     public static Map<String, Object> deletePhoto(UUID photoId) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("id", photoId);
+        return variables;
+    }
+
+    public static Map<String, Object> updateFriendship(UUID userId, FriendshipAction action) {
+        Map<String, Object> input = new HashMap<>();
+        input.put("user", userId);
+        input.put("action", action);
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("input", input);
         return variables;
     }
 }

@@ -36,4 +36,8 @@ public interface GatewayApi {
     @POST("/graphql")
     Call<GqlDeletePhoto> deletePhotoMutation(@Header("Authorization") String bearerToken,
                                              @Body GqlRequest gqlRequest);
+
+    @POST("/graphql")
+    Call<GqlFriendship> updateFriendshipMutation(@Header("Authorization") String bearerToken,
+                                           @Body GqlRequest gqlRequest);
 }

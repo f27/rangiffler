@@ -49,4 +49,9 @@ public class GatewayApiClient extends RestClient {
     public GqlDeletePhoto deletePhotoMutation(String bearerToken, GqlRequest request) throws IOException {
         return gatewayApi.deletePhotoMutation(bearerToken, request).execute().body();
     }
+
+    @Step("Обновить дружбу")
+    public GqlFriendship updateFriendshipMutation(String bearerToken, GqlRequest request) throws IOException {
+        return gatewayApi.updateFriendshipMutation(bearerToken, request).execute().body();
+    }
 }
