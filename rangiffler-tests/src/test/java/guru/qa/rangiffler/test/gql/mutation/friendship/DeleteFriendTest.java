@@ -1,6 +1,5 @@
 package guru.qa.rangiffler.test.gql.mutation.friendship;
 
-import guru.qa.grpc.rangiffler.grpc.FriendStatus;
 import guru.qa.rangiffler.jupiter.annotation.*;
 import guru.qa.rangiffler.model.FriendshipAction;
 import guru.qa.rangiffler.model.UserModel;
