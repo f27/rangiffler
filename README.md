@@ -1,4 +1,5 @@
 # Rangiffler
+![Image](image.png)
 ## Как запустить
 #### Если у вас Windows - используйте bash терминал
 ### Подготовка:
@@ -29,6 +30,11 @@ openjdk version "19" 2022-09-20
 OpenJDK Runtime Environment (build 19+36-2238)
 OpenJDK 64-Bit Server VM (build 19+36-2238, mixed mode, sharing)
 ```
+
+#### 4. Создать volume для БД и отчетов allure
+`docker volume create rangiffler-all-db`
+
+`docker volume create rangiffler-allure-artifacts`
 
 ### Локальный запуск в IDE
 
