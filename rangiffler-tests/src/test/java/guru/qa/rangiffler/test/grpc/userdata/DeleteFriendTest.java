@@ -67,7 +67,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
@@ -96,7 +96,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
@@ -131,7 +131,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
@@ -164,7 +164,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
@@ -199,7 +199,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
@@ -220,7 +220,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
@@ -241,7 +241,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(
@@ -262,7 +262,7 @@ public class DeleteFriendTest extends BaseGrpcTest {
 
         step("Проверить исключение",
                 () -> {
-                    Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+                    StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                             () -> userdataGrpcBlockingStub.deleteFriend(request)
                     );
                     Assertions.assertEquals(

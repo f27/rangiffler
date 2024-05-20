@@ -1,0 +1,5 @@
+{
+  "operationName":"DeletePhoto",
+  "variables": {"id":"24d20b4a-7b20-43fc-9f32-fcbc5ead3ab5"},
+  "query":"mutation DeletePhoto($id: ID!) {\n  deletePhoto(id: $id)\n}"
+}

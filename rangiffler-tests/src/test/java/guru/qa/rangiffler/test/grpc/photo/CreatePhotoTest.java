@@ -84,7 +84,7 @@ public class CreatePhotoTest extends BaseGrpcTest {
     @GenerateUser
     @DisplayName("Создание фотографии с некорректной картинкой должно возвращать INVALID_ARGUMENT")
     void shouldNotCreatePhotoWithBadImageTest(@User(FOR_GENERATE_USER) UserModel user) {
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.createPhoto(
                         CreatePhotoRequest.newBuilder()
                                 .setUserId(user.id().toString())
@@ -106,7 +106,7 @@ public class CreatePhotoTest extends BaseGrpcTest {
     @GenerateUser
     @DisplayName("Создание фотографии со слишком длинным описанием должно возвращать INVALID_ARGUMENT")
     void shouldNotCreatePhotoWithTooLongDescriptionTest(@User(FOR_GENERATE_USER) UserModel user) {
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.createPhoto(
                         CreatePhotoRequest.newBuilder()
                                 .setUserId(user.id().toString())
@@ -128,7 +128,7 @@ public class CreatePhotoTest extends BaseGrpcTest {
     @GenerateUser
     @DisplayName("Создание фотографии со слишком длинным кодом страны должно возвращать INVALID_ARGUMENT")
     void shouldNotCreatePhotoWithTooCountryCodeTest(@User(FOR_GENERATE_USER) UserModel user) {
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.createPhoto(
                         CreatePhotoRequest.newBuilder()
                                 .setUserId(user.id().toString())
@@ -150,7 +150,7 @@ public class CreatePhotoTest extends BaseGrpcTest {
     @GenerateUser
     @DisplayName("Создание фотографии с некорректным id пользователя должно возвращать INVALID_ARGUMENT")
     void shouldNotCreatePhotoWithIncorrectUserIdTest() {
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> photoGrpcBlockingStub.createPhoto(
                         CreatePhotoRequest.newBuilder()
                                 .setUserId("")

@@ -33,6 +33,30 @@ public class AddPhotoTest extends BaseWebTest {
 
     @Test
     @ApiLogin
+    @DisplayName("Добавление двух фотографий")
+    void twoPhotosUploadTest() {
+        PhotoModel photo1ForUpload = PhotoModel.create("img/photo/1.jpg", "dog", CountryEnum.RUSSIAN_FEDERATION);
+        PhotoModel photo2ForUpload = PhotoModel.create("img/photo/2.jpg", "forest", CountryEnum.UNITED_KINGDOM);
+        myTravelsPage
+                .clickAddPhoto()
+                .getAddPhotoModal()
+                .uploadPhoto(photo1ForUpload)
+                .clickSave();
+        myTravelsPage
+                .getSnackbar().messageShouldHaveText("New post created");
+        myTravelsPage
+                .clickAddPhoto()
+                .getAddPhotoModal()
+                .uploadPhoto(photo2ForUpload)
+                .clickSave();
+        myTravelsPage
+                .getSnackbar().messageShouldHaveText("New post created");
+        myTravelsPage
+                .checkPhotos(photo1ForUpload, photo2ForUpload);
+    }
+
+    @Test
+    @ApiLogin
     @DisplayName("Добавление фотографии c длинным описанием (255 символов)")
     void photoWithLongDescriptionUploadTest() {
         PhotoModel photoForUpload = PhotoModel.create("img/photo/1.jpg", DataUtil.generateStringWithLength(255));

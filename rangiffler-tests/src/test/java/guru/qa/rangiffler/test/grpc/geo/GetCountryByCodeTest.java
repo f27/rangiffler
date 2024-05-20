@@ -41,7 +41,7 @@ public class GetCountryByCodeTest extends BaseGrpcTest {
     @Test
     @DisplayName("Получение страны с несуществующим кодом должно возвращать NOT_FOUND")
     void getCountryByNotExistingCodeTest() {
-        Exception e = Assertions.assertThrows(StatusRuntimeException.class,
+        StatusRuntimeException e = Assertions.assertThrows(StatusRuntimeException.class,
                 () -> geoGrpcBlockingStub.getCountryByCode(CountryCode.newBuilder().setCode("NOT_EXISTING_CODE").build()));
         Assertions.assertEquals(
                 Status.NOT_FOUND.withDescription("Country not found").asRuntimeException().getMessage(),
